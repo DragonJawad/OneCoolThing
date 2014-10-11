@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OneCoolThing.iml" filepath="$PROJECT_DIR$/OneCoolThing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Sliding Menu/Sliding Menu.iml" filepath="$PROJECT_DIR$/Sliding Menu/Sliding Menu.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
