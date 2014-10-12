@@ -2,7 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+    </style>
+
+    <!-- Customized ActionBar style -->
+    <style name="ActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+        <!-- Following line allows the activity to use the action bar's space -->
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
 </resources>
