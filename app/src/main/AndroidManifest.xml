@@ -16,9 +16,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Below are test activities -->
         <activity
             android:name=".Activity.ActivityTestCenter"
             android:label="Test Activity"
+            android:parentActivityName=".Activity.ActivityMain"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activity.MainActivity"
+                />
+        </activity>
+
+        <activity
+            android:name=".Activity.ActivityTestViews"
+            android:label="Test Views Activity"
             android:parentActivityName=".Activity.ActivityMain"
             >
             <meta-data

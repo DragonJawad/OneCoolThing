@@ -61,6 +61,11 @@ public class ActivityMain extends ActionBarActivity
         startActivity(intent);
     }
 
+    public void onTestViewsGo(View view) {
+        Intent intent = new Intent(this, ActivityTestViews.class);
+        startActivity(intent);
+    }
+
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
