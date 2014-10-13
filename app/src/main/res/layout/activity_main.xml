@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/dev_green"
     tools:context=".MainActivity">
 
     <!-- As the main content view, the view below consumes the entire
@@ -26,6 +27,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="edu.umich.engin.cm.onecoolthing.Fragments.NavigationDrawerFragment"
-        tools:layout="@layout/fragment_navigation_drawer" />
+        tools:layout="@layout/fragment_navigation_drawer_default" />
 
 </android.support.v4.widget.DrawerLayout>

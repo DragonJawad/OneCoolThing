@@ -2,14 +2,34 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/ActionBar</item>
     </style>
 
-    <!-- Customized ActionBar style -->
-    <style name="ActionBar" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@android:color/transparent</item>
-        <!-- Following line allows the activity to use the action bar's space -->
+    <!-- Customized App Theme -->
+    <style name="AppTheme2" parent="Theme.AppCompat.Light">
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/ActionBarTransparent2</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/ActionBarTransparent2</item>
+    </style>
+
+    <!-- Transparent Action Bar -->
+    <style name="ActionBarTransparent2" parent="Widget.AppCompat.Light.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:titleTextStyle">@style/ActionBarTransparent.Title2</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@android:color/transparent</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="titleTextStyle">@style/ActionBarTransparent.Title2</item>
+
+    </style>
+
+    <!-- Customizes text for the actionBar -->
+    <style name="ActionBarTransparent.Title2"
+        parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>

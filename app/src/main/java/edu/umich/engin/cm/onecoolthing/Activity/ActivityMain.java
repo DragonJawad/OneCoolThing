@@ -1,6 +1,7 @@
 package edu.umich.engin.cm.onecoolthing.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,7 @@ import edu.umich.engin.cm.onecoolthing.Fragments.NavigationDrawerFragment;
 import edu.umich.engin.cm.onecoolthing.R;
 
 
-public class MainActivity extends ActionBarActivity
+public class ActivityMain extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -52,6 +53,12 @@ public class MainActivity extends ActionBarActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+    }
+
+    // Crude way to go to a test activity
+    public void onTestGo(View view) {
+        Intent intent = new Intent(this, ActivityTestCenter.class);
+        startActivity(intent);
     }
 
     public void onSectionAttached(int number) {
@@ -136,7 +143,7 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
+            ((ActivityMain) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
