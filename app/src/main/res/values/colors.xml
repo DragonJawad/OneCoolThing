@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Sliding Menu Colors -->
+    <color name="purple_light">#a276eb</color>
+    <color name="purple_middle">#8658ce</color>
+    <color name="purple_dark">#6a3ab2</color>
+
     <!-- Basic colors, laziness -->
     <color name="white">#FFF</color>
     <color name="black">#000</color>

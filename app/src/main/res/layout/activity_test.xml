@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="48sp"
-        android:text="Test test"/>
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_large"
+        android:layout_margin="@dimen/margin_general"
+        android:text="Test test"
+        android:layout_alignParentTop="true"
+        />
 
+    <TextView
+        android:id="@+id/leftAnnouncer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_normal"
+        android:text="Left slider working"
+        android:layout_below="@id/test"
+        android:layout_alignLeft="@+id/test"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_general"
+        android:textSize="@dimen/text_normal"
+        android:text="Right slider working"
+        android:layout_below="@id/leftAnnouncer"
+        android:layout_alignParentRight="true"
+        />
 </RelativeLayout>
