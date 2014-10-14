@@ -1,12 +1,13 @@
 package edu.umich.engin.cm.onecoolthing.Activity;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.MenuItem;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import edu.umich.engin.cm.onecoolthing.Fragments.FragmentVerticalPager;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -22,31 +23,50 @@ public class ActivityTestCenter extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
+        // Add in the center view
+        addCenterView();
+
+
         // Initialize the left sliding menu
         slidingMenuLeft = new SlidingMenu(this);
-        slidingMenuLeft.setMode(SlidingMenu.LEFT);
-        slidingMenuLeft.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        slidingMenuLeft.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
-        slidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow);
-        slidingMenuLeft.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        slidingMenuLeft.setFadeDegree(0.35f);
-        slidingMenuLeft.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        slidingMenuLeft.setMenu(R.layout.slidingmenu_test);
+        slidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
+        slidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
 
         // Initialize the right sliding menu
         slidingMenuRight = new SlidingMenu(this);
-        slidingMenuRight.setMode(SlidingMenu.RIGHT);
-        slidingMenuRight.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        slidingMenuRight.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
-        slidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow);
-        slidingMenuRight.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        slidingMenuRight.setFadeDegree(0.35f);
-        slidingMenuRight.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        slidingMenuRight.setMenu(R.layout.slidingmenu_test);
+        slidingMenuRight.setMode(SlidingMenu.RIGHT); // Define the orientation to the right
+        slidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
-    //    getActionBar().setDisplayHomeAsUpEnabled(true);
+        // Set up the sliding menus
+        setUpSlidingMenu(slidingMenuLeft);
+        setUpSlidingMenu(slidingMenuRight);
     }
 
+    private void addCenterView() {
+        // Create and setup the center fragment, as necessary
+        FragmentVerticalPager frag = new FragmentVerticalPager();
+
+        // Add in the fragment to the place specified in the layout file
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.container, frag);
+        fragmentTransaction.commit();
+    }
+
+    /** Sets up a slidingMenu according to pre-defined specifics
+     * @param slidingMenu Must be an initialized SlidingMenu object with
+     *                      orientation, shadow drawable, and menu already defined
+     */
+    private void setUpSlidingMenu(SlidingMenu slidingMenu) {
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
+        slidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width);
+        slidingMenu.setFadeDegree(0.35f);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        slidingMenu.setMenu(R.layout.slidingmenu_test);
+    }
+
+    /*
     // Override the back button press so can close sliding menu instead
     @Override
     public void onBackPressed() {
@@ -82,4 +102,5 @@ public class ActivityTestCenter extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    */
 }
