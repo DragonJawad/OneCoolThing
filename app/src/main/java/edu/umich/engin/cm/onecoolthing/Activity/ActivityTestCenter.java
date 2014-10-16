@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -14,10 +16,13 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 12/10/14.
  */
-public class ActivityTestCenter extends Activity {
+public class ActivityTestCenter extends Activity implements FragmentVerticalPager.VertPagerCommunicator {
     // Sliding Menu test objects
     SlidingMenu slidingMenuLeft;
     SlidingMenu slidingMenuRight;
+
+    // The right sliding menu's view, for easy access to change its contents
+    View viewRightMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +31,6 @@ public class ActivityTestCenter extends Activity {
 
         // Add in the center view
         addCenterView();
-
 
         // Initialize the left sliding menu
         slidingMenuLeft = new SlidingMenu(this);
@@ -40,10 +44,8 @@ public class ActivityTestCenter extends Activity {
         slidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
         // Inflate a view for the right sliding menu
-        View view = getLayoutInflater().inflate(R.layout.slidingmenu_right,null);
-        slidingMenuRight.setMenu(view);
-
-     //   slidingMenuRight.setMenu(R.layout.slidingmenu_right);
+        viewRightMenu = getLayoutInflater().inflate(R.layout.slidingmenu_right,null);
+        slidingMenuRight.setMenu(viewRightMenu);
 
         // Set up the rest of the sliding menu properties
         setUpSlidingMenu(slidingMenuLeft);
@@ -59,6 +61,9 @@ public class ActivityTestCenter extends Activity {
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.container, frag);
         fragmentTransaction.commit();
+
+        // Let the frag communicate with this activity
+        frag.setCommunicator(this);
     }
 
     /** Sets up a slidingMenu according to pre-defined specifics
@@ -71,8 +76,16 @@ public class ActivityTestCenter extends Activity {
         slidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width_main);
         slidingMenu.setFadeDegree(0.35f);
         slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-    //    slidingMenu.setContent(R.layout.slidingmenu_left);
-    //    slidingMenu.setMenu(R.layout.slidingmenu_left);
+    }
+
+    // Testing function: change the right sliding menu's background color
+    public void changeRightSlide(int color) {
+        // For now, output the passed in color
+        Toast.makeText(this, "Passed in color: " + color, Toast.LENGTH_SHORT).show();
+
+        // Change the right slider's container's color
+        LinearLayout container = (LinearLayout)viewRightMenu.findViewById(R.id.container_right_sliding);
+        container.setBackgroundColor(color);
     }
 
     /*

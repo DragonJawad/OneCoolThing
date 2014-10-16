@@ -64,4 +64,9 @@ public class FragmentBase extends Fragment {
             mNewColor=color;
         }
     }
+
+    // Returns the color assigned to this fragment
+    public int getColor(){
+        return mNewColor;
+    }
 }

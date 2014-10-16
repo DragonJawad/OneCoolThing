@@ -43,6 +43,18 @@ public class SimplePagerAdapter extends FragmentPagerAdapter {
 
     }
 
+    public int getFragColor(int position) {
+        if(position == 0){
+            return fragA.getColor();
+        }
+        else if(position == 1){
+            return fragB.getColor();
+        }
+        else {
+            return fragC.getColor();
+        }
+    }
+
     @Override
     public Fragment getItem(int position) {
         // TODO: Make this more efficient, use a list or such, also comment more
