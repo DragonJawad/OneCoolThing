@@ -47,6 +47,41 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         viewRightMenu = getLayoutInflater().inflate(R.layout.slidingmenu_right,null);
         slidingMenuRight.setMenu(viewRightMenu);
 
+        // Set listeners for the left and right sliding menus [so both aren't open at once]
+            // TODO: Make them call a function that takes in a boolean.
+                // Function would possibly close other if open, check if already disabled, etc
+        slidingMenuLeft.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+            @Override
+            public void onOpen() {
+                // Disable the right sliding menu
+                slidingMenuRight.setSlidingEnabled(false);
+            }
+        });
+
+        slidingMenuLeft.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+            @Override
+            public void onClose() {
+                // Enable the right sliding menu
+                slidingMenuRight.setSlidingEnabled(true);
+            }
+        });
+
+        slidingMenuRight.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+            @Override
+            public void onOpen() {
+                // Disable the left sliding menu
+                slidingMenuLeft.setSlidingEnabled(false);
+            }
+        });
+
+        slidingMenuRight.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+            @Override
+            public void onClose() {
+                // Enable the left sliding menu
+                slidingMenuLeft.setSlidingEnabled(true);
+            }
+        });
+
         // Set up the rest of the sliding menu properties
         setUpSlidingMenu(slidingMenuLeft);
         setUpSlidingMenu(slidingMenuRight);
