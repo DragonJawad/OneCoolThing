@@ -4,6 +4,9 @@
     <color name="purple_light">#a276eb</color>
     <color name="purple_middle">#8658ce</color>
     <color name="purple_dark">#6a3ab2</color>
+    <color name="white_light">#FFF</color>
+    <color name="white_middle">#ffd3d3d3</color>
+    <color name="white_dark">#ff8e8e8e</color>
 
     <!-- Basic colors, laziness -->
     <color name="white">#FFF</color>

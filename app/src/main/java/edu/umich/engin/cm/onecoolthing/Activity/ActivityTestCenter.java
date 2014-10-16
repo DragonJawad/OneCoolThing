@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.View;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -31,13 +32,20 @@ public class ActivityTestCenter extends Activity {
         slidingMenuLeft = new SlidingMenu(this);
         slidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
         slidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
+        slidingMenuLeft.setMenu(R.layout.slidingmenu_left); // Assign the layout/content
 
         // Initialize the right sliding menu
         slidingMenuRight = new SlidingMenu(this);
         slidingMenuRight.setMode(SlidingMenu.RIGHT); // Define the orientation to the right
         slidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
-        // Set up the sliding menus
+        // Inflate a view for the right sliding menu
+        View view = getLayoutInflater().inflate(R.layout.slidingmenu_right,null);
+        slidingMenuRight.setMenu(view);
+
+     //   slidingMenuRight.setMenu(R.layout.slidingmenu_right);
+
+        // Set up the rest of the sliding menu properties
         setUpSlidingMenu(slidingMenuLeft);
         setUpSlidingMenu(slidingMenuRight);
     }
@@ -60,10 +68,11 @@ public class ActivityTestCenter extends Activity {
     private void setUpSlidingMenu(SlidingMenu slidingMenu) {
         slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
-        slidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width);
+        slidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width_main);
         slidingMenu.setFadeDegree(0.35f);
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        slidingMenu.setMenu(R.layout.slidingmenu_test);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+    //    slidingMenu.setContent(R.layout.slidingmenu_left);
+    //    slidingMenu.setMenu(R.layout.slidingmenu_left);
     }
 
     /*

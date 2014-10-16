@@ -9,4 +9,5 @@
     android:text="Large Text"
     android:id="@+id/textView"
     android:background="#FFCC00"
+    android:paddingTop="?android:actionBarSize"
     android:layout_gravity="left|top" />
