@@ -26,29 +26,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  * Used to test different things first
  */
 public class ActivityTestViews extends ListActivity {
-
     private ProgressDialog pDialog;
-
-    // URL to get contacts JSON
-    private static String url = "http://api.androidhive.info/contacts/";
-
-    // JSON Node names
-    private static final String TAG_CONTACTS = "contacts";
-    private static final String TAG_ID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_ADDRESS = "address";
-    private static final String TAG_GENDER = "gender";
-    private static final String TAG_PHONE = "phone";
-    private static final String TAG_PHONE_MOBILE = "mobile";
-    private static final String TAG_PHONE_HOME = "home";
-    private static final String TAG_PHONE_OFFICE = "office";
-
-    // contacts JSONArray
-    JSONArray contacts = null;
-
-    // Hashmap for ListView
-    ArrayList<HashMap<String, String>> contactList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
