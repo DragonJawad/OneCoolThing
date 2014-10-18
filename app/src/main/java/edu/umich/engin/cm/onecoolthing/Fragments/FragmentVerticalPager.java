@@ -1,18 +1,15 @@
 package edu.umich.engin.cm.onecoolthing.Fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import edu.umich.engin.cm.onecoolthing.R;
-import edu.umich.engin.cm.onecoolthing.ViewUtil.SimplePagerAdapter;
+import edu.umich.engin.cm.onecoolthing.Util.SimplePagerAdapter;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 /**

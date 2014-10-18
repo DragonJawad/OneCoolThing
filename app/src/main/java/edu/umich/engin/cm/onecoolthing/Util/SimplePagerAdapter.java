@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.ViewUtil;
+package edu.umich.engin.cm.onecoolthing.Util;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
