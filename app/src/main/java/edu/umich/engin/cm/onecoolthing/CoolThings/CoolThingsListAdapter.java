@@ -1,10 +1,6 @@
-package edu.umich.engin.cm.onecoolthing.NetworkUtils;
+package edu.umich.engin.cm.onecoolthing.CoolThings;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
+import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThing;
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoader;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**

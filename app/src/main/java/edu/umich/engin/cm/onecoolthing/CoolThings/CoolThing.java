@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.NetworkUtils;
+package edu.umich.engin.cm.onecoolthing.CoolThings;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;

@@ -1,12 +1,9 @@
-package edu.umich.engin.cm.onecoolthing.NetworkUtils;
+package edu.umich.engin.cm.onecoolthing.CoolThings;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -14,10 +11,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
-import edu.umich.engin.cm.onecoolthing.Activity.ActivityTestViews;
+import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThing;
+import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingsListAdapter;
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
 
 /**
  * Created by jawad on 18/10/14.
@@ -49,6 +48,12 @@ public class ParseCoolThings {
         }
     }
 
+    public void setVertPager(Context context) {
+
+
+        return;
+    }
+
     /**
      * Async class to get Cool Things
      */
@@ -59,11 +64,6 @@ public class ParseCoolThings {
         ListView targetList;
         // Optional pDialog object
         ProgressDialog pDialog;
-
-        public GetCoolThings(Context context, ListView listView) {
-            this.mContext = context;
-            this.targetList = listView;
-        }
 
         public GetCoolThings(Context context, ListView listView, ProgressDialog progressDialog) {
             this.mContext = context;
