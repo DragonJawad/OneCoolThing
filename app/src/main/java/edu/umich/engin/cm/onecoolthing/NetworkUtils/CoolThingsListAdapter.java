@@ -1,13 +1,19 @@
 package edu.umich.engin.cm.onecoolthing.NetworkUtils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.R;
@@ -20,12 +26,32 @@ import edu.umich.engin.cm.onecoolthing.R;
 public class CoolThingsListAdapter extends BaseAdapter {
     Context mContext;
 
+    // ImageLoader used to lazy insert images into listViews
+    ImageLoader imageLoader;
+
     // List of cool things
     ArrayList<CoolThing> coolThings;
+
+    // Determines whether or not to use images
+    boolean useImages = false;
 
     public CoolThingsListAdapter(Context context, ArrayList<CoolThing> coolThings) {
         this.coolThings = coolThings;
         this.mContext = context;
+
+        // Set up the new imageLoader, and clear its cache
+        imageLoader = new ImageLoader(context);
+        imageLoader.clearCache();
+    }
+
+    public CoolThingsListAdapter(Context context, ArrayList<CoolThing> coolThings, boolean useImages) {
+        this.coolThings = coolThings;
+        this.mContext = context;
+        this.useImages = useImages;
+
+        // Set up the new imageLoader, and clear its cache
+        imageLoader = new ImageLoader(context);
+        imageLoader.clearCache();
     }
 
     @Override
@@ -45,30 +71,51 @@ public class CoolThingsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO: Use the ViewHolder optimization design pattern
-
         View row = null;
+        ViewHolder holder;
+
         if(convertView == null) {
             // Then gotta set up this row for the first time
             LayoutInflater inflater =
                     (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.list_item_jsontest, parent, false);
+
+            // Create a ViewHolder to save all the different parts of the row
+            holder = new ViewHolder();
+            holder.id = (TextView) row.findViewById(R.id.id);
+            holder.name = (TextView) row.findViewById(R.id.name);
+            holder.body = (TextView) row.findViewById(R.id.body);
+            holder.image = (ImageView) row.findViewById(R.id.icon);
+
+            // Make the row reuse the ViewHolder
+            row.setTag(holder);
         }
         else { // Otherwise, use the recycled view
             row = convertView;
+            holder = (ViewHolder) row.getTag();
         }
-
-        // Get the layout views
-        TextView id = (TextView) row.findViewById(R.id.id);
-        TextView name = (TextView) row.findViewById(R.id.name);
-        TextView body = (TextView) row.findViewById(R.id.body);
 
         // Set the current row's data
         CoolThing thisThing = coolThings.get(position);
-        id.setText(thisThing.getId());
-        name.setText(thisThing.getTitle());
-        body.setText(thisThing.getBodyText());
+        holder.id.setText(thisThing.getId());
+        holder.name.setText(thisThing.getTitle());
+        holder.body.setText(thisThing.getBodyText());
+
+        // Lazily load the image
+        String url = thisThing.getImageURL();
+        Log.d("MD/Adapter", "URL: "+url);
+        imageLoader.DisplayImage(url, holder.image);
 
         return row;
+    }
+
+    public static class ViewHolder{
+
+        public TextView id;
+        public TextView name;
+        public TextView body;
+
+        public ImageView image;
+
     }
 }

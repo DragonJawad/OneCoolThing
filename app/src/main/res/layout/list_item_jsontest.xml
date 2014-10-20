@@ -10,28 +10,53 @@
     android:paddingRight="10dp"
     android:background="@color/dev_blue">
 
-    <!-- Id Label -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:src="@drawable/ic_launcher"
+            android:layout_weight="1"
+            />
 
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:paddingTop="6dip"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_normal"
-        android:textStyle="bold"
-        android:text="Filler id"/>
+        <LinearLayout
+            android:id="@+id/subcontainer"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:paddingLeft="@dimen/padding_general"
+            >
 
-    <!-- Name label -->
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:textSize="@dimen/text_normal"
-        android:textColor="@color/dev_orange"
-        android:text="Filler name"/>
+            <!-- Id Label -->
+
+            <TextView
+                android:id="@+id/id"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dip"
+                android:paddingTop="6dip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_normal"
+                android:textStyle="bold"
+                android:text="Filler id"/>
+
+            <!-- Name label -->
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dip"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/dev_orange"
+                android:text="Filler name"/>
+
+
+        </LinearLayout>
+        </LinearLayout>
 
     <!-- Body text label label -->
     <TextView

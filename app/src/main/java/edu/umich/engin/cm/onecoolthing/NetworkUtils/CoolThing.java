@@ -1,5 +1,8 @@
 package edu.umich.engin.cm.onecoolthing.NetworkUtils;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
 /**
  * Created by jawad on 18/10/14.
  */
@@ -11,6 +14,7 @@ public class CoolThing {
     private String subTitle;
     private String bodyText;
 
+    private Bitmap image;
     private String imageURL;
 
     private String collegeURL;
@@ -57,6 +61,10 @@ public class CoolThing {
         public void setBodyText(String bodyText) {
             this.bodyText = bodyText;
         }
+
+        public Bitmap getImage() { return image; }
+
+        public void setImage(Bitmap image) { this.image = image; }
 
         public String getImageURL() {
             return imageURL;
