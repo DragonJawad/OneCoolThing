@@ -32,6 +32,7 @@ public class ParseCoolThings {
     // JSON Tags
     private static final String TAG_ID = "ID";
     private static final String TAG_TITLE = "Title";
+    private static final String TAG_SUBTITLE = "Sub Title";
     private static final String TAG_BODYTEXT = "Body Text";
     private static final String TAG_IMAGEURL = "iPhone 5 Retina Image";
 
@@ -138,12 +139,14 @@ public class ParseCoolThings {
                         // Get the necessary data from the object
                         String id = jsonObject.getString(TAG_ID);
                         String title = jsonObject.getString(TAG_TITLE);
+                        String subTitle = jsonObject.getString(TAG_SUBTITLE);
                         String body = jsonObject.getString(TAG_BODYTEXT);
                         String imageURL = jsonObject.getString(TAG_IMAGEURL);
 
                         // Make a new Cool Thing object to hold this data
                         CoolThing coolThing = new CoolThing(id, title, body);
                         coolThing.setImageURL(imageURL);
+                        coolThing.setSubTitle(subTitle);
 
                         // Add the new cool thing to the list of awesome cool things
                         listCoolThings.add(coolThing);
