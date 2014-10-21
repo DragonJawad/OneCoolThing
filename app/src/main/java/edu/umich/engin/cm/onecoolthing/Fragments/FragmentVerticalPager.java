@@ -61,7 +61,7 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
     public void initCoolViewPager(Context context, ArrayList<CoolThing> coolThings) {
         // Set up the pagerAdapter to handle the different "pages"/fragments
         pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
-        pagerAdapter.initAdapter(coolThings);
+        pagerAdapter.initAdapter(context, coolThings);
         Log.d("MD/FragVertPager", "Adapter done with");
 
         // Set the pageAdapter to the ViewPager
