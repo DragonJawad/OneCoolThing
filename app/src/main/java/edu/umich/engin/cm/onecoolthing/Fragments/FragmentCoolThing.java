@@ -51,9 +51,6 @@ public class FragmentCoolThing extends Fragment {
             // Trying to set the background image lazily
             ImageLoader imageLoader = new ImageLoader(getActivity());
             imageLoader.DisplayImage(imageURL, background, 1);
-
-            // Force the imageView to stretch across the screen
-            background.setScaleType(ImageView.ScaleType.FIT_XY);
         }
     }
 
