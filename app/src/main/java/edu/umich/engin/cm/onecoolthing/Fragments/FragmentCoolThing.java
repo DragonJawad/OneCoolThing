@@ -50,13 +50,8 @@ public class FragmentCoolThing extends Fragment {
         if(imageURL != null) {
             // Trying to set the background image lazily
             ImageLoader imageLoader = new ImageLoader(getActivity());
-            imageLoader.DisplayImage(imageURL, background);
+            imageLoader.DisplayImage(imageURL, background, 1);
         }
-    }
-
-    public ImageView getBackgroundImageView() {
-        if(background == null) Log.d("MD/CoolFrag", "BG is NULL! =<");
-        return background;
     }
 
     public void setBackgroundImage(Bitmap bg) {
@@ -70,10 +65,5 @@ public class FragmentCoolThing extends Fragment {
 
     public void setTitleText(String title) {
         this.titleText = title;
-    }
-
-    public void setTitleTextNow(String title) {
-        this.titleText = title;
-        titleView.setText(titleText);
     }
 }

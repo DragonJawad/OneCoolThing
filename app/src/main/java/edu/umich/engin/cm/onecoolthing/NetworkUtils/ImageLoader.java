@@ -35,11 +35,10 @@ import edu.umich.engin.cm.onecoolthing.Util.Utils;
  */
 
 public class ImageLoader {
+    FileCache fileCache;
 
     // Initialize MemoryCache
     MemoryCache memoryCache = new MemoryCache();
-
-    FileCache fileCache;
 
     // Create Map (collection) to store image and image url in key value pair
     private Map<ImageView, String> imageViews = Collections.synchronizedMap(
@@ -48,6 +47,9 @@ public class ImageLoader {
 
     // Handler to display images in UI thread
     Handler handler = new Handler();
+
+    // If not -1, then determines what scale to use the images at
+    int givenScale = -1;
 
     public ImageLoader(Context context){
 
@@ -62,6 +64,7 @@ public class ImageLoader {
     // default image show in list (Before online image download)
     final int stub_id = R.drawable.ic_launcher;
 
+    // Default, primary method
     public void DisplayImage(String url, ImageView imageView)
     {
         //Store image and url in Map
@@ -70,19 +73,13 @@ public class ImageLoader {
         // Check image is stored in MemoryCache Map or not (see MemoryCache.java)
         Bitmap bitmap = memoryCache.get(url);
 
-        Log.d("MD/ImageLoader", "Before...");
-
         if(bitmap!=null) {
-            Log.d("MD/ImageLoader", "Image not null");
-
             // if image is stored in MemoryCache Map then
             // Show image in listview row
             imageView.setImageBitmap(bitmap);
         }
         else
         {
-            Log.d("MD/ImageLoader", "Image was null");
-
             //queue Photo to download from url
             queuePhoto(url, imageView);
 
@@ -90,6 +87,13 @@ public class ImageLoader {
             imageView.setImageResource(stub_id);
         }
     }
+
+    // Call DisplayImage but specify a scale to use
+    public void DisplayImage(String url, ImageView imageview, int scale) {
+        givenScale = scale;
+        DisplayImage(url, imageview);
+    }
+
 
     private void queuePhoto(String url, ImageView imageView)
     {
