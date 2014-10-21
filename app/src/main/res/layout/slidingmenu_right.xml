@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/margin_general"
-    android:paddingTop="?android:actionBarSize"
     android:paddingLeft="@dimen/slidingmenu_shadow_width"
     android:background="@color/purple_dark">
 

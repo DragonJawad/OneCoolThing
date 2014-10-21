@@ -45,7 +45,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         slidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
         // Inflate a view for the right sliding menu
-        viewRightMenu = getLayoutInflater().inflate(R.layout.slidingmenu_right_test,null);
+        viewRightMenu = getLayoutInflater().inflate(R.layout.slidingmenu_right,null);
         slidingMenuRight.setMenu(viewRightMenu);
 
         // Set listeners for the left and right sliding menus [so both aren't open at once]
