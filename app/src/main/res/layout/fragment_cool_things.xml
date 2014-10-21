@@ -39,6 +39,7 @@
             android:layout_weight="3"
             android:text="@string/garbage_fill_short"
             android:textSize="@dimen/text_large"
+            android:textColor="@color/white"
             android:gravity="end"
             />
 
