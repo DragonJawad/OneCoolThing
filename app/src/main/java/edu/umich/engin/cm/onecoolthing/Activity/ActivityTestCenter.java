@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import edu.umich.engin.cm.onecoolthing.CoolThings.ParseCoolThings;
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentVerticalPager;
 import edu.umich.engin.cm.onecoolthing.R;
 
@@ -99,6 +100,10 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
 
         // Let the frag communicate with this activity
         frag.setCommunicator(this);
+
+        // Tell ParseCoolThings to set up the VerticalPager
+        ParseCoolThings parser = new ParseCoolThings();
+        parser.setVertPager(this, frag);
     }
 
     /** Sets up a slidingMenu according to pre-defined specifics

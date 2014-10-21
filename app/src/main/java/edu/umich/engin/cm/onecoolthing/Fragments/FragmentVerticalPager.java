@@ -4,10 +4,15 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
+import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThing;
+import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingsPagerAdapter;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.SimplePagerAdapter;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
@@ -17,8 +22,11 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
  */
 public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageChangeListener {
     VerticalViewPager mViewPager; // The viewPager shown via this fragment
-    SimplePagerAdapter pagerAdapter; // The adapter that controls the pager
     VertPagerCommunicator communicator; // Allows feedback to the activity
+
+    // The adapter that controls the pager
+    SimplePagerAdapter pagerAdapterTest;
+    CoolThingsPagerAdapter pagerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,13 +43,26 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
         super.onActivityCreated(savedInstanceState);
 
         // Initialize the viewpager with the activity's context
-        initViewPager(getActivity());
+    //    initSimpleViewPager(getActivity());
     }
 
-    private void initViewPager(Context context) {
+    private void initSimpleViewPager(Context context) {
         // Set up pagerAdapter to handle the different "pages"/fragments
-        pagerAdapter = new SimplePagerAdapter(getFragmentManager());
-        pagerAdapter.setFragments(context);
+        pagerAdapterTest = new SimplePagerAdapter(getFragmentManager());
+        pagerAdapterTest.setFragments(context);
+
+        // Set the pageAdapter to the ViewPager
+        mViewPager.setAdapter(pagerAdapterTest);
+
+        // Make this fragment listen to the adapter's changes
+        mViewPager.setOnPageChangeListener(this);
+    }
+
+    public void initCoolViewPager(Context context, ArrayList<CoolThing> coolThings) {
+        // Set up the pagerAdapter to handle the different "pages"/fragments
+        pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
+        pagerAdapter.initAdapter(coolThings);
+        Log.d("MD/FragVertPager", "Adapter done with");
 
         // Set the pageAdapter to the ViewPager
         mViewPager.setAdapter(pagerAdapter);
@@ -65,11 +86,13 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
         // If no communicator set, do nothing
         if(communicator == null) return;
 
+        /*
         // When a new page is selected, take notice!
-        int color = pagerAdapter.getFragColor(i);
+        int color = pagerAdapterTest.getFragColor(i);
 
         // Notify the activity of changes
         communicator.changeRightSlide(color);
+        */
     }
 
     @Override

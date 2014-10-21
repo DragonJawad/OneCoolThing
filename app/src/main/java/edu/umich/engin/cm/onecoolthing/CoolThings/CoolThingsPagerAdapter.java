@@ -3,6 +3,7 @@ package edu.umich.engin.cm.onecoolthing.CoolThings;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -32,13 +33,19 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter {
         listOfCoolThings = coolThings;
 
         // Initialize the array of cool thing fragments
-        listOfFragCoolThings = new ArrayList<FragmentCoolThing>(pageLimit);
+        listOfFragCoolThings = new ArrayList<FragmentCoolThing>();
 
-        // Fill in the fragments' titles, for now
+        // Init fragments and with titles, for now
         for(int i = 0; i < pageLimit; ++i) {
-            FragmentCoolThing thisFrag = listOfFragCoolThings.get(i);
+            // Initialize fragment
+            FragmentCoolThing thisFrag = new FragmentCoolThing();
+
+            // Insert a title into the fragment
             CoolThing thisThing = listOfCoolThings.get(i);
             thisFrag.setTitleText( thisThing.getTitle() );
+
+            // Add the fragment to the array
+            listOfFragCoolThings.add(thisFrag);
         }
     }
 

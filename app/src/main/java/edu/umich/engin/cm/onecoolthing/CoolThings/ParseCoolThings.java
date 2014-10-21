@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThing;
 import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingsListAdapter;
+import edu.umich.engin.cm.onecoolthing.Fragments.FragmentVerticalPager;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
 
@@ -22,6 +23,8 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
  * Created by jawad on 18/10/14.
  *
  * Handles getting all Cool Thing objects and setting appropriate data
+ * TODO: Save or at least cache some of data - JSON string and/or cool things
+ * TODO: Optimize loading contacts- not all need to be saved/used at once
  */
 public class ParseCoolThings {
     private static final String URL = "http://www.engin.umich.edu/college/about/news/news/coolthingindexjson";
@@ -40,7 +43,7 @@ public class ParseCoolThings {
         if(CheckNetworkConnection.isConnectionAvailable(context)) {
             // Let the subclass AsyncTask get and set the data
             GetCoolThings getCoolThings = new GetCoolThings(context, listView, pDialog);
-            getCoolThings.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+            getCoolThings.execute();
         }
         else {
             // Otherwise, give a warning that there is no internet connection
@@ -48,10 +51,19 @@ public class ParseCoolThings {
         }
     }
 
-    public void setVertPager(Context context) {
+    public void setVertPager(Context context, FragmentVerticalPager frag) {
+        // If the network is available, go ahead
+        if(CheckNetworkConnection.isConnectionAvailable(context)) {
+            // Let the subclass AsyncTask get and set the data
+            GetCoolThings getCoolThings = new GetCoolThings(context, frag);
+            getCoolThings.execute();
+        }
+        else {
+            // TODO: Give prompt to open up internet connection
 
-
-        return;
+            // Otherwise, give a warning that there is no internet connection
+            Toast.makeText(context, "Error: No internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -60,11 +72,20 @@ public class ParseCoolThings {
     private class GetCoolThings extends AsyncTask<Void, Void, Void> {
         Context mContext;
 
-        // Used to set up a listView
-        ListView targetList;
-        // Optional pDialog object
-        ProgressDialog pDialog;
+        FragmentVerticalPager fragmentVerticalPager; // Used to set up a VerticalPager
+        ListView targetList; // Used to set up a listView, if necessary
+        ProgressDialog pDialog; // Optional pDialog object
 
+        // Simple constructor, for simply getting the contacts
+        public GetCoolThings() {}
+
+        // Constructor, for setting up a
+        public GetCoolThings(Context context, FragmentVerticalPager frag) {
+            this.mContext = context;
+            this.fragmentVerticalPager = frag;
+        }
+
+        // Constructor, to set up a listView
         public GetCoolThings(Context context, ListView listView, ProgressDialog progressDialog) {
             this.mContext = context;
             this.targetList = listView;
@@ -147,8 +168,15 @@ public class ParseCoolThings {
 
             Log.d("MD/JSONParser", "Finished parsing JSON");
 
-            // Set up the listView
-            setUpList(false);
+            // Set up the listView, if necessary
+            if(targetList != null) {
+                setUpList(false);
+            }
+
+            // Set up the VerticalPager, if necessary
+            if(fragmentVerticalPager != null) {
+                fragmentVerticalPager.initCoolViewPager(mContext, listCoolThings);
+            }
         }
     }
 }
