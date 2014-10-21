@@ -58,6 +58,16 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
+    // Return the subTitle of a CoolThing at the given position
+    public String getSubTitle(int i) {
+        return listOfCoolThings.get(i).getSubTitle();
+    }
+
+    // Return the body text of a CoolThing at the given position
+    public String getBodyText(int i) {
+        return listOfCoolThings.get(i).getBodyText();
+    }
+
     // TODO: Set up the background image lazily and efficiently
     @Override
     public Fragment getItem(int i) {

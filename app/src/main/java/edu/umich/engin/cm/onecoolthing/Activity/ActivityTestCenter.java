@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -126,6 +127,18 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         // Change the right slider's container's color
         LinearLayout container = (LinearLayout)viewRightMenu.findViewById(R.id.container_right_sliding);
         container.setBackgroundColor(color);
+    }
+
+    // Change the right slide to match the current CoolThing
+    public void changeRightSlide(String subTitle, String body) {
+        // Get the views to change
+            // TODO: Cache these early on
+        TextView subTitleView = (TextView) viewRightMenu.findViewById(R.id.subTitle);
+        TextView bodyTextView = (TextView) viewRightMenu.findViewById(R.id.bodyText);
+
+        // Change the views according to the passed parameters
+        subTitleView.setText(subTitle);
+        bodyTextView.setText(body);
     }
 
     /*

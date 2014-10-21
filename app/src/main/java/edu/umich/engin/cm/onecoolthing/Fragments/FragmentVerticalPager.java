@@ -81,10 +81,18 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
 
     }
 
+    // When a new page is selected, notify the activity so it can change another view to show data
     @Override
     public void onPageSelected(int i) {
         // If no communicator set, do nothing
         if(communicator == null) return;
+
+        // Get the data from the page to pass on
+        String subTitle = pagerAdapter.getSubTitle(i);
+        String body = pagerAdapter.getBodyText(i);
+
+        // Send the information to the activity
+        communicator.changeRightSlide(subTitle, body);
 
         /*
         // When a new page is selected, take notice!
@@ -105,5 +113,6 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
     //      to the color that the center fragment is using
     public interface VertPagerCommunicator{
       public void changeRightSlide(int color);
+      public void changeRightSlide(String subTitle, String body);
     };
 }

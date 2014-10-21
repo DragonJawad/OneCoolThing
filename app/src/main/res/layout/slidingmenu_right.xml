@@ -10,18 +10,27 @@
     android:paddingLeft="@dimen/slidingmenu_shadow_width"
     android:background="@color/purple_dark">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_large"
-        android:textColor="@color/white"
-        android:text="@string/garbage_fill_short"/>
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large"
+            android:textColor="@color/white"
+            android:text="@string/garbage_fill_short"/>
+
+        </LinearLayout>
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="4">
         <TextView
+            android:id="@+id/bodyText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/garbage_fill_medium"
