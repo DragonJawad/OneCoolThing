@@ -213,20 +213,26 @@ public class ImageLoader {
             BitmapFactory.decodeStream(stream1,null,o);
             stream1.close();
 
-            //Find the correct scale value. It should be the power of 2.
-
             // TODO: Make this resizing aspect optional
+            //////////////////////////////////////
             // Set width/height of recreated image
-            final int REQUIRED_SIZE=85;
-
-            int width_tmp=o.outWidth, height_tmp=o.outHeight;
             int scale=1;
-            while(true){
-                if(width_tmp/2 < REQUIRED_SIZE || height_tmp/2 < REQUIRED_SIZE)
-                    break;
-                width_tmp/=2;
-                height_tmp/=2;
-                scale*=2;
+            // If no specific scale specified, use default
+            if(givenScale == -1) {
+                //Find the correct scale value. It should be the power of 2.
+                final int REQUIRED_SIZE = 85;
+                int width_tmp = o.outWidth, height_tmp = o.outHeight;
+                while (true) {
+                    if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE)
+                        break;
+                    width_tmp /= 2;
+                    height_tmp /= 2;
+                    scale *= 2;
+                }
+            }
+            // Otherwise, use the specified scale
+            else {
+                scale = givenScale;
             }
 
             //decode with current scale values
@@ -238,8 +244,11 @@ public class ImageLoader {
             return bitmap;
 
         } catch (FileNotFoundException e) {
+            Log.e("MD/ImageLoader", e.getMessage());
+            e.printStackTrace();
         }
         catch (IOException e) {
+            Log.e("MD/ImageLoader", e.getMessage());
             e.printStackTrace();
         }
         return null;

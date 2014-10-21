@@ -33,7 +33,7 @@ public class ParseCoolThings {
     private static final String TAG_ID = "ID";
     private static final String TAG_TITLE = "Title";
     private static final String TAG_BODYTEXT = "Body Text";
-    private static final String TAG_IMAGEURL = "iPhone Non-Retina Image";
+    private static final String TAG_IMAGEURL = "iPhone 5 Retina Image";
 
     // List of coolThings
     ArrayList<CoolThing> listCoolThings = new ArrayList<CoolThing>();
