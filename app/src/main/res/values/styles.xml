@@ -6,23 +6,29 @@
 
     <!-- Customized App Theme -->
     <style name="AppTheme2" parent="Theme.AppCompat.Light">
+        <!-- Let the actioBbar overlay the activity, ie activity is full screen -->
         <item name="android:windowActionBarOverlay">true</item>
+        <!-- Set up the action bar styles -->
         <item name="android:actionBarStyle">@style/ActionBarTransparent2</item>
+        <!-- Set the drawer icon to show up instead of the "Up" caret icon -->
+        <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
 
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/ActionBarTransparent2</item>
+        <item name="homeAsUpIndicator">@drawable/ic_drawer</item>
     </style>
 
     <!-- Transparent Action Bar -->
     <style name="ActionBarTransparent2" parent="Widget.AppCompat.Light.ActionBar">
+        <!-- Set the background of the actionBar to be transparent -->
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Set the style of the title of the actionBar -->
         <item name="android:titleTextStyle">@style/ActionBarTransparent.Title2</item>
+        <!-- Basically, show only the logo and button next to logo- no title or buttons -->
         <item name="android:displayOptions">showHome|useLogo</item>
 
         <!-- Support library compatibility -->
         <item name="background">@android:color/transparent</item>
-        <item name="windowActionBarOverlay">true</item>
         <item name="titleTextStyle">@style/ActionBarTransparent.Title2</item>
         <item name="displayOptions">showHome|useLogo</item>
     </style>
@@ -30,6 +36,7 @@
     <!-- Customizes text for the actionBar -->
     <style name="ActionBarTransparent.Title2"
         parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <!-- Set the title text as black- Deprecated atm actually, as there is no title text -->
         <item name="android:textColor">@color/black</item>
     </style>
 
