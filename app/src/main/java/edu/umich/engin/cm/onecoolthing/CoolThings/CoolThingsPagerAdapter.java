@@ -58,6 +58,12 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
+    // Update the list of coolThings the adapter is using
+        // TODO: Finish this off
+    public void updateAdapter(ArrayList<CoolThing> coolThings) {
+        this.listOfCoolThings = coolThings;
+    }
+
     // Return the subTitle of a CoolThing at the given position
     public String getSubTitle(int i) {
         return listOfCoolThings.get(i).getSubTitle();

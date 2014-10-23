@@ -2,6 +2,7 @@ package edu.umich.engin.cm.onecoolthing.CoolThings;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
@@ -27,6 +28,7 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
  * TODO: Optimize loading contacts- not all need to be saved/used at once
  */
 public class ParseCoolThings {
+    // Exact URL to get CoolThings from
     private static final String URL = "http://www.engin.umich.edu/college/about/news/news/coolthingindexjson";
 
     // JSON Tags
@@ -80,7 +82,7 @@ public class ParseCoolThings {
         // Simple constructor, for simply getting the contacts
         public GetCoolThings() {}
 
-        // Constructor, for setting up a
+        // Constructor, for setting up a CoolThing
         public GetCoolThings(Context context, FragmentVerticalPager frag) {
             this.mContext = context;
             this.fragmentVerticalPager = frag;
@@ -136,8 +138,10 @@ public class ParseCoolThings {
                         // Get the current data object
                         JSONObject jsonObject = jsonData.getJSONObject(i);
 
-                        // Get the necessary data from the object
+                        // Get the id first, for quick checking
                         String id = jsonObject.getString(TAG_ID);
+
+                        // Get the necessary data from the object
                         String title = jsonObject.getString(TAG_TITLE);
                         String subTitle = jsonObject.getString(TAG_SUBTITLE);
                         String body = jsonObject.getString(TAG_BODYTEXT);
