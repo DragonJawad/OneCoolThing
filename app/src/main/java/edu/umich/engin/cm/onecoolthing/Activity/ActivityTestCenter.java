@@ -3,17 +3,25 @@ package edu.umich.engin.cm.onecoolthing.Activity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.ParseCoolThings;
+import edu.umich.engin.cm.onecoolthing.Fragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentVerticalPager;
 import edu.umich.engin.cm.onecoolthing.R;
 
@@ -34,20 +42,20 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         setContentView(R.layout.activity_test);
 
         // Add in the center view
-        addCenterView();
+        addCenterCoolThings();
 
        // Initialize the sliding menus
         initBothSlidingMenus();
     }
 
-    private void addCenterView() {
+    private void addCenterCoolThings() {
         // Create and setup the center fragment, as necessary
         FragmentVerticalPager frag = new FragmentVerticalPager();
 
         // Add in the fragment to the place specified in the layout file
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.container, frag);
+        fragmentTransaction.replace(R.id.container, frag);
         fragmentTransaction.commit();
 
         // Let the frag communicate with this activity
@@ -60,11 +68,45 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
 
     // Set up the right and left sliding menus
     private void initBothSlidingMenus() {
+        // Get the LayoutInflater to inflate the views for the sliding menus
+        LayoutInflater inflater = getLayoutInflater();
+
         // Initialize the left sliding menu
         slidingMenuLeft = new SlidingMenu(this);
         slidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
         slidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
-        slidingMenuLeft.setMenu(R.layout.slidingmenu_left_test); // Assign the layout/content
+
+        // Inflate a view for the left sliding menu
+        View viewLeftMenu = inflater.inflate(R.layout.slidingmenu_left, null);
+
+        // Set up the listView within the left sliding menu
+        ListView listNav = (ListView)viewLeftMenu.findViewById(R.id.list);
+        NavAdapter adapter = new NavAdapter(this);
+        listNav.setAdapter(adapter);
+        // Set a click listener for the listView
+        listNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Highlight the selected item
+                view.setSelected(true);
+
+                // Change out the current fragment displayed in the center
+                    // TODO: Make this it's own function
+                if(position == 0) addCenterCoolThings(); // Add the CoolThings home view
+                else {
+                    // Otherwise add a fill in frag
+                    FragmentBase frag = new FragmentBase();
+                    frag.changeBG(R.color.dev_blue);
+
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                    fragmentTransaction.replace(R.id.container, frag);
+                    fragmentTransaction.commit();
+                }
+            }
+        });
+
+        slidingMenuLeft.setMenu(viewLeftMenu); // Assign the layout/content
 
         // Initialize the right sliding menu
         slidingMenuRight = new SlidingMenu(this);
@@ -72,7 +114,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         slidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
         // Inflate a view for the right sliding menu
-        viewRightMenu = getLayoutInflater().inflate(R.layout.slidingmenu_right,null);
+        viewRightMenu = inflater.inflate(R.layout.slidingmenu_right,null);
         slidingMenuRight.setMenu(viewRightMenu);
 
         // Set listeners for the left and right sliding menus [so both aren't open at once]
@@ -186,4 +228,55 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         }
     }
     */
+
+    // Adapter for the left sliding menu's listView
+        // TODO: Make this cleaner, more efficient, and more towards the final design
+    class NavAdapter extends BaseAdapter {
+        Context mContext;
+        String[] navText;
+
+        // Initialize the adapter
+        public NavAdapter(Context context) {
+            this.mContext = context;
+
+            // Initialize the String array for the navigation
+            navText = getResources().getStringArray(R.array.nav_items);
+        }
+
+        @Override
+        public int getCount() {
+            return navText.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = null;
+
+            if(convertView == null) {
+                // Then have to inflate this row for the first time
+                LayoutInflater inflater =
+                        (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                row = inflater.inflate(R.layout.list_drawer_item, parent, false);
+            }
+            // Else, use the recycled view
+            else row = convertView;
+
+            // Change the text of the item
+            TextView navTitle = (TextView) row.findViewById(R.id.name);
+            // Set the text
+            navTitle.setText(navText[position]);
+
+            return row;
+        }
+    }
 }

@@ -16,7 +16,13 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- Test-based -->
+    <string-array name="nav_items">
+        <item name="Home">Home</item>
+        <item name="Test1">Test1</item>
+    </string-array>
 
+    <!-- Etc/Deprecated? -->
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
 
