@@ -64,7 +64,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         slidingMenuLeft = new SlidingMenu(this);
         slidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
         slidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
-        slidingMenuLeft.setMenu(R.layout.slidingmenu_left); // Assign the layout/content
+        slidingMenuLeft.setMenu(R.layout.slidingmenu_left_test); // Assign the layout/content
 
         // Initialize the right sliding menu
         slidingMenuRight = new SlidingMenu(this);
@@ -110,7 +110,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
             }
         });
 
-        // Set up the rest of the sliding menu properties
+        // Set up the rest of the shared sliding menu properties
         setUpSlidingMenu(slidingMenuLeft);
         setUpSlidingMenu(slidingMenuRight);
     }
@@ -183,18 +183,6 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         }
         else {
             super.onBackPressed();
-        }
-    }
-
-    // This may be scrapped soon, but toggles sliding menu by home button
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.slidingMenuLeft.toggle();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
     */
