@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +36,30 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         // Add in the center view
         addCenterView();
 
+       // Initialize the sliding menus
+        initBothSlidingMenus();
+    }
+
+    private void addCenterView() {
+        // Create and setup the center fragment, as necessary
+        FragmentVerticalPager frag = new FragmentVerticalPager();
+
+        // Add in the fragment to the place specified in the layout file
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.container, frag);
+        fragmentTransaction.commit();
+
+        // Let the frag communicate with this activity
+        frag.setCommunicator(this);
+
+        // Tell ParseCoolThings to set up the VerticalPager
+        ParseCoolThings parser = new ParseCoolThings();
+        parser.setVertPager(this, frag);
+    }
+
+    // Set up the right and left sliding menus
+    private void initBothSlidingMenus() {
         // Initialize the left sliding menu
         slidingMenuLeft = new SlidingMenu(this);
         slidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
@@ -50,8 +76,8 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         slidingMenuRight.setMenu(viewRightMenu);
 
         // Set listeners for the left and right sliding menus [so both aren't open at once]
-            // TODO: Make them call a function that takes in a boolean.
-                // Function would possibly close other if open, check if already disabled, etc
+        // TODO: Make them call a function that takes in a boolean.
+        // Function would possibly close other if open, check if already disabled, etc
         slidingMenuLeft.setOnOpenListener(new SlidingMenu.OnOpenListener() {
             @Override
             public void onOpen() {
@@ -89,24 +115,6 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         setUpSlidingMenu(slidingMenuRight);
     }
 
-    private void addCenterView() {
-        // Create and setup the center fragment, as necessary
-        FragmentVerticalPager frag = new FragmentVerticalPager();
-
-        // Add in the fragment to the place specified in the layout file
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.container, frag);
-        fragmentTransaction.commit();
-
-        // Let the frag communicate with this activity
-        frag.setCommunicator(this);
-
-        // Tell ParseCoolThings to set up the VerticalPager
-        ParseCoolThings parser = new ParseCoolThings();
-        parser.setVertPager(this, frag);
-    }
-
     /** Sets up a slidingMenu according to pre-defined specifics
      * @param slidingMenu Must be an initialized SlidingMenu object with
      *                      orientation, shadow drawable, and menu already defined
@@ -141,6 +149,28 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         bodyTextView.setText(body);
     }
 
+    // Override the menu key press so sliding menu can be open and closed by it
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( keyCode == KeyEvent.KEYCODE_MENU && !slidingMenuRight.isMenuShowing()) {
+            this.slidingMenuLeft.toggle();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    // Overrides the Up/Home button, so drawer icon toggles left sliding menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.slidingMenuLeft.toggle();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /*
     // Override the back button press so can close sliding menu instead
     @Override
@@ -154,16 +184,6 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         else {
             super.onBackPressed();
         }
-    }
-
-    // Override the menu key press so sliding menu can be open and closed by it
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
-            this.slidingMenuLeft.toggle();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     // This may be scrapped soon, but toggles sliding menu by home button
