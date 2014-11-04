@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +44,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         // Add in the center view
         addCenterCoolThings();
 
-       // Initialize the sliding menus
+        // Initialize the sliding menus
         initBothSlidingMenus();
     }
 
@@ -58,6 +60,9 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
 
         // Let the frag communicate with this activity
         frag.setCommunicator(this);
+
+        // Set the particular activity settings for the center view
+        toggleCoolThingSettings(true);
     }
 
     // Set up the right and left sliding menus
@@ -179,10 +184,49 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
             // TODO: Cache these early on
         TextView subTitleView = (TextView) viewRightMenu.findViewById(R.id.subTitle);
         TextView bodyTextView = (TextView) viewRightMenu.findViewById(R.id.bodyText);
+        ScrollView scrollDescription = (ScrollView) viewRightMenu.findViewById(R.id.scroll_description);
 
         // Change the views according to the passed parameters
         subTitleView.setText(subTitle);
         bodyTextView.setText(body);
+
+        // Reset the ScrollView ie description to the top
+        scrollDescription.scrollTo(0,0);
+    }
+
+    /**
+     * Toggle the settings necessary for the CoolThing views
+     * @param enable - True if now enabling the CoolThing center view. Vice versa if removing view
+     */
+    private void toggleCoolThingSettings(boolean enable) {
+        // Toggle the right slider (in terms of enabling or disabling it)
+        enableRightSlider(enable);
+
+        // Toggle the landscape mode - if enabling the CoolThing view, disable the landscape mode
+        toggleLandscapeMode(!enable);
+    }
+
+    /**
+     * Enables/disables the right sliding menu entirely
+     * @param enable - True if now allowing the right slider to be used
+     */
+    private void enableRightSlider(boolean enable) {
+
+    }
+
+    /**
+     * Enables/disables landscape orientation entirely
+     * @param enable - True if now allowing landscape mode now, false if disabling landscape mode
+     */
+    private void toggleLandscapeMode(boolean enable) {
+        // If disabling, simply lock orientation to portrait mode
+        if(!enable) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        // Otherwise, let the user define the orientation to use
+        else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+        }
     }
 
     // Override the menu key press so sliding menu can be open and closed by it
@@ -206,22 +250,6 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    /*
-    // Override the back button press so can close sliding menu instead
-    @Override
-    public void onBackPressed() {
-        if ( slidingMenuLeft.isMenuShowing() ) {
-            slidingMenuLeft.toggle();
-        }
-        else if( slidingMenuRight.isMenuShowing() ) {
-            slidingMenuRight.toggle();
-        }
-        else {
-            super.onBackPressed();
-        }
-    }
-    */
 
     // Adapter for the left sliding menu's listView
         // TODO: Make this cleaner, more efficient, and more towards the final design
