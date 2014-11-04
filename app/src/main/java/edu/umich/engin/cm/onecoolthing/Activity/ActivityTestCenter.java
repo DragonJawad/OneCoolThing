@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import edu.umich.engin.cm.onecoolthing.CoolThings.ParseCoolThings;
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentVerticalPager;
 import edu.umich.engin.cm.onecoolthing.R;
@@ -60,10 +58,6 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
 
         // Let the frag communicate with this activity
         frag.setCommunicator(this);
-
-        // Tell ParseCoolThings to set up the VerticalPager
-        ParseCoolThings parser = new ParseCoolThings();
-        parser.setVertPager(this, frag);
     }
 
     // Set up the right and left sliding menus
