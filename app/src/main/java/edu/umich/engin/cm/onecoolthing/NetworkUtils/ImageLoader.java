@@ -54,6 +54,15 @@ public class ImageLoader {
     // If not -1, then determines what scale to use the images at
     int givenScale = -1;
 
+    // Manager to be notified once data is loaded
+    LoaderManager manager;
+
+    // Interface so that user can be notified once data has been finally applied
+    public interface LoaderManager {
+        // Notifies the fragment's manager that the fragment is done being set
+        public void notifyDataLoaded();
+    };
+
     public ImageLoader(Context context){
 
         fileCache = new FileCache(context);
@@ -61,7 +70,14 @@ public class ImageLoader {
         // Creates a thread pool that reuses a fixed number of
         // threads operating off a shared unbounded queue.
         executorService = Executors.newFixedThreadPool(5);
+    }
 
+    // Constructor that sets a manager to notify once data is loaded
+    public ImageLoader(Context context, LoaderManager manager){
+        this(context);
+
+        // Set the manager to notify once data is applied
+        this.manager = manager;
     }
 
     // default image show in list (Before online image download)
@@ -357,6 +373,11 @@ public class ImageLoader {
 
                 // Stop the spinner
                 photoToLoad.spinner.setVisibility(View.GONE);
+            }
+
+            // Finally, notify the manager that data has been loaded
+            if(manager != null) {
+                manager.notifyDataLoaded();
             }
         }
     }

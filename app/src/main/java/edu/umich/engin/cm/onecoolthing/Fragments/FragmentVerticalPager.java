@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +46,6 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
         // Set up the pagerAdapter to handle the different "pages"/fragments
         pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
         pagerAdapter.initAdapter(context);
-        Log.d("MD/FragVertPager", "Adapter done with");
 
         // Set the pageAdapter to the ViewPager
         mViewPager.setAdapter(pagerAdapter);

@@ -32,8 +32,9 @@ public class ParseCoolThings {
     /**
      * Returns the jsonObject in CoolThing format
      * @param jsonObject - Contains the Cool Thing with the appropriate tags in JSON format
+     * @param coolThing - CoolThing who's data is to be modified
      */
-    static public CoolThing JSONToCoolThing(JSONObject jsonObject) throws JSONException {
+    static public void JSONToCoolThing(JSONObject jsonObject, CoolThing coolThing) throws JSONException {
 
         // Get the necessary data from the object
         String id = jsonObject.getString(TAG_ID);
@@ -42,13 +43,12 @@ public class ParseCoolThings {
         String body = jsonObject.getString(TAG_BODYTEXT);
         String imageURL = jsonObject.getString(TAG_IMAGEURL);
 
-        // Make a new Cool Thing object to hold this data
-        CoolThing coolThing = new CoolThing(id, title, body);
+        // Add the data to the Cool Thing object to hold this data
+        coolThing.setId(id);
+        coolThing.setTitle(title);
+        coolThing.setBodyText(body);
         coolThing.setImageURL(imageURL);
         coolThing.setSubTitle(subTitle);
-
-        // Return this cool thing finally
-        return coolThing;
     }
 
     // Interface any interactables need in order to get notified of finished JSON array
@@ -96,7 +96,7 @@ public class ParseCoolThings {
             } catch (JSONException e) {
                 Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
                         .show();
-                Log.e("JSONParser", e.getMessage());
+                Log.e("MD/JSONParser", e.getMessage());
                 e.printStackTrace();
                 cancel(true);
             }

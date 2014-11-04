@@ -3,6 +3,7 @@ package edu.umich.engin.cm.onecoolthing.Fragments;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class FragmentCoolThing extends Fragment {
 
     // Determines if the layout is ready to be modified or not
     private boolean viewReady = false;
-    // Makes sure that the image+text isn't assigned twice
+    // Makes sure that the necessary data has been added
     private boolean assignedData = false;
 
     // Holds the data to display for this image
@@ -37,6 +38,9 @@ public class FragmentCoolThing extends Fragment {
 
     // Spinner to display until cool thing loads
     private ProgressBar spinner;
+
+    // Necessary to notify anything outside of frag that data has been set
+    private ImageLoader.LoaderManager manager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class FragmentCoolThing extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // If an imageURL has been given AND bg hasn't been set up yet, set it up
-        if(imageURL != null && !assignedData) {
+        if(imageURL != null && assignedData) {
             setUpCoolThing();
         }
 
@@ -68,8 +72,7 @@ public class FragmentCoolThing extends Fragment {
 
     // Sets up the Cool Thing
     private void setUpCoolThing() {
-        // State that the image has - supposedly - been assigned already
-        assignedData = true;
+        Log.d("MD/CoolThingFrag", "Setting up cool thing");
 
         // If there's a placeholder BG, place it now
         if(placeholderBG != null) {
@@ -79,29 +82,42 @@ public class FragmentCoolThing extends Fragment {
         // Call the imageLoader to lazily set up the imageView AND text at the same time
             // AND allow it to stop the spinner
                 // TODO: Bad design, rework this so a single class/thread handles this?
-        ImageLoader imageLoader = new ImageLoader(getActivity());
+        ImageLoader imageLoader = new ImageLoader(getActivity(), manager);
         imageLoader.DisplayImageAndTextAndSpinner(imageURL, background, 1, titleView,
                 titleText, spinner);
     }
 
     // Set the background image's URL and title text at the same time, to avoid any potential errors
-    public void setImageURLAndText(String url, String title) {
+    public void setData(String url, String title, ImageLoader.LoaderManager manager) {
+        // Double check that data isn't being set twice
+        if(assignedData) Log.e("MD/CoolThingFrag", "Data was already assigned for this frag! Title: "+title);
+
         // Set the data
         setBackgroundURL(url);
         setTitleText(title);
+        this.manager = manager;
+
+        // State that the data was assigned
+        assignedData = true;
 
         // If the fragment's layout has been set up already and image not yet set, set it up
-        if(viewReady && !assignedData) setUpCoolThing();
+        if(viewReady) setUpCoolThing();
     }
 
     public void setBackgroundURL(String url) {
         // Set the background image url
         this.imageURL = url;
+
+        // State that the data was assigned
+        assignedData = true;
     }
 
     public void setTitleText(String title) {
        // Set the title text for this cool thing
        this.titleText = title;
+
+       // State that the data was assigned
+       assignedData = true;
     }
 
     // Set a placeholder background image to use

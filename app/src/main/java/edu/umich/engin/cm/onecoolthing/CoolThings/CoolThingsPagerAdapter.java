@@ -12,13 +12,15 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentCoolThing;
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoader;
 
 /**
  * Created by jawad on 20/10/14.
  *
  * Displays FragmentCoolThings in PagerAdapter
  */
-public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.JSONUser {
+public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.JSONUser,
+        ImageLoader.LoaderManager{
     // List of fragments to display
     ArrayList<FragmentCoolThing> listOfFragCoolThings;
 
@@ -56,9 +58,10 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         CoolThing coolThing = new CoolThing("N/A", "N/A", "N/A");
         try {
             int FIRST_INDEX = 0; // Index of the very first cool thing
-            coolThing = ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(FIRST_INDEX));
+            ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(FIRST_INDEX),
+                    coolThing);
         } catch (JSONException e) {
-            Log.e("PagerAdapter", e.getMessage());
+            Log.e("MD/PagerAdapter", e.getMessage());
             e.printStackTrace();
         }
 
@@ -67,9 +70,13 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
         // Give the data to the fragment
         FragmentCoolThing frag = listOfFragCoolThings.get(0);
-        frag.setImageURLAndText(coolThing.getImageURL(), coolThing.getTitle());
+        frag.setData(coolThing.getImageURL(), coolThing.getTitle(), this);
+    }
 
-        // Let function add additional placeholder fragment and such
+    // Be notified once a fragment's data has finally loaded
+    @Override
+    public void notifyDataLoaded() {
+        // Simply add the next fragment and notify that the data set has been changed
         addNextFragment();
     }
 
@@ -92,18 +99,29 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
     }
 
     // Set up the placeholder, loading fragment
-    private void setUpFrag(int index, FragmentCoolThing frag) {
+    private void setUpFrag(int index) {
+        Log.d("MD/PagerAdapter", "Setting up frag with index: " + index);
+
+        // Get the frag to set up
+        FragmentCoolThing frag = listOfFragCoolThings.get(index);
+
         // Get the cool thing that represents this fragment and fill it with data
         CoolThing coolThing = listOfCoolThings.get(index);
         try {
-            coolThing = ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(index));
+            ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(index),
+                    coolThing);
         } catch (JSONException e) {
-            Log.e("PagerAdapter", e.getMessage());
+            Log.e("MD/PagerAdapter", e.getMessage());
             e.printStackTrace();
         }
 
         // Apply the data to the frag
-        frag.setImageURLAndText(coolThing.getImageURL(), coolThing.getTitle());
+        String url = coolThing.getImageURL();
+        String titleText = coolThing.getTitle();
+        Log.d("MD/PagerAdapter", "Url: "+url);
+        Log.d("MD/PagerAdapter", "Title: " + titleText);
+
+        frag.setData(url, titleText, this);
     }
 
     // Return the subTitle of a CoolThing at the given position
@@ -118,18 +136,18 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     @Override
     public Fragment getItem(int i) {
+        Log.d("MD/CoolThingsPagerAdapter", "Getting fragment item: "+i);
+        Log.d("MD/PagerAdapter", "Size of frags list: " + listOfFragCoolThings.size());
+        Log.d("MD/PagerAdapter", "Size of cool things list: " + listOfCoolThings.size());
+
         // Get the fragment
         FragmentCoolThing frag = listOfFragCoolThings.get(i);
 
         // If the fragment hasn't been set yet and this isn't the special first fragment's case,
             // then set it up
-    //    if(i != 0 && !frag.checkIfSet()) {
         if(i != 0 && !frag.checkIfSet()) {
             // Set up this fragment
-            setUpFrag(i, frag);
-
-            // Add the next placeholder fragment
-            addNextFragment();
+            setUpFrag(i);
         }
 
         return frag;
