@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -94,6 +97,33 @@ public class ImageLoader {
         DisplayImage(url, imageview);
     }
 
+    // Display an image with a specific scale, and assign a TextView's text at the same time
+    public void DisplayImageAndTextAndSpinner(String url, ImageView imageView, int scale,
+                                    TextView textView, String text, ProgressBar spinner) {
+        // Set the givenScale
+        givenScale = scale;
+
+        // TODO: Rewrite below so not copy+pasting code
+        //Store image and url in Map
+        imageViews.put(imageView, url);
+
+        // Check image is stored in MemoryCache Map or not (see MemoryCache.java)
+        Bitmap bitmap = memoryCache.get(url);
+
+        if(bitmap!=null) {
+            // if image is stored in MemoryCache Map then
+            // Show image in listview row
+            imageView.setImageBitmap(bitmap);
+
+            // Display text now as well
+            textView.setText(text);
+        }
+        else
+        {
+            //queue Photo to download from url AND let it set the textView's text
+            queuePhotoAndTextAndSpinner(url, imageView, textView, text, spinner);
+        }
+    }
 
     private void queuePhoto(String url, ImageView imageView)
     {
@@ -107,14 +137,48 @@ public class ImageLoader {
         executorService.submit(new PhotosLoader(p));
     }
 
+    // Queue a new photo to load, as well as text to load at the same time
+    private void queuePhotoAndTextAndSpinner(String url, ImageView imageView,
+                                   TextView textView, String text, ProgressBar spinner) {
+        // Store the data in a PhotoToLoad object
+        PhotoToLoad p = new PhotoToLoad(url, imageView, textView, text, spinner);
+
+        // pass PhotoToLoad object to PhotosLoader runnable class
+        // and submit PhotosLoader runnable to executers to run runnable
+        // Submits a PhotosLoader runnable task for execution
+
+        executorService.submit(new PhotosLoader(p));
+    }
+
     //Task for the queue
     private class PhotoToLoad
     {
+        // Simple data
         public String url;
         public ImageView imageView;
+
+        // Additional text to load & spinner to manage
+        public boolean loadText = false;
+        public TextView textView;
+        public String text;
+        public ProgressBar spinner;
+
+        // Simple constructor
         public PhotoToLoad(String u, ImageView i){
             url=u;
             imageView=i;
+        }
+
+        // Constructor, in order to load text
+        public PhotoToLoad(String u, ImageView i, TextView textView,
+                           String text, ProgressBar spinner){
+            url=u;
+            imageView=i;
+
+            loadText = true;
+            this.textView = textView;
+            this.text = text;
+            this.spinner = spinner;
         }
     }
 
@@ -269,17 +333,31 @@ public class ImageLoader {
     {
         Bitmap bitmap;
         PhotoToLoad photoToLoad;
-        public BitmapDisplayer(Bitmap b, PhotoToLoad p){bitmap=b;photoToLoad=p;}
+
+        // Simple constructor
+        public BitmapDisplayer(Bitmap b, PhotoToLoad p){
+            bitmap=b;
+            photoToLoad=p;
+        }
+
         public void run()
         {
-            if(imageViewReused(photoToLoad))
-                return;
+            // Show image if not reusing it
+            if(!imageViewReused(photoToLoad)) {
+                // Show bitmap on UI
+                if (bitmap != null)
+                    photoToLoad.imageView.setImageBitmap(bitmap);
+                else
+                    photoToLoad.imageView.setImageResource(stub_id);
+            }
 
-            // Show bitmap on UI
-            if(bitmap!=null)
-                photoToLoad.imageView.setImageBitmap(bitmap);
-            else
-                photoToLoad.imageView.setImageResource(stub_id);
+            // Display text and turn off spinner, if necessary
+            if(photoToLoad.loadText) {
+                photoToLoad.textView.setText(photoToLoad.text);
+
+                // Stop the spinner
+                photoToLoad.spinner.setVisibility(View.GONE);
+            }
         }
     }
 

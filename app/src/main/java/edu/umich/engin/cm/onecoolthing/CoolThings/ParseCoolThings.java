@@ -1,23 +1,14 @@
 package edu.umich.engin.cm.onecoolthing.CoolThings;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThing;
-import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingsListAdapter;
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentVerticalPager;
-import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
 
 /**
@@ -38,84 +29,57 @@ public class ParseCoolThings {
     private static final String TAG_BODYTEXT = "Body Text";
     private static final String TAG_IMAGEURL = "iPhone 5 Retina Image";
 
-    // List of coolThings
-    ArrayList<CoolThing> listCoolThings = new ArrayList<CoolThing>();
+    /**
+     * Returns the jsonObject in CoolThing format
+     * @param jsonObject - Contains the Cool Thing with the appropriate tags in JSON format
+     */
+    static public CoolThing JSONToCoolThing(JSONObject jsonObject) throws JSONException {
 
-    public void setListView(Context context, ListView listView, ProgressDialog pDialog) {
-        // If the network is available, go ahead and set everything up
-        if(CheckNetworkConnection.isConnectionAvailable(context)) {
-            // Let the subclass AsyncTask get and set the data
-            GetCoolThings getCoolThings = new GetCoolThings(context, listView, pDialog);
-            getCoolThings.execute();
-        }
-        else {
-            // Otherwise, give a warning that there is no internet connection
-            Toast.makeText(context, "Error: No internet connection", Toast.LENGTH_LONG).show();
-        }
+        // Get the necessary data from the object
+        String id = jsonObject.getString(TAG_ID);
+        String title = jsonObject.getString(TAG_TITLE);
+        String subTitle = jsonObject.getString(TAG_SUBTITLE);
+        String body = jsonObject.getString(TAG_BODYTEXT);
+        String imageURL = jsonObject.getString(TAG_IMAGEURL);
+
+        // Make a new Cool Thing object to hold this data
+        CoolThing coolThing = new CoolThing(id, title, body);
+        coolThing.setImageURL(imageURL);
+        coolThing.setSubTitle(subTitle);
+
+        // Return this cool thing finally
+        return coolThing;
     }
 
-    public void setVertPager(Context context, FragmentVerticalPager frag) {
-        // If the network is available, go ahead
-        if(CheckNetworkConnection.isConnectionAvailable(context)) {
-            // Let the subclass AsyncTask get and set the data
-            GetCoolThings getCoolThings = new GetCoolThings(context, frag);
-            getCoolThings.execute();
-        }
-        else {
-            // TODO: Give prompt to open up internet connection
+    // Interface any interactables need in order to get notified of finished JSON array
+    public interface JSONUser {
+        public void gotJSON(JSONArray jsonArray);
+    };
 
-            // Otherwise, give a warning that there is no internet connection
-            Toast.makeText(context, "Error: No internet connection", Toast.LENGTH_LONG).show();
-        }
+
+    /**
+     * Gets JSON string for Cool Things and gives to jsonUser once done
+     * @param context
+     * @param jsonUser - Necessary to communicate finished json string back
+     */
+    public void getJSON(Context context, JSONUser jsonUser) {
+        // Create a new Async to get the JSON data then notify the jsonUser
+        GetCoolJSON jsonAsync = new GetCoolJSON(context, jsonUser);
+        jsonAsync.execute();
     }
 
     /**
-     * Async class to get Cool Things
+     * Async class to get String representation of JSON
+     * which then passes it to the jsonUser
      */
-    private class GetCoolThings extends AsyncTask<Void, Void, Void> {
+    private class GetCoolJSON extends AsyncTask<Void, Void, Void> {
         Context mContext;
+        JSONUser jsonUser; // Necessary for telling client of finished JSON string
+        JSONArray jsonArray; // The final product, that contains all of the JSON
 
-        FragmentVerticalPager fragmentVerticalPager; // Used to set up a VerticalPager
-        ListView targetList; // Used to set up a listView, if necessary
-        ProgressDialog pDialog; // Optional pDialog object
-
-        // Simple constructor, for simply getting the contacts
-        public GetCoolThings() {}
-
-        // Constructor, for setting up a CoolThing
-        public GetCoolThings(Context context, FragmentVerticalPager frag) {
+        public GetCoolJSON(Context context, JSONUser jsonUser) {
             this.mContext = context;
-            this.fragmentVerticalPager = frag;
-        }
-
-        // Constructor, to set up a listView
-        public GetCoolThings(Context context, ListView listView, ProgressDialog progressDialog) {
-            this.mContext = context;
-            this.targetList = listView;
-            this.pDialog = progressDialog;
-        }
-
-        // Sets up the listView
-        private void setUpList(boolean useImages) {
-            // If there's a listView, set it up
-            if(targetList != null) {
-                CoolThingsListAdapter listAdapter =
-                        new CoolThingsListAdapter(mContext, listCoolThings, useImages);
-                targetList.setAdapter(listAdapter);
-            }
-        }
-
-        // If there is a pDialog, use it
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            if(pDialog != null) {
-                // Showing progress dialog
-                pDialog.setMessage("Please wait...");
-                pDialog.setCancelable(false);
-                pDialog.show();
-            }
+            this.jsonUser = jsonUser;
         }
 
         @Override
@@ -126,41 +90,15 @@ public class ParseCoolThings {
             // Make a request to url and get response
             String jsonStr = sh.makeServiceCall(URL, ServiceHandler.GET);
 
-            Log.d("MD/JSONResponse: ", "> " + jsonStr);
-
-            if(jsonStr != null) {
-                try {
-                    // Get the overarching JSON array
-                    JSONArray jsonData = new JSONArray(jsonStr);
-
-                    // Loop through each object and create a CoolThing
-                    for(int i = 0; i < jsonData.length(); ++i) {
-                        // Get the current data object
-                        JSONObject jsonObject = jsonData.getJSONObject(i);
-
-                        // Get the id first, for quick checking
-                        String id = jsonObject.getString(TAG_ID);
-
-                        // Get the necessary data from the object
-                        String title = jsonObject.getString(TAG_TITLE);
-                        String subTitle = jsonObject.getString(TAG_SUBTITLE);
-                        String body = jsonObject.getString(TAG_BODYTEXT);
-                        String imageURL = jsonObject.getString(TAG_IMAGEURL);
-
-                        // Make a new Cool Thing object to hold this data
-                        CoolThing coolThing = new CoolThing(id, title, body);
-                        coolThing.setImageURL(imageURL);
-                        coolThing.setSubTitle(subTitle);
-
-                        // Add the new cool thing to the list of awesome cool things
-                        listCoolThings.add(coolThing);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
+            // Change the jsonStr into a jsonArray- save a simple step
+            try {
+                jsonArray = new JSONArray(jsonStr);
+            } catch (JSONException e) {
+                Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
+                        .show();
+                Log.e("JSONParser", e.getMessage());
+                e.printStackTrace();
+                cancel(true);
             }
 
             return null;
@@ -168,22 +106,8 @@ public class ParseCoolThings {
 
         @Override
         protected void onPostExecute(Void result) {
-            // Dismiss the progress dialog
-            if(pDialog != null && pDialog.isShowing()) {
-                pDialog.dismiss();
-            }
-
-            Log.d("MD/JSONParser", "Finished parsing JSON");
-
-            // Set up the listView, if necessary
-            if(targetList != null) {
-                setUpList(false);
-            }
-
-            // Set up the VerticalPager, if necessary
-            if(fragmentVerticalPager != null) {
-                fragmentVerticalPager.initCoolViewPager(mContext, listCoolThings);
-            }
+            // Notify the jsonUser of the JSON data
+            jsonUser.gotJSON(jsonArray);
         }
     }
 }

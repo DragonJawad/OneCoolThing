@@ -9,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
-import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThing;
 import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingsPagerAdapter;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.SimplePagerAdapter;
@@ -32,8 +29,8 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_verticalpager, container, false);
 
-        // Get the viewpager from the layout but init later
-        mViewPager = (VerticalViewPager) view.findViewById(R.id.pager);
+       // Get the viewpager from the layout but init later
+       mViewPager = (VerticalViewPager) view.findViewById(R.id.pager);
 
        return view;
     }
@@ -43,25 +40,13 @@ public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageC
         super.onActivityCreated(savedInstanceState);
 
         // Initialize the viewpager with the activity's context
-    //    initSimpleViewPager(getActivity());
+        initCoolViewPager(getActivity());
     }
 
-    private void initSimpleViewPager(Context context) {
-        // Set up pagerAdapter to handle the different "pages"/fragments
-        pagerAdapterTest = new SimplePagerAdapter(getFragmentManager());
-        pagerAdapterTest.setFragments(context);
-
-        // Set the pageAdapter to the ViewPager
-        mViewPager.setAdapter(pagerAdapterTest);
-
-        // Make this fragment listen to the adapter's changes
-        mViewPager.setOnPageChangeListener(this);
-    }
-
-    public void initCoolViewPager(Context context, ArrayList<CoolThing> coolThings) {
+    public void initCoolViewPager(Context context) {
         // Set up the pagerAdapter to handle the different "pages"/fragments
         pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
-        pagerAdapter.initAdapter(context, coolThings);
+        pagerAdapter.initAdapter(context);
         Log.d("MD/FragVertPager", "Adapter done with");
 
         // Set the pageAdapter to the ViewPager

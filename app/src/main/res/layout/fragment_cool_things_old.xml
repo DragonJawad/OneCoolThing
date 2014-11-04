@@ -6,20 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/blue226">
 
-    <!-- Circle progress loading anim -->
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_centerInParent="true" />
-
-    <!-- Background of the cool thing -->
     <ImageView
         android:id="@+id/background"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="fitXY"
+        android:src="@drawable/slidingmenu_shadow_left"
         />
 
     <LinearLayout
@@ -46,6 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
+            android:text="@string/garbage_fill_short"
             android:textSize="@dimen/text_large"
             android:textColor="@color/white"
             android:gravity="end"
