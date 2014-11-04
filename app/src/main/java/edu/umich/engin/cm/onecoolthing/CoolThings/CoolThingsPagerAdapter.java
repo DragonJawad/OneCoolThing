@@ -100,8 +100,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     // Set up the placeholder, loading fragment
     private void setUpFrag(int index) {
-        Log.d("MD/PagerAdapter", "Setting up frag with index: " + index);
-
         // Get the frag to set up
         FragmentCoolThing frag = listOfFragCoolThings.get(index);
 
@@ -118,8 +116,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         // Apply the data to the frag
         String url = coolThing.getImageURL();
         String titleText = coolThing.getTitle();
-        Log.d("MD/PagerAdapter", "Url: "+url);
-        Log.d("MD/PagerAdapter", "Title: " + titleText);
 
         frag.setData(url, titleText, this);
     }
@@ -136,10 +132,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     @Override
     public Fragment getItem(int i) {
-        Log.d("MD/CoolThingsPagerAdapter", "Getting fragment item: "+i);
-        Log.d("MD/PagerAdapter", "Size of frags list: " + listOfFragCoolThings.size());
-        Log.d("MD/PagerAdapter", "Size of cool things list: " + listOfCoolThings.size());
-
         // Get the fragment
         FragmentCoolThing frag = listOfFragCoolThings.get(i);
 
