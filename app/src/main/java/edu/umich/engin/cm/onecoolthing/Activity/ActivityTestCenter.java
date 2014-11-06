@@ -36,6 +36,23 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
     // The right sliding menu's view, for easy access to change its contents
     View viewRightMenu;
 
+    /* Current center fragment index, for reference
+     * Below is the master list - If the nav is changed, change the below and any
+     *      code that uses the below system, ie
+     *          strings.xml -> nav_items array
+     *          this -> changeFrag()
+     * 0 - One Cool Feed [main One Cool Thing feed]
+     * 1 - LabLog
+     * 2 - Visual Adventures
+     * 3 - Michigan Engineer Mag
+     * 4 - I <3 A2
+     * 5 - Some Cool Apps
+     * 6 - MichEpedia
+     * 7 - Decoder
+     * 8 - About
+     */
+    int currentFragmentIndex = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,22 +103,8 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         listNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Highlight the selected item
-            //    view.setSelected(true); // Commented out, as not in iOS version ='<
-
                 // Change out the current fragment displayed in the center
-                    // TODO: Make this it's own function
-                if(position == 0) addCenterCoolThings(); // Add the CoolThings home view
-                else {
-                    // Otherwise add a fill in frag
-                    FragmentBase frag = new FragmentBase();
-                    frag.changeBG(R.color.dev_blue);
-
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                    fragmentTransaction.replace(R.id.container, frag);
-                    fragmentTransaction.commit();
-                }
+                changeFrag(position);
             }
         });
 
@@ -166,6 +169,35 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         slidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width_main);
         slidingMenu.setFadeDegree(0.35f);
         slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+    }
+
+    /**
+     * Changes out the center fragment as necessary
+     * @param index - Index chosen by user in navigation menu
+     */
+    private void changeFrag(int index) {
+        // First check if user clicked on the current fragment again
+        if(index == currentFragmentIndex) return;
+
+        // Otherwise, change the index
+        currentFragmentIndex = index;
+
+        switch(index) {
+            case 0:
+                // Add in the One Cool Feed
+                addCenterCoolThings(); // Add the CoolThings home view
+                break;
+            default:
+                // Default: Add in a filler fragment
+                FragmentBase frag = new FragmentBase();
+                frag.changeBG(R.color.dev_blue);
+
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.container, frag);
+                fragmentTransaction.commit();
+                break;
+        }
     }
 
     // Testing function: change the right sliding menu's background color

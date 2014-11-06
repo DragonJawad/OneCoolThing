@@ -19,8 +19,15 @@
 
     <!-- Test-based -->
     <string-array name="nav_items">
-        <item name="Home">Home</item>
-        <item name="Test1">Test1</item>
+        <item name="nav_OneCoolFeed">One Cool Feed</item>
+        <item name="nav-LabLog">LabLog</item>
+        <item name="nav_VisualAdventures">Visual Adventures</item>
+        <item name="nav_MichiganEngineerMag">Michigan Engineer Mag</item>
+        <item name="nav_LoveA2">I &lt;3 A2</item>
+        <item name="nav_SomeCoolApps">Some Cool Apps</item>
+        <item name="nav_MichEpedia">MichEpedia</item>
+        <item name="nav_Decoder">Decoder</item>
+        <item name="nav_About">About</item>
     </string-array>
 
     <!-- Etc/Deprecated? -->

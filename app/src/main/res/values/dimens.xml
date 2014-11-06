@@ -16,7 +16,7 @@
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
-    <dimen name="margin_nav_item">15dp</dimen>
+    <dimen name="margin_nav_item">8dp</dimen>
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
