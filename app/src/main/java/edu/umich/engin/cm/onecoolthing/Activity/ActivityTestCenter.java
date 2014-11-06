@@ -126,6 +126,9 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Change out the current fragment displayed in the center
                 changeFrag(position);
+
+                // Toggle/close the left sliding menu
+                slidingMenuLeft.toggle();
             }
         });
 
@@ -245,14 +248,14 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             fragmentTransaction.commit();
         }
         else {
-                // Otherwise, add a fill-in frag
-                FragmentBase frag = new FragmentBase();
-                frag.changeBG(R.color.dev_blue);
+            // Otherwise, add a fill-in frag
+            FragmentBase frag = new FragmentBase();
+            frag.changeBG(R.color.dev_blue);
 
-                Log.d(TAG, "Created general fragment " + index);
+            Log.d(TAG, "Created general fragment " + index);
 
-                fragmentTransaction.add(R.id.container, frag, frag_tags[index]);
-                fragmentTransaction.commit();
+            fragmentTransaction.add(R.id.container, frag, frag_tags[index]);
+            fragmentTransaction.commit();
         }
 
         // Finally, change the index of the currently used fragment
