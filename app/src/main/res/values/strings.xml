@@ -17,7 +17,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <!-- Test-based -->
+    <!-- Nav/Fragments/Pages -->
+        <!-- The names on the left drawer/nav menu -->
     <string-array name="nav_items">
         <item name="nav_OneCoolFeed">One Cool Feed</item>
         <item name="nav-LabLog">LabLog</item>
@@ -29,6 +30,19 @@
         <item name="nav_Decoder">Decoder</item>
         <item name="nav_About">About</item>
     </string-array>
+        <!-- The URLS for the feeds- "" == no url/no webview -->
+    <string-array name="nav_items_urls">
+        <item name="nav_OneCoolFeed"></item>
+        <item name="nav-LabLog">http://umengineeringlablog.tumblr.com/</item>
+        <item name="nav_VisualAdventures"></item>
+        <item name="nav_MichiganEngineerMag"></item>
+        <item name="nav_LoveA2"></item>
+        <item name="nav_SomeCoolApps"></item>
+        <item name="nav_MichEpedia"></item>
+        <item name="nav_Decoder"></item>
+        <item name="nav_About"></item>
+    </string-array>
+
 
     <!-- Etc/Deprecated? -->
     <string name="action_example">Example action</string>

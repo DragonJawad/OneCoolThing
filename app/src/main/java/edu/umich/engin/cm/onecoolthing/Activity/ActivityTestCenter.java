@@ -25,6 +25,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentOneCoolFeed;
+import edu.umich.engin.cm.onecoolthing.Fragments.FragmentTumblrFeed;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -39,6 +40,8 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
     // Tags for all fragments
     private String[] frag_tags;
+    // URLs for all feeds- same indexes as currentFragmentIndex and null == no webview
+    private String[] frag_urls;
 
     // Sliding Menu test objects
     SlidingMenu slidingMenuLeft;
@@ -71,15 +74,11 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
         // Get all the fragments' tags - or names - from the nav list in resources
         frag_tags = getResources().getStringArray(R.array.nav_items);
+        // Get all fragments' urls, if they exist
+        frag_urls = getResources().getStringArray(R.array.nav_items_urls);
 
-        // Initialize the one cool feed
+        // Initialize the one cool feed [which also adds it to the center as well]
         initOneCoolFeedFrag();
-
-        // Add in the center view
-        addCenterCoolThings();
-
-        // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
-        currentFragmentIndex = 0;
 
         // Initialize the sliding menus
         initBothSlidingMenus();
@@ -91,9 +90,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
         // Let the frag communicate with this activity
         fragOneCoolFeed.setCommunicator(this);
-    }
 
-    private void addCenterCoolThings() {
         // Add in the fragment to the place specified in the layout file
         getFragmentManager().beginTransaction()
                 .add(R.id.container, fragOneCoolFeed, frag_tags[0])
@@ -101,6 +98,9 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
         // Set the particular activity settings for the center view
         toggleCoolThingSettings(true);
+
+        // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
+        currentFragmentIndex = 0;
     }
 
     // Set up the right and left sliding menus
@@ -198,14 +198,14 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
      */
     private void changeFrag(int index) {
         // First check if user clicked on the current fragment again
-        if(index == currentFragmentIndex) return;
+        if (index == currentFragmentIndex) return;
 
         // Begin the fragment transaction
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // First, clear out the center container - if not the main frag, then simply remove middle
-        if(currentFragmentIndex != 0) {
+        if (currentFragmentIndex != 0) {
             // Get the fragment to remove
             Fragment fragment = fragmentManager.findFragmentByTag(frag_tags[currentFragmentIndex]);
             fragmentTransaction.remove(fragment);
@@ -213,25 +213,38 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             Log.d(TAG, "Removed fragment: " + currentFragmentIndex);
         }
         // Otherwise, if this is the One Cool Feed, simply hide it- don't remove it
-            // in order to avoid fixing the lifecycle
+        // in order to avoid fixing the lifecycle
         else {
             fragmentTransaction.hide(fragOneCoolFeed);
             Log.d(TAG, "Hid center fragment");
         }
 
         // Then add in the chosen fragment and set the appropriate settings
-        switch(index) {
-            case 0:
-                // Simply show the OneCoolFeed and set up the settings using its function
-                fragmentTransaction.show(fragOneCoolFeed);
-                Log.d(TAG, "Showing center fragment");
-                fragmentTransaction.commit();
+        if (index == 0) {
+            // Simply show the OneCoolFeed and set up the settings using its function
+            fragmentTransaction.show(fragOneCoolFeed);
+            Log.d(TAG, "Showing center fragment");
+            fragmentTransaction.commit();
 
-                // Apply the settings for the OneCoolFeed
-                toggleCoolThingSettings(true);
+            // Apply the settings for the OneCoolFeed
+            toggleCoolThingSettings(true);
+        }
+        // Otherwise, if this index has an URL, open up a feed
+        else if(!frag_urls[index].equals("")) {
+            Log.d(TAG, "Opening up a webview");
 
-                break;
-            default:
+            // Get the url and title separately, for ease of typing/reading
+            String this_url = frag_urls[index];
+            String this_title = frag_tags[index];
+
+            // Create a new TumblrFeed fragment, with its title and url
+            FragmentTumblrFeed frag = FragmentTumblrFeed.newInstance(this_url, this_title);
+
+            // Add the url to the center view
+            fragmentTransaction.add(R.id.container, frag, frag_tags[index]);
+            fragmentTransaction.commit();
+        }
+        else {
                 // Otherwise, add a fill-in frag
                 FragmentBase frag = new FragmentBase();
                 frag.changeBG(R.color.dev_blue);
@@ -240,21 +253,10 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
                 fragmentTransaction.add(R.id.container, frag, frag_tags[index]);
                 fragmentTransaction.commit();
-
-                break;
         }
 
         // Finally, change the index of the currently used fragment
         currentFragmentIndex = index;
-    }
-
-    /**
-     * Replaces current fragment with specified fragment,
-     *  BUT if old fragment is the 0th fragment, simply hide it [and show it if going to 0th]
-     * @param index
-     */
-    private void replaceFrags(int index) {
-        // First, clear out the center container
     }
 
     // Testing function: change the right sliding menu's background color
