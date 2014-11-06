@@ -34,10 +34,10 @@
     <string-array name="nav_items_urls">
         <item name="nav_OneCoolFeed"></item>
         <item name="nav-LabLog">http://umengineeringlablog.tumblr.com/</item>
-        <item name="nav_VisualAdventures"></item>
+        <item name="nav_VisualAdventures">http://michiganengineering.tumblr.com/</item>
         <item name="nav_MichiganEngineerMag"></item>
-        <item name="nav_LoveA2"></item>
-        <item name="nav_SomeCoolApps"></item>
+        <item name="nav_LoveA2">http://iloveannarbor.tumblr.com/</item>
+        <item name="nav_SomeCoolApps">http://somecoolapps.tumblr.com/</item>
         <item name="nav_MichEpedia"></item>
         <item name="nav_Decoder"></item>
         <item name="nav_About"></item>
