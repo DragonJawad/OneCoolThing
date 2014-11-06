@@ -22,13 +22,13 @@ import android.widget.Toast;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentBase;
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentVerticalPager;
+import edu.umich.engin.cm.onecoolthing.Fragments.FragmentOneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
  * Created by jawad on 12/10/14.
  */
-public class ActivityTestCenter extends Activity implements FragmentVerticalPager.VertPagerCommunicator {
+public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.VertPagerCommunicator {
     // Sliding Menu test objects
     SlidingMenu slidingMenuLeft;
     SlidingMenu slidingMenuRight;
@@ -67,7 +67,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
 
     private void addCenterCoolThings() {
         // Create and setup the center fragment, as necessary
-        FragmentVerticalPager frag = new FragmentVerticalPager();
+        FragmentOneCoolFeed frag = new FragmentOneCoolFeed();
 
         // Add in the fragment to the place specified in the layout file
         FragmentManager fm = getFragmentManager();
@@ -223,7 +223,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
         bodyTextView.setText(body);
 
         // Reset the ScrollView ie description to the top
-        scrollDescription.scrollTo(0,0);
+        scrollDescription.scrollTo(0, 0);
     }
 
     /**

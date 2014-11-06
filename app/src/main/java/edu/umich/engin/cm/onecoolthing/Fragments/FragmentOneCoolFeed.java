@@ -16,7 +16,7 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 /**
  * Created by jawad on 14/10/14.
  */
-public class FragmentVerticalPager extends Fragment implements ViewPager.OnPageChangeListener {
+public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageChangeListener {
     VerticalViewPager mViewPager; // The viewPager shown via this fragment
     VertPagerCommunicator communicator; // Allows feedback to the activity
 
