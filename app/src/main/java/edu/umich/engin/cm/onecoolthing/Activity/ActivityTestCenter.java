@@ -87,7 +87,7 @@ public class ActivityTestCenter extends Activity implements FragmentVerticalPage
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Highlight the selected item
-                view.setSelected(true);
+            //    view.setSelected(true); // Commented out, as not in iOS version ='<
 
                 // Change out the current fragment displayed in the center
                     // TODO: Make this it's own function

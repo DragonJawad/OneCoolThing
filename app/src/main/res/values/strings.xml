@@ -11,6 +11,7 @@
     <string name="title_section1">Test 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="left_drawer_title">More Cool Things</string>
 
     <!-- Accessibility -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
