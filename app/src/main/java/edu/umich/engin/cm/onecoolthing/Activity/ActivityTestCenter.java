@@ -36,16 +36,19 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     private final String TAG = "MD/ActivityTestCenter";
 
     // The single One Cool Feed fragment to use
-    FragmentOneCoolFeed fragOneCoolFeed;
+    private FragmentOneCoolFeed mFragOneCoolFeed;
 
     // Tags for all fragments
-    private String[] frag_tags;
+    private String[] mFragTags;
     // URLs for all feeds- same indexes as currentFragmentIndex and null == no webview
-    private String[] frag_urls;
+    private String[] mFragUrls;
 
     // Sliding Menu test objects
-    SlidingMenu slidingMenuLeft;
-    SlidingMenu slidingMenuRight;
+    private SlidingMenu mSlidingMenuLeft;
+    private SlidingMenu mSlidingMenuRight;
+
+    // Determines whether or not the right sliding menu is enabled
+    private boolean mRightMenuEnabled = false;
 
     // The right sliding menu's view, for easy access to change its contents
     View viewRightMenu;
@@ -72,28 +75,28 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
+        // Initialize the sliding menus
+        initBothSlidingMenus();
+
         // Get all the fragments' tags - or names - from the nav list in resources
-        frag_tags = getResources().getStringArray(R.array.nav_items);
+        mFragTags = getResources().getStringArray(R.array.nav_items);
         // Get all fragments' urls, if they exist
-        frag_urls = getResources().getStringArray(R.array.nav_items_urls);
+        mFragUrls = getResources().getStringArray(R.array.nav_items_urls);
 
         // Initialize the one cool feed [which also adds it to the center as well]
         initOneCoolFeedFrag();
-
-        // Initialize the sliding menus
-        initBothSlidingMenus();
     }
 
     private void initOneCoolFeedFrag() {
         // Actually initialize the fragment
-        fragOneCoolFeed = new FragmentOneCoolFeed();
+        mFragOneCoolFeed = new FragmentOneCoolFeed();
 
         // Let the frag communicate with this activity
-        fragOneCoolFeed.setCommunicator(this);
+        mFragOneCoolFeed.setCommunicator(this);
 
         // Add in the fragment to the place specified in the layout file
         getFragmentManager().beginTransaction()
-                .add(R.id.container, fragOneCoolFeed, frag_tags[0])
+                .add(R.id.container, mFragOneCoolFeed, mFragTags[0])
                 .commit();
 
         // Set the particular activity settings for the center view
@@ -109,9 +112,9 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         LayoutInflater inflater = getLayoutInflater();
 
         // Initialize the left sliding menu
-        slidingMenuLeft = new SlidingMenu(this);
-        slidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
-        slidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
+        mSlidingMenuLeft = new SlidingMenu(this);
+        mSlidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
+        mSlidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
 
         // Inflate a view for the left sliding menu
         View viewLeftMenu = inflater.inflate(R.layout.slidingmenu_left, null);
@@ -128,59 +131,61 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
                 changeFrag(position);
 
                 // Toggle/close the left sliding menu
-                slidingMenuLeft.toggle();
+                mSlidingMenuLeft.toggle();
             }
         });
 
-        slidingMenuLeft.setMenu(viewLeftMenu); // Assign the layout/content
+        mSlidingMenuLeft.setMenu(viewLeftMenu); // Assign the layout/content
 
         // Initialize the right sliding menu
-        slidingMenuRight = new SlidingMenu(this);
-        slidingMenuRight.setMode(SlidingMenu.RIGHT); // Define the orientation to the right
-        slidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
+        mSlidingMenuRight = new SlidingMenu(this);
+        mSlidingMenuRight.setMode(SlidingMenu.RIGHT); // Define the orientation to the right
+        mSlidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
         // Inflate a view for the right sliding menu
         viewRightMenu = inflater.inflate(R.layout.slidingmenu_right,null);
-        slidingMenuRight.setMenu(viewRightMenu);
+        mSlidingMenuRight.setMenu(viewRightMenu);
 
         // Set listeners for the left and right sliding menus [so both aren't open at once]
         // TODO: Make them call a function that takes in a boolean.
         // Function would possibly close other if open, check if already disabled, etc
-        slidingMenuLeft.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+        mSlidingMenuLeft.setOnOpenListener(new SlidingMenu.OnOpenListener() {
             @Override
             public void onOpen() {
-                // Disable the right sliding menu
-                slidingMenuRight.setSlidingEnabled(false);
+                // Disable the right sliding menu period, as both shouldn't be open at once
+                mSlidingMenuRight.setSlidingEnabled(false);
             }
         });
 
-        slidingMenuLeft.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+        mSlidingMenuLeft.setOnCloseListener(new SlidingMenu.OnCloseListener() {
             @Override
             public void onClose() {
-                // Enable the right sliding menu
-                slidingMenuRight.setSlidingEnabled(true);
+                // Enable the right sliding menu, if it's enabled
+                if(mRightMenuEnabled) {
+                    mSlidingMenuRight.setSlidingEnabled(true);
+                }
             }
         });
 
-        slidingMenuRight.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+        mSlidingMenuRight.setOnOpenListener(new SlidingMenu.OnOpenListener() {
             @Override
             public void onOpen() {
                 // Disable the left sliding menu
-                slidingMenuLeft.setSlidingEnabled(false);
+                mSlidingMenuLeft.setSlidingEnabled(false);
             }
         });
 
-        slidingMenuRight.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+        mSlidingMenuRight.setOnCloseListener(new SlidingMenu.OnCloseListener() {
             @Override
             public void onClose() {
                 // Enable the left sliding menu
-                slidingMenuLeft.setSlidingEnabled(true);
+                mSlidingMenuLeft.setSlidingEnabled(true);
             }
         });
 
         // Set up the rest of the shared sliding menu properties
-        setUpSlidingMenu(slidingMenuLeft);
-        setUpSlidingMenu(slidingMenuRight);
+        setUpSlidingMenu(mSlidingMenuLeft);
+        setUpSlidingMenu(mSlidingMenuRight);
     }
 
     /** Sets up a slidingMenu according to pre-defined specifics
@@ -210,7 +215,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         // First, clear out the center container - if not the main frag, then simply remove middle
         if (currentFragmentIndex != 0) {
             // Get the fragment to remove
-            Fragment fragment = fragmentManager.findFragmentByTag(frag_tags[currentFragmentIndex]);
+            Fragment fragment = fragmentManager.findFragmentByTag(mFragTags[currentFragmentIndex]);
             fragmentTransaction.remove(fragment);
 
             Log.d(TAG, "Removed fragment: " + currentFragmentIndex);
@@ -218,44 +223,53 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         // Otherwise, if this is the One Cool Feed, simply hide it- don't remove it
         // in order to avoid fixing the lifecycle
         else {
-            fragmentTransaction.hide(fragOneCoolFeed);
+            fragmentTransaction.hide(mFragOneCoolFeed);
             Log.d(TAG, "Hid center fragment");
         }
 
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
+        //    Log.d(TAG, "Showing center fragment");
+
             // Simply show the OneCoolFeed and set up the settings using its function
-            fragmentTransaction.show(fragOneCoolFeed);
-            Log.d(TAG, "Showing center fragment");
+            fragmentTransaction.show(mFragOneCoolFeed);
             fragmentTransaction.commit();
 
             // Apply the settings for the OneCoolFeed
             toggleCoolThingSettings(true);
         }
         // Otherwise, if this index has an URL, open up a feed
-        else if(!frag_urls[index].equals("")) {
-            Log.d(TAG, "Opening up a webview");
+        else if(!mFragUrls[index].equals("")) {
+        //    Log.d(TAG, "Opening up a webview");
 
             // Get the url and title separately, for ease of typing/reading
-            String this_url = frag_urls[index];
-            String this_title = frag_tags[index];
+            String this_url = mFragUrls[index];
+            String this_title = mFragTags[index];
 
             // Create a new TumblrFeed fragment, with its title and url
             FragmentTumblrFeed frag = FragmentTumblrFeed.newInstance(this_url, this_title);
 
             // Add the url to the center view
-            fragmentTransaction.add(R.id.container, frag, frag_tags[index]);
+            fragmentTransaction.add(R.id.container, frag, mFragTags[index]);
             fragmentTransaction.commit();
+
+            // Set settings for this view
+            // Currently: Undo the settings for the One Cool Feed
+            toggleCoolThingSettings(false);
         }
         else {
+            //    Log.d(TAG, "Created general fragment " + index);
+
             // Otherwise, add a fill-in frag
             FragmentBase frag = new FragmentBase();
             frag.changeBG(R.color.dev_blue);
 
-            Log.d(TAG, "Created general fragment " + index);
-
-            fragmentTransaction.add(R.id.container, frag, frag_tags[index]);
+            fragmentTransaction.add(R.id.container, frag, mFragTags[index]);
             fragmentTransaction.commit();
+
+            // Set settings for this view
+            // Currently: Undo the settings for the One Cool Feed
+            toggleCoolThingSettings(false);
         }
 
         // Finally, change the index of the currently used fragment
@@ -305,7 +319,17 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
      * @param enable - True if now allowing the right slider to be used
      */
     private void enableRightSlider(boolean enable) {
+        // Enable/disable the right sliding menu, for other controls
+        mRightMenuEnabled = enable;
 
+        // Enable the sliding menu, if the left sliding menu is NOT open
+        if(enable && !mSlidingMenuLeft.isMenuShowing()) {
+            mSlidingMenuRight.setSlidingEnabled(true);
+        }
+        // Otherwise, if disabling the right sliding menu, then simply disable it
+        else if(!enable) {
+            mSlidingMenuRight.setSlidingEnabled(false);
+        }
     }
 
     /**
@@ -326,8 +350,8 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     // Override the menu key press so sliding menu can be open and closed by it
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ( keyCode == KeyEvent.KEYCODE_MENU && !slidingMenuRight.isMenuShowing()) {
-            this.slidingMenuLeft.toggle();
+        if ( keyCode == KeyEvent.KEYCODE_MENU && !mSlidingMenuRight.isMenuShowing()) {
+            this.mSlidingMenuLeft.toggle();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -338,7 +362,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.slidingMenuLeft.toggle();
+                this.mSlidingMenuLeft.toggle();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
