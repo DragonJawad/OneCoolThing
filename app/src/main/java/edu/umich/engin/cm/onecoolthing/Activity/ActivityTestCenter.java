@@ -1,11 +1,13 @@
 package edu.umich.engin.cm.onecoolthing.Activity;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,6 +31,15 @@ import edu.umich.engin.cm.onecoolthing.R;
  * Created by jawad on 12/10/14.
  */
 public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.VertPagerCommunicator {
+    // Log tag for this class
+    private final String TAG = "MD/ActivityTestCenter";
+
+    // The single One Cool Feed fragment to use
+    FragmentOneCoolFeed fragOneCoolFeed;
+
+    // Tags for all fragments
+    private String[] frag_tags;
+
     // Sliding Menu test objects
     SlidingMenu slidingMenuLeft;
     SlidingMenu slidingMenuRight;
@@ -58,25 +69,35 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
+        // Get all the fragments' tags - or names - from the nav list in resources
+        frag_tags = getResources().getStringArray(R.array.nav_items);
+
+        // Initialize the one cool feed
+        initOneCoolFeedFrag();
+
         // Add in the center view
         addCenterCoolThings();
+
+        // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
+        currentFragmentIndex = 0;
 
         // Initialize the sliding menus
         initBothSlidingMenus();
     }
 
-    private void addCenterCoolThings() {
-        // Create and setup the center fragment, as necessary
-        FragmentOneCoolFeed frag = new FragmentOneCoolFeed();
-
-        // Add in the fragment to the place specified in the layout file
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.container, frag);
-        fragmentTransaction.commit();
+    private void initOneCoolFeedFrag() {
+        // Actually initialize the fragment
+        fragOneCoolFeed = new FragmentOneCoolFeed();
 
         // Let the frag communicate with this activity
-        frag.setCommunicator(this);
+        fragOneCoolFeed.setCommunicator(this);
+    }
+
+    private void addCenterCoolThings() {
+        // Add in the fragment to the place specified in the layout file
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, fragOneCoolFeed, frag_tags[0])
+                .commit();
 
         // Set the particular activity settings for the center view
         toggleCoolThingSettings(true);
@@ -179,25 +200,61 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         // First check if user clicked on the current fragment again
         if(index == currentFragmentIndex) return;
 
-        // Otherwise, change the index
-        currentFragmentIndex = index;
+        // Begin the fragment transaction
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        // First, clear out the center container - if not the main frag, then simply remove middle
+        if(currentFragmentIndex != 0) {
+            // Get the fragment to remove
+            Fragment fragment = fragmentManager.findFragmentByTag(frag_tags[currentFragmentIndex]);
+            fragmentTransaction.remove(fragment);
+
+            Log.d(TAG, "Removed fragment: " + currentFragmentIndex);
+        }
+        // Otherwise, if this is the One Cool Feed, simply hide it- don't remove it
+            // in order to avoid fixing the lifecycle
+        else {
+            fragmentTransaction.hide(fragOneCoolFeed);
+            Log.d(TAG, "Hid center fragment");
+        }
+
+        // Then add in the chosen fragment and set the appropriate settings
         switch(index) {
             case 0:
-                // Add in the One Cool Feed
-                addCenterCoolThings(); // Add the CoolThings home view
+                // Simply show the OneCoolFeed and set up the settings using its function
+                fragmentTransaction.show(fragOneCoolFeed);
+                Log.d(TAG, "Showing center fragment");
+                fragmentTransaction.commit();
+
+                // Apply the settings for the OneCoolFeed
+                toggleCoolThingSettings(true);
+
                 break;
             default:
-                // Default: Add in a filler fragment
+                // Otherwise, add a fill-in frag
                 FragmentBase frag = new FragmentBase();
                 frag.changeBG(R.color.dev_blue);
 
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.container, frag);
+                Log.d(TAG, "Created general fragment " + index);
+
+                fragmentTransaction.add(R.id.container, frag, frag_tags[index]);
                 fragmentTransaction.commit();
+
                 break;
         }
+
+        // Finally, change the index of the currently used fragment
+        currentFragmentIndex = index;
+    }
+
+    /**
+     * Replaces current fragment with specified fragment,
+     *  BUT if old fragment is the 0th fragment, simply hide it [and show it if going to 0th]
+     * @param index
+     */
+    private void replaceFrags(int index) {
+        // First, clear out the center container
     }
 
     // Testing function: change the right sliding menu's background color
