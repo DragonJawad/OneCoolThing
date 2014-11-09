@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThing;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoader;
 import edu.umich.engin.cm.onecoolthing.R;
 
@@ -36,7 +35,7 @@ public class CoolThingsListAdapter extends BaseAdapter {
         this.coolThings = coolThings;
         this.mContext = context;
 
-        // Set up the new imageLoader, and clear its cache
+        // Set up the new mImageLoader, and clear its cache
         imageLoader = new ImageLoader(context);
         imageLoader.clearCache();
     }
@@ -46,7 +45,7 @@ public class CoolThingsListAdapter extends BaseAdapter {
         this.mContext = context;
         this.useImages = useImages;
 
-        // Set up the new imageLoader, and clear its cache
+        // Set up the new mImageLoader, and clear its cache
         imageLoader = new ImageLoader(context);
         imageLoader.clearCache();
     }

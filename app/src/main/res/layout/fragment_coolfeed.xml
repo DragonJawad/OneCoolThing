@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<fr.castorflex.android.verticalviewpager.VerticalViewPager
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/greydiant_568h"
-/>
+    >
+
+    <!-- The background of the Viewpager -->
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <!-- The actual ViewPager -->
+    <fr.castorflex.android.verticalviewpager.VerticalViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        />
+</RelativeLayout>

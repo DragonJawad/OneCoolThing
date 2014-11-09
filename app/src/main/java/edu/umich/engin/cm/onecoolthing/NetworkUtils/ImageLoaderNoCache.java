@@ -33,15 +33,15 @@ public class ImageLoaderNoCache {
     // Interface so that user can be notified once data has been finally applied
     public interface LoaderManager {
         // Notifies the manager that the data was loaded
-        public void NotifyDataLoaded();
+        public void notifyDataLoaded();
 
         // Give the retrieved bitMap to the manager(s)
-            // Note: NotifyDataLoaded() will be called first, if used
+            // Note: notifyDataLoaded() will be called first, if used
         public void notifyRetrievedBitmap(Bitmap bitmap);
     }
 
     // Default constructor
-    ImageLoaderNoCache() {
+    public ImageLoaderNoCache() {
         // Creates a thread pool that reuses a fixed number of
         // threads operating off a shared unbounded queue.
         mExecutorService = Executors.newFixedThreadPool(5);
@@ -184,7 +184,7 @@ public class ImageLoaderNoCache {
             if(mManagers != null) {
                 for(LoaderManager manager : mManagers) {
                     // Notify the manager
-                    manager.NotifyDataLoaded();
+                    manager.notifyDataLoaded();
                 }
             }
         }

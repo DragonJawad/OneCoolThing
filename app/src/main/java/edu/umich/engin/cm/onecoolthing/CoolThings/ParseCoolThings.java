@@ -90,7 +90,7 @@ public class ParseCoolThings {
             // Make a request to url and get response
             String jsonStr = sh.makeServiceCall(URL, ServiceHandler.GET);
 
-            // Change the jsonStr into a jsonArray- save a simple step
+            // Change the jsonStr into a mJsonArray- save a simple step
             try {
                 jsonArray = new JSONArray(jsonStr);
             } catch (JSONException e) {

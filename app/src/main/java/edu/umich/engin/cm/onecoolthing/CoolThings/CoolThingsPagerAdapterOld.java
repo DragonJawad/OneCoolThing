@@ -33,7 +33,7 @@ public class CoolThingsPagerAdapterOld extends FragmentPagerAdapter {
     }
 
     public void initAdapter(Context context, ArrayList<CoolThing> coolThings) {
-        // Initialize the imageLoader
+        // Initialize the mImageLoader
         imageLoader = new ImageLoader(context);
 
         // Save the list of coolThings for later use

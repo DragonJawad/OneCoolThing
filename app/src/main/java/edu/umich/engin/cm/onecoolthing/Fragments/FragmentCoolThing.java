@@ -133,7 +133,7 @@ public class FragmentCoolThing extends Fragment implements ImageLoaderNoCache.Lo
     }
 
     @Override
-    public void NotifyDataLoaded() {
+    public void notifyDataLoaded() {
         // No need to use, as notifyRetrievedBitmap will take care of ita ll
     }
 

@@ -13,6 +13,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentCoolThing;
+import edu.umich.engin.cm.onecoolthing.Fragments.FragmentOneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 
 /**
@@ -22,27 +23,37 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
  */
 public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.JSONUser,
         ImageLoaderNoCache.LoaderManager{
+    private static final String TAG = "MD/CoolThingsPagerAdapter";
+
     // List of fragments to display
-    ArrayList<FragmentCoolThing> listOfFragCoolThings;
+    ArrayList<FragmentCoolThing> mListOfFragCoolThings;
 
     // Array of all coolThings
-    ArrayList<CoolThing> listOfCoolThings;
+    ArrayList<CoolThing> mListOfCoolThings;
 
     // Contains all the cool things in raw JSON form
-    JSONArray jsonArray;
+    JSONArray mJsonArray;
+
+    // Simply save a reference to the frag that calls this pager, to give it the url of its bg
+    FragmentOneCoolFeed mFragCaller;
+        // TODO: Make an interface... again?
 
     public CoolThingsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public void initAdapter(Context context) {
+    // Intializes the adapter, MUST get
+    public void initAdapter(Context context, FragmentOneCoolFeed frag) {
+        // Cache the mFragCaller to give it its background url later
+        this.mFragCaller = frag;
+
         // Initialize teh array lists
-        listOfFragCoolThings = new ArrayList<FragmentCoolThing>();
-        listOfCoolThings = new ArrayList<CoolThing>();
+        mListOfFragCoolThings = new ArrayList<FragmentCoolThing>();
+        mListOfCoolThings = new ArrayList<CoolThing>();
 
         // Create and display first fragment, with loading animation
         FragmentCoolThing firstFrag = new FragmentCoolThing();
-        listOfFragCoolThings.add(firstFrag);
+        mListOfFragCoolThings.add(firstFrag);
 
         // Call an Async in the parser to get the JSON and call on this object once its done
         ParseCoolThings parser = new ParseCoolThings();
@@ -53,7 +64,7 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
     @Override
     public void gotJSON(JSONArray jsonArray) {
         // Cache the JSON for later use
-        this.jsonArray = jsonArray;
+        this.mJsonArray = jsonArray;
 
         // Create a new cool thing, for easy data retrieval now and later
         CoolThing coolThing = new CoolThing("N/A", "N/A", "N/A");
@@ -67,33 +78,42 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         }
 
         // Add the coolThing to current list of cool things
-        listOfCoolThings.add(coolThing);
+        mListOfCoolThings.add(coolThing);
 
         // Give the data to the fragment
-        FragmentCoolThing frag = listOfFragCoolThings.get(0);
+        FragmentCoolThing frag = mListOfFragCoolThings.get(0);
         frag.setData(coolThing.getImageURL(), coolThing.getTitle(), this);
+
+        // Notify the frag to use this coolThing's url for its background
+        mFragCaller.setBackground(coolThing.getImageURL());
     }
 
     // Be notified once a fragment's data has finally loaded
     @Override
-    public void NotifyDataLoaded() {
+    public void notifyDataLoaded() {
         // Simply add the next fragment and notify that the data set has been changed
         addNextFragment();
+    }
+
+    // No need for this, just here to fulfill implementation of ImageLoaderNoCache LoaderManager interface
+    @Override
+    public void notifyRetrievedBitmap(Bitmap bitmap) {
+
     }
 
     // Add the next placeholder, loading fragment
     private void addNextFragment() {
         // Check!: If added all data, then no need to add another fragment
-        if(listOfFragCoolThings.size() >= jsonArray.length()) return;
+        if(mListOfFragCoolThings.size() >= mJsonArray.length()) return;
 
         // Create a placeholder fragment and add it to the list of fragments
         FragmentCoolThing frag = new FragmentCoolThing();
-        listOfFragCoolThings.add(frag);
+        mListOfFragCoolThings.add(frag);
         // TODO: Add the first image's bg as a placeholder background
 
         // Create a placeholder cool thing and add it to the list of cool things
         CoolThing coolThing = new CoolThing("N/A", "N/A", "N/A");
-        listOfCoolThings.add(coolThing);
+        mListOfCoolThings.add(coolThing);
 
         // Notify adapter that the data set has been changed
         notifyDataSetChanged();
@@ -102,12 +122,12 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
     // Set up the placeholder, loading fragment
     private void setUpFrag(int index) {
         // Get the frag to set up
-        FragmentCoolThing frag = listOfFragCoolThings.get(index);
+        FragmentCoolThing frag = mListOfFragCoolThings.get(index);
 
         // Get the cool thing that represents this fragment and fill it with data
-        CoolThing coolThing = listOfCoolThings.get(index);
+        CoolThing coolThing = mListOfCoolThings.get(index);
         try {
-            ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(index),
+            ParseCoolThings.JSONToCoolThing(mJsonArray.getJSONObject(index),
                     coolThing);
         } catch (JSONException e) {
             Log.e("MD/PagerAdapter", e.getMessage());
@@ -123,18 +143,18 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     // Return the subTitle of a CoolThing at the given position
     public String getSubTitle(int i) {
-        return listOfCoolThings.get(i).getSubTitle();
+        return mListOfCoolThings.get(i).getSubTitle();
     }
 
     // Return the body text of a CoolThing at the given position
     public String getBodyText(int i) {
-        return listOfCoolThings.get(i).getBodyText();
+        return mListOfCoolThings.get(i).getBodyText();
     }
 
     @Override
     public Fragment getItem(int i) {
         // Get the fragment
-        FragmentCoolThing frag = listOfFragCoolThings.get(i);
+        FragmentCoolThing frag = mListOfFragCoolThings.get(i);
 
         // If the fragment hasn't been set yet and this isn't the special first fragment's case,
             // then set it up
@@ -148,12 +168,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     @Override
     public int getCount() {
-        return listOfFragCoolThings.size();
-    }
-
-    // No need for this, just here to fulfill implementation of ImageLoaderNoCache LoaderManager interface
-    @Override
-    public void notifyRetrievedBitmap(Bitmap bitmap) {
-
+        return mListOfFragCoolThings.size();
     }
 }
