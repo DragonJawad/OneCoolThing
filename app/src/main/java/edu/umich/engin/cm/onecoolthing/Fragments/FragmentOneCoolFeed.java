@@ -27,7 +27,7 @@ public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageCha
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_verticalpager, container, false);
+       View view = inflater.inflate(R.layout.fragment_coolfeed, container, false);
 
        // Get the viewpager from the layout but init later
        mViewPager = (VerticalViewPager) view.findViewById(R.id.pager);

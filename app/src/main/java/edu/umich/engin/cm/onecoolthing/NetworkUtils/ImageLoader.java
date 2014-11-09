@@ -116,7 +116,7 @@ public class ImageLoader {
     // Display an image with a specific scale, and assign a TextView's text at the same time
     public void DisplayImageAndTextAndSpinner(String url, ImageView imageView, int scale,
                                     TextView textView, String text, ProgressBar spinner) {
-        // Set the givenScale
+        // Set the mGivenScale
         givenScale = scale;
 
         // TODO: Rewrite below so not copy+pasting code
@@ -224,7 +224,7 @@ public class ImageLoader {
                 BitmapDisplayer bd=new BitmapDisplayer(bmp, photoToLoad);
 
                 // Causes the Runnable bd (BitmapDisplayer) to be added to the message queue.
-                // The runnable will be run on the thread to which this handler is attached.
+                // The runnable will be run on the thread to which this mHandler is attached.
                 // BitmapDisplayer run method will call
                 handler.post(bd);
 

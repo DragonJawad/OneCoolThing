@@ -23,6 +23,28 @@
         />
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!-- View to simply force the overlay only
+            half of height -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <!-- Transparent overlay -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/greydiant_568h"
+            android:scaleType="fitXY"/>
+
+        </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -38,18 +60,19 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1"
-        />
+            />
 
         <!-- Displays title of cool thing -->
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:textSize="@dimen/text_large"
             android:textColor="@color/white"
             android:gravity="end"
+            android:text="@string/garbage_fill_short"
             />
 
-        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
