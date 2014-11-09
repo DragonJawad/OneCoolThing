@@ -19,9 +19,6 @@ import java.util.concurrent.Executors;
  *      as unnecessary for this app
  */
 public class ImageLoaderNoCache {
-    // Manager to be notified once data is loaded
-    LoaderManager mManagers[];
-
     // Handler to display images in UI thread
     Handler mHandler = new Handler();
 
@@ -30,50 +27,49 @@ public class ImageLoaderNoCache {
     // If not -1, then determines what scale to use the images at
     int mGivenScale = -1;
 
+    // Manager(s) to be notified once data is loaded
+    LoaderManager mManagers[];
+
     // Interface so that user can be notified once data has been finally applied
     public interface LoaderManager {
-        // Determines whether or not to give the retrieved bitMap to the manager(s) as well
-        boolean getBitmap = false;
-
-        // Notifies the fragment's manager that the fragment is done being set
-        public void notifyDataLoaded();
-
-        // Determines whether or not to return the retrieved bitMap
-        public boolean shouldReturnBitmap();
+        // Notifies the manager that the data was loaded
+        public void NotifyDataLoaded();
 
         // Give the retrieved bitMap to the manager(s)
+            // Note: NotifyDataLoaded() will be called first, if used
         public void notifyRetrievedBitmap(Bitmap bitmap);
-    };
+    }
 
-    // Basic constructor
+    // Default constructor
     ImageLoaderNoCache() {
         // Creates a thread pool that reuses a fixed number of
         // threads operating off a shared unbounded queue.
         mExecutorService = Executors.newFixedThreadPool(5);
     }
 
-    // Constructor that specifies manager(s) to notify
-    ImageLoaderNoCache(LoaderManager mManagers[]) {
-        // Call the simple constructor
+    // Constructor if using all-seeing managers
+    public ImageLoaderNoCache(LoaderManager managers[]) {
         this();
 
-        // Cache the mManagers to call on later
-        this.mManagers = mManagers;
+        this.mManagers = managers;
     }
 
     // Display an image from a url on a specified imageView
-    void DisplayImage(String url, ImageView imageView) {
-        // Put this image process on line
-        queBitmap(url, imageView);
-    }
-
-
-    void queBitmap(String url, ImageView imageView) {
+    public void DisplayImage(String url, ImageView imageView) {
         // Create the necessary task
-        LoadIntoImageViewTask imageViewTask = new LoadIntoImageViewTask(url, imageView);
+        LoadIntoImageViewTask task = new LoadIntoImageViewTask(url, imageView);
 
         // Put the task into the que
-        mExecutorService.submit( new BitmapLoader(imageViewTask) );
+        mExecutorService.submit(new BitmapLoader(task));
+    }
+
+    // Simply notifies the manager(s) of the image, once retrieved
+    public void GetImage(String url, LoaderManager managers[]) {
+        // Create a simple notifier task
+        NotifyRetrievedTask task = new NotifyRetrievedTask(url, managers);
+
+        // Put the task into the que
+        mExecutorService.submit(new BitmapLoader(task));
     }
 
     // Abstract class, to load images
@@ -108,6 +104,31 @@ public class ImageLoaderNoCache {
         public void LoadImage(Bitmap bitmap) {
             // Set the bitmap onto the imageView
             mTargetImageView.setImageBitmap(bitmap);
+        }
+    }
+
+    // Simply notifies the manager(s) of the retrieved image
+    private class NotifyRetrievedTask extends LoadImageTask {
+        String mUrl;
+        LoaderManager mManagers[];
+
+        // Default constructor
+        NotifyRetrievedTask(String url, LoaderManager managers[]) {
+            this.mUrl = url;
+            this.mManagers = managers;
+        }
+
+        @Override
+        public String GetUrl() {
+            return mUrl;
+        }
+
+        @Override
+        public void LoadImage(Bitmap bitmap) {
+            // Notify the managers of the bitmap
+            for(LoaderManager manager : mManagers) {
+                manager.notifyRetrievedBitmap(bitmap);
+            }
         }
     }
 
@@ -150,7 +171,7 @@ public class ImageLoaderNoCache {
 
         // Default constructor
         BitmapDisplayer(Bitmap bitmap, LoadImageTask task) {
-            this.mBitmap = mBitmap;
+            this.mBitmap = bitmap;
             this.mTask = task;
         }
 
@@ -162,13 +183,8 @@ public class ImageLoaderNoCache {
             // If there are any managers, notify them as appropriate
             if(mManagers != null) {
                 for(LoaderManager manager : mManagers) {
-                    // Notify the manager, by default
-                    manager.notifyDataLoaded();
-
-                    // If the manager also wants the bitmap, give it to him/her
-                    if( manager.shouldReturnBitmap() ) {
-                        manager.notifyRetrievedBitmap(mBitmap);
-                    }
+                    // Notify the manager
+                    manager.NotifyDataLoaded();
                 }
             }
         }

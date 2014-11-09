@@ -3,6 +3,7 @@ package edu.umich.engin.cm.onecoolthing.CoolThings;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.util.Log;
 
@@ -12,7 +13,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentCoolThing;
-import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoader;
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 
 /**
  * Created by jawad on 20/10/14.
@@ -20,7 +21,7 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoader;
  * Displays FragmentCoolThings in PagerAdapter
  */
 public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.JSONUser,
-        ImageLoader.LoaderManager{
+        ImageLoaderNoCache.LoaderManager{
     // List of fragments to display
     ArrayList<FragmentCoolThing> listOfFragCoolThings;
 
@@ -75,7 +76,7 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     // Be notified once a fragment's data has finally loaded
     @Override
-    public void notifyDataLoaded() {
+    public void NotifyDataLoaded() {
         // Simply add the next fragment and notify that the data set has been changed
         addNextFragment();
     }
@@ -148,5 +149,11 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
     @Override
     public int getCount() {
         return listOfFragCoolThings.size();
+    }
+
+    // No need for this, just here to fulfill implementation of ImageLoaderNoCache LoaderManager interface
+    @Override
+    public void notifyRetrievedBitmap(Bitmap bitmap) {
+
     }
 }

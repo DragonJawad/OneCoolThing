@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoader;
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -19,7 +19,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  *
  * Displays a single "CoolThing" object, with only title and background
  */
-public class FragmentCoolThing extends Fragment {
+public class FragmentCoolThing extends Fragment implements ImageLoaderNoCache.LoaderManager {
     // View elements
     private ImageView background;
     private TextView titleView;
@@ -40,7 +40,7 @@ public class FragmentCoolThing extends Fragment {
     private ProgressBar spinner;
 
     // Necessary to notify anything outside of frag that data has been set
-    private ImageLoader.LoaderManager manager;
+    private ImageLoaderNoCache.LoaderManager mFragUserManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,21 +81,23 @@ public class FragmentCoolThing extends Fragment {
 
         // Call the imageLoader to lazily set up the imageView AND text at the same time
             // AND allow it to stop the spinner
-                // TODO: Bad design, rework this so a single class/thread handles this?
-        ImageLoader imageLoader = new ImageLoader(getActivity(), manager);
-        imageLoader.DisplayImageAndTextAndSpinner(imageURL, background, 1, titleView,
-                titleText, spinner);
+        ImageLoaderNoCache.LoaderManager managersOverall[] = {this, mFragUserManager};
+        ImageLoaderNoCache imageLoader = new ImageLoaderNoCache(managersOverall);
+
+        // Start up the loading task, but set it to simply notify this fragment
+        ImageLoaderNoCache.LoaderManager manager[] = {this};
+        imageLoader.GetImage(imageURL, manager);
     }
 
     // Set the background image's URL and title text at the same time, to avoid any potential errors
-    public void setData(String url, String title, ImageLoader.LoaderManager manager) {
+    public void setData(String url, String title, ImageLoaderNoCache.LoaderManager manager) {
         // Double check that data isn't being set twice
         if(assignedData) Log.e("MD/CoolThingFrag", "Data was already assigned for this frag! Title: "+title);
 
         // Set the data
         setBackgroundURL(url);
         setTitleText(title);
-        this.manager = manager;
+        this.mFragUserManager = manager;
 
         // State that the data was assigned
         assignedData = true;
@@ -128,5 +130,23 @@ public class FragmentCoolThing extends Fragment {
     // Check if this fragment has been set up yet or not
     public boolean checkIfSet() {
         return assignedData;
+    }
+
+    @Override
+    public void NotifyDataLoaded() {
+        // No need to use, as notifyRetrievedBitmap will take care of ita ll
+    }
+
+    // Set the data up once the image is finally retrieved
+    @Override
+    public void notifyRetrievedBitmap(Bitmap bitmap) {
+        // First, set the bitmap as the background of the image
+        background.setImageBitmap(bitmap);
+
+        // Then set the titleText
+        titleView.setText(titleText);
+
+        // Finally, stop the spinner
+        spinner.setVisibility(View.GONE);
     }
 }
