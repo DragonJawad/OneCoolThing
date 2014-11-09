@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,6 @@ public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageCha
        // Get the viewpager from the layout but init later
        mViewPager = (VerticalViewPager) view.findViewById(R.id.pager);
 
-       Log.d(TAG, "Running onCreate");
-
        return view;
     }
 
@@ -41,14 +38,15 @@ public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageCha
     public void onStart() {
         super.onStart();
 
-        Log.d(TAG, "Running onStart");
-
         // Initialize the viewpager with the activity's context
         initCoolViewPager(getActivity());
     }
 
     public void initCoolViewPager(Context context) {
-        Log.d(TAG, "Initializing CoolViewpager");
+        // Bug fix of "Observer... was not registered" error
+            // Ie, adapter kept getting reset and app crashes when leaving and coming back from
+                // ANYWHERE
+        if(pagerAdapter != null) return;
 
         // Set up the pagerAdapter to handle the different "pages"/fragments
         pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
@@ -59,10 +57,6 @@ public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageCha
 
         // Make this fragment listen to the adapter's changes
         mViewPager.setOnPageChangeListener(this);
-    }
-
-    private void printStats() {
-
     }
 
     // Sets the communicator so the fragment can notify the activity of changes in pager
@@ -108,5 +102,5 @@ public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageCha
     public interface VertPagerCommunicator{
       public void changeRightSlide(int color);
       public void changeRightSlide(String subTitle, String body);
-    };
+    }
 }
