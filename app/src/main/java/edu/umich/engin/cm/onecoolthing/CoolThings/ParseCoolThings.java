@@ -24,9 +24,11 @@ public class ParseCoolThings {
 
     // JSON Tags
     private static final String TAG_ID = "ID";
+    private static final String TAG_INCLUDEINAPP = "Include in App";
     private static final String TAG_TITLE = "Title";
     private static final String TAG_SUBTITLE = "Sub Title";
     private static final String TAG_BODYTEXT = "Body Text";
+    private static final String TAG_PALETTECOLOR = "Color Palette";
     private static final String TAG_IMAGEURL = "iPhone 5 Retina Image";
 
     /**
