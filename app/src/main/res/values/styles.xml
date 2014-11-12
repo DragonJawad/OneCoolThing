@@ -9,13 +9,24 @@
         <!-- Let the actioBbar overlay the activity, ie activity is full screen -->
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Set up the action bar styles -->
-        <item name="android:actionBarStyle">@style/ActionBarTransparent2</item>
-        <!-- Set the drawer icon to show up instead of the "Up" caret icon -->
+        <item name="android:actionBarStyle">@style/ActionBarEmpty</item>
+        <!-- Remove the shadow under the actionBar -->
+        <item name="android:windowContentOverlay">@null</item>
+
+        <!-- Set the drawer icon to show up instead of the "Up" caret icon
         <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
+        <item name="homeAsUpIndicator">@drawable/ic_drawer</item>
+        -->
 
         <!-- Support library compatibility -->
-        <item name="actionBarStyle">@style/ActionBarTransparent2</item>
-        <item name="homeAsUpIndicator">@drawable/ic_drawer</item>
+        <item name="actionBarStyle">@style/ActionBarEmpty</item>
+    </style>
+
+    <!-- Final, empty Action Bar style | makes space for customized actionBar -->
+    <style name="ActionBarEmpty" parent="Widget.AppCompat.Base.ActionBar">
+        <!-- TODO: Add support versions -->
+        <item name="android:displayOptions">none</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <!-- Transparent Action Bar -->

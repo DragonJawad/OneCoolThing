@@ -1,23 +1,19 @@
 package edu.umich.engin.cm.onecoolthing.CoolThings;
 
-import android.graphics.Bitmap;
-import android.widget.ImageView;
-
 /**
  * Created by jawad on 18/10/14.
  */
 public class CoolThing {
     private String id;
-    private String publishDate;
+    private boolean includeInApp;
 
     private String title;
     private String subTitle;
     private String bodyText;
 
-    private Bitmap image;
+    private String paletteColor;
     private String imageURL;
 
-    private String collegeURL;
     private String fullItemURL;
 
 
@@ -30,15 +26,15 @@ public class CoolThing {
             this.id = id;
         }
 
-        public String getPublishDate() {
-            return publishDate;
+        public boolean isIncludeInApp() {
+            return includeInApp;
         }
 
-        public void setPublishDate(String publishDate) {
-            this.publishDate = publishDate;
+        public void setIncludeInApp(boolean includeInApp) {
+            this.includeInApp = includeInApp;
         }
 
-        public String getTitle() {
+    public String getTitle() {
             return title;
         }
 
@@ -62,24 +58,20 @@ public class CoolThing {
             this.bodyText = bodyText;
         }
 
-        public Bitmap getImage() { return image; }
+        public String getPaletteColor() {
+            return paletteColor;
+        }
 
-        public void setImage(Bitmap image) { this.image = image; }
+        public void setPaletteColor(String paletteColor) {
+            this.paletteColor = paletteColor;
+        }
 
-        public String getImageURL() {
+    public String getImageURL() {
             return imageURL;
         }
 
         public void setImageURL(String imageURL) {
             this.imageURL = imageURL;
-        }
-
-        public String getCollegeURL() {
-            return collegeURL;
-        }
-
-        public void setCollegeURL(String collegeURL) {
-            this.collegeURL = collegeURL;
         }
 
         public String getFullItemURL() {

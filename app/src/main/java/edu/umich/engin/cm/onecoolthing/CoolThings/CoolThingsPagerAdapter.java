@@ -34,6 +34,9 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
     // Contains all the cool things in raw JSON form
     JSONArray mJsonArray;
 
+    // Counts how many CoolThings necessary to skip from current index to get next CoolThing
+    int skipCounter = 0;
+
     // Simply save a reference to the frag that calls this pager, to give it the url of its bg
     FragmentOneCoolFeed mFragCaller;
         // TODO: Make an interface... again?
@@ -72,6 +75,16 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
             int FIRST_INDEX = 0; // Index of the very first cool thing
             ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(FIRST_INDEX),
                     coolThing);
+
+            // While not including this CoolThing, get the next CoolThing to check
+            while(!coolThing.isIncludeInApp()) {
+                // Increment the skipCounter
+                ++skipCounter;
+
+                // Get the next Cool Thing to check
+                ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(FIRST_INDEX + skipCounter),
+                        coolThing);
+            }
         } catch (JSONException e) {
             Log.e("MD/PagerAdapter", e.getMessage());
             e.printStackTrace();
@@ -109,7 +122,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         // Create a placeholder fragment and add it to the list of fragments
         FragmentCoolThing frag = new FragmentCoolThing();
         mListOfFragCoolThings.add(frag);
-        // TODO: Add the first image's bg as a placeholder background
 
         // Create a placeholder cool thing and add it to the list of cool things
         CoolThing coolThing = new CoolThing("N/A", "N/A", "N/A");
@@ -127,8 +139,19 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         // Get the cool thing that represents this fragment and fill it with data
         CoolThing coolThing = mListOfCoolThings.get(index);
         try {
-            ParseCoolThings.JSONToCoolThing(mJsonArray.getJSONObject(index),
+            // Get the first CoolThing to check
+            ParseCoolThings.JSONToCoolThing(mJsonArray.getJSONObject(index+skipCounter),
                     coolThing);
+
+            // If not using this Cool Thing, get and check the next one
+            while(!coolThing.isIncludeInApp()) {
+                // Indicate to skip another CoolThing
+                ++skipCounter;
+
+                // Get the next CoolThing to check
+                ParseCoolThings.JSONToCoolThing(mJsonArray.getJSONObject(index+skipCounter),
+                        coolThing);
+            }
         } catch (JSONException e) {
             Log.e("MD/PagerAdapter", e.getMessage());
             e.printStackTrace();
@@ -150,6 +173,9 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
     public String getBodyText(int i) {
         return mListOfCoolThings.get(i).getBodyText();
     }
+
+    // Return the palette color of a CoolThing at the given position
+    public String getPaletteColor(int i) {return mListOfCoolThings.get(i).getPaletteColor(); }
 
     @Override
     public Fragment getItem(int i) {

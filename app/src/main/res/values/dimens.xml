@@ -15,11 +15,13 @@
 
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>
+    <dimen name="margin_actionbar_icon_left">0dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
     <dimen name="margin_nav_item">8dp</dimen>
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
+    <dimen name="padding_actionbar_icon">10dp</dimen>
     <dimen name="padding_drawer_left">10dp</dimen>
 
     <!-- Sliding Menu -->
@@ -27,5 +29,7 @@
     <dimen name="slidingmenu_width_main">240dp</dimen>
     <dimen name="slidingmenu_width_content">200dp</dimen>
     <dimen name="slidingmenu_width_content_offset">40dp</dimen>
+
+    <integer name="slidingright_gradient_angle">315</integer>
 
 </resources>

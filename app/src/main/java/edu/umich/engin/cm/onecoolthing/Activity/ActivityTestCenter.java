@@ -1,11 +1,13 @@
 package edu.umich.engin.cm.onecoolthing.Activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -50,8 +51,17 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     // Determines whether or not the right sliding menu is enabled
     private boolean mRightMenuEnabled = false;
 
-    // The right sliding menu's view, for easy access to change its contents
-    View viewRightMenu;
+    // The right sliding menu's repeatedly accessed views
+    LinearLayout mRightMenuLinearLayout;
+    TextView mRightMenuTitleTextView;
+    TextView mRightMenuBodyTextView;
+    ScrollView mRightMenuScrollView;
+
+    // Actionbar Views
+    View mViewActionBarSimple;
+    View mViewActionBarWithTitle;
+    // Actionbar itself
+    ActionBar mActionBar;
 
     /* Current center fragment index, for reference
      * Below is the master list - If the nav is changed, change the below and any
@@ -75,6 +85,9 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
+        // Initialize the custom actionBar views and set the first actionBar up
+        initActionBar();
+
         // Initialize the sliding menus
         initBothSlidingMenus();
 
@@ -85,6 +98,24 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
         // Initialize the one cool feed [which also adds it to the center as well]
         initOneCoolFeedFrag();
+    }
+
+    private void initActionBar() {
+        // Get the LayoutInflater to inflate the views
+        LayoutInflater inflater = getLayoutInflater();
+
+        // Inflate the simple ActionBar view
+        mViewActionBarSimple = inflater.inflate(R.layout.actionbar_simple, null);
+
+        // Initialize and set up the ActionBar
+        mActionBar = getActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(false);
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        mActionBar.setDisplayShowCustomEnabled(true);
+
+        // Set the actionBar layout initially to the simple one
+        mActionBar.setCustomView(mViewActionBarSimple);
     }
 
     private void initOneCoolFeedFrag() {
@@ -108,7 +139,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
     // Set up the right and left sliding menus
     private void initBothSlidingMenus() {
-        // Get the LayoutInflater to inflate the views for the sliding menus
+        // Get the LayoutInflater to inflate the views for the left sliding menu
         LayoutInflater inflater = getLayoutInflater();
 
         // Initialize the left sliding menu
@@ -142,9 +173,15 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         mSlidingMenuRight.setMode(SlidingMenu.RIGHT); // Define the orientation to the right
         mSlidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
-        // Inflate a view for the right sliding menu
-        viewRightMenu = inflater.inflate(R.layout.slidingmenu_right,null);
-        mSlidingMenuRight.setMenu(viewRightMenu);
+        // Initialize and set the right sliding menu's content
+        View rightMenuView = inflater.inflate(R.layout.slidingmenu_right,null);
+        mSlidingMenuRight.setMenu(rightMenuView);
+
+        // Get the repeatedly accessed right sliding menu's views now
+        mRightMenuLinearLayout = (LinearLayout) rightMenuView.findViewById(R.id.container_right_sliding);
+        mRightMenuTitleTextView = (TextView) rightMenuView.findViewById(R.id.subTitle);
+        mRightMenuBodyTextView = (TextView) rightMenuView.findViewById(R.id.bodyText);
+        mRightMenuScrollView = (ScrollView) rightMenuView.findViewById(R.id.scroll_description);
 
         // Set listeners for the left and right sliding menus [so both aren't open at once]
         // TODO: Make them call a function that takes in a boolean.
@@ -276,30 +313,59 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         currentFragmentIndex = index;
     }
 
-    // Testing function: change the right sliding menu's background color
-    public void changeRightSlide(int color) {
-        // For now, output the passed in color
-        Toast.makeText(this, "Passed in color: " + color, Toast.LENGTH_SHORT).show();
-
-        // Change the right slider's container's color
-        LinearLayout container = (LinearLayout)viewRightMenu.findViewById(R.id.container_right_sliding);
-        container.setBackgroundColor(color);
-    }
-
     // Change the right slide to match the current CoolThing
-    public void changeRightSlide(String subTitle, String body) {
-        // Get the views to change
-            // TODO: Cache these early on
-        TextView subTitleView = (TextView) viewRightMenu.findViewById(R.id.subTitle);
-        TextView bodyTextView = (TextView) viewRightMenu.findViewById(R.id.bodyText);
-        ScrollView scrollDescription = (ScrollView) viewRightMenu.findViewById(R.id.scroll_description);
+    public void changeRightSlide(String subTitle, String body, String paletteColor) {
+        // Change the body and subtitle texts
+        mRightMenuTitleTextView.setText(subTitle);
+        mRightMenuBodyTextView.setText(body);
 
-        // Change the views according to the passed parameters
-        subTitleView.setText(subTitle);
-        bodyTextView.setText(body);
+        // TODO: ...Find some nice midpoint between strings values and readability in code here
+            // Ie, so that not hardcoding exact strings but can still easily tell what color here
+        // Set the right slider's background and UI text color based on the pre-determined colors
+        Resources res = getResources();
+        int textColor;
+        int idSliderBackground;
+
+        if(paletteColor.equals("Red")) {
+            textColor = res.getColor(R.color.ui_if_red);
+            idSliderBackground = R.drawable.slidingright_red;
+        }
+        else if(paletteColor.equals("Yellow")) {
+            textColor = res.getColor(R.color.ui_if_yellow);
+            idSliderBackground = R.drawable.slidingright_yellow;
+        }
+        else if(paletteColor.equals("Green")) {
+            textColor = res.getColor(R.color.ui_if_green);
+            idSliderBackground = R.drawable.slidingright_greenlighter;
+        }
+        else if(paletteColor.equals("Orange")) {
+            textColor = res.getColor(R.color.ui_if_orange);
+            idSliderBackground = R.drawable.slidingright_orangedarker;
+        }
+        else if(paletteColor.equals("Teal")) {
+            textColor = res.getColor(R.color.ui_if_teal);
+            idSliderBackground = R.drawable.slidingright_aqua;
+        }
+        else if(paletteColor.equals("Blue")) {
+            textColor = res.getColor(R.color.ui_if_blue);
+            idSliderBackground = R.drawable.slidingright_bluedarker;
+        }
+        else if(paletteColor.equals("Purple")) {
+            textColor = res.getColor(R.color.ui_if_purple);
+            idSliderBackground = R.drawable.slidingright_purple;
+        }
+        else {
+            textColor = res.getColor(R.color.ui_if_other);
+            idSliderBackground = R.drawable.slidingright_greydarker;
+        }
+
+        // Now, finally set the colors
+        mRightMenuTitleTextView.setTextColor(textColor);
+        mRightMenuBodyTextView.setTextColor(textColor);
+        mRightMenuLinearLayout.setBackgroundResource(idSliderBackground);
 
         // Reset the ScrollView ie description to the top
-        scrollDescription.scrollTo(0, 0);
+        mRightMenuScrollView.scrollTo(0, 0);
     }
 
     /**

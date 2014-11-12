@@ -40,15 +40,23 @@ public class ParseCoolThings {
 
         // Get the necessary data from the object
         String id = jsonObject.getString(TAG_ID);
+        boolean includeInApp = jsonObject.getBoolean(TAG_INCLUDEINAPP);
+
         String title = jsonObject.getString(TAG_TITLE);
         String subTitle = jsonObject.getString(TAG_SUBTITLE);
         String body = jsonObject.getString(TAG_BODYTEXT);
+
+        String paletteColor = jsonObject.getString(TAG_PALETTECOLOR);
         String imageURL = jsonObject.getString(TAG_IMAGEURL);
 
         // Add the data to the Cool Thing object to hold this data
         coolThing.setId(id);
+        coolThing.setIncludeInApp(includeInApp);
+
         coolThing.setTitle(title);
         coolThing.setBodyText(body);
+
+        coolThing.setPaletteColor(paletteColor);
         coolThing.setImageURL(imageURL);
         coolThing.setSubTitle(subTitle);
     }

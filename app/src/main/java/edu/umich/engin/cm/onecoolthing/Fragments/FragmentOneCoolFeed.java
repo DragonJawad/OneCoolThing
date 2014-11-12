@@ -109,9 +109,10 @@ public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageCha
         // Get the data from the page to pass on
         String subTitle = pagerAdapter.getSubTitle(i);
         String body = pagerAdapter.getBodyText(i);
+        String paletteColor = pagerAdapter.getPaletteColor(i);
 
         // Send the information to the activity
-        communicator.changeRightSlide(subTitle, body);
+        communicator.changeRightSlide(subTitle, body, paletteColor);
 
         /*
         // When a new page is selected, take notice!
@@ -130,8 +131,7 @@ public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageCha
     // TODO: Change this to work better with final design, including names and actual usage
     // Currently, simply tells the ActivityTestCenter to change the right slider's color
     //      to the color that the center fragment is using
-    public interface VertPagerCommunicator{
-      public void changeRightSlide(int color);
-      public void changeRightSlide(String subTitle, String body);
+    public interface VertPagerCommunicator {
+      public void changeRightSlide(String subTitle, String body, String paletteColor);
     }
 }

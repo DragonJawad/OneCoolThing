@@ -41,4 +41,48 @@
     <color name="white_light">#FFF</color>
     <color name="white_middle">#ffd3d3d3</color>
     <color name="white_dark">#ff8e8e8e</color>
+
+    <!-- Right Sliding Menu Text Colors -->
+    <color name="ui_if_red">#FFF</color>
+    <color name="ui_if_yellow">#333333</color>
+    <color name="ui_if_green">#333333</color>
+    <color name="ui_if_orange">#FFF</color>
+    <color name="ui_if_teal">#FFF</color>
+    <color name="ui_if_blue">#FFF</color>
+    <color name="ui_if_purple">#FFF</color>
+    <color name="ui_if_other">#FFF</color>
+
+    <!-- Right Sliding Menu Background Gradient Colors -->
+        <!-- Red -->
+    <color name="slidingright_red_upperleft">#A4161F</color>
+    <color name="slidingright_red_middle">#8D181D</color>
+    <color name="slidingright_red_bottomright">#5E1B16</color>
+        <!-- Yellow -->
+    <color name="slidingright_yellow_upperleft">#FFCD56</color>
+    <color name="slidingright_yellow_middle">#FBC452</color>
+    <color name="slidingright_yellow_bottomright">#ECB04A</color>
+        <!-- Green Lighter -->
+    <color name="slidingright_greenlighter_upperleft">#A5EFA1</color>
+    <color name="slidingright_greenlighter_middle">#79DC8C</color>
+    <color name="slidingright_greenlighter_bottomright">#4AC978</color>
+        <!-- Orange -->
+    <color name="slidingright_orangedarker_upperleft">#D05637</color>
+    <color name="slidingright_orangedarker_middle">#AA4A30</color>
+    <color name="slidingright_orangedarker_bottomright">#863F2A</color>
+        <!-- Aqua -->
+    <color name="slidingright_aqua_upperleft">#00B0A7</color>
+    <color name="slidingright_aqua_middle">#009FA7</color>
+    <color name="slidingright_aqua_bottomright">#5975AB</color>
+        <!-- Blue Darker -->
+    <color name="slidingright_bluedarker_upperleft">#2C4A90</color>
+    <color name="slidingright_bluedarker_middle">#323971</color>
+    <color name="slidingright_bluedarker_bottomright">#382A56</color>
+        <!-- Purple -->
+    <color name="slidingright_purple_upperleft">#6C488D</color>
+    <color name="slidingright_purple_middle">#4D3F78</color>
+    <color name="slidingright_purple_bottomright">#002949</color>
+        <!-- Grey Darker -->
+    <color name="slidingright_greydarker_upperleft">#5B5D60</color>
+    <color name="slidingright_greydarker_middle">#373B43</color>
+    <color name="slidingright_greydarker_bottomright">#131724</color>
 </resources>
