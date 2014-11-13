@@ -12,11 +12,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -32,7 +34,8 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 12/10/14.
  */
-public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.VertPagerCommunicator {
+public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.VertPagerCommunicator,
+    View.OnClickListener {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
@@ -57,11 +60,13 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     TextView mRightMenuBodyTextView;
     ScrollView mRightMenuScrollView;
 
+    // Actionbar itself
+    ActionBar mActionBar;
+
     // Actionbar Views
     View mViewActionBarSimple;
     View mViewActionBarWithTitle;
-    // Actionbar itself
-    ActionBar mActionBar;
+    TextView mActionTitleText;
 
     /* Current center fragment index, for reference
      * Below is the master list - If the nav is changed, change the below and any
@@ -106,6 +111,20 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
         // Inflate the simple ActionBar view
         mViewActionBarSimple = inflater.inflate(R.layout.actionbar_simple, null);
+
+        // Set the imageButton from the simple view to toggle the slidingMenu
+        ((ImageButton) mViewActionBarSimple.findViewById(R.id.navButton))
+                .setOnClickListener(this);
+
+        // Inflate the ActionBar with the title view
+        mViewActionBarWithTitle = inflater.inflate(R.layout.actionbar_withtitle, null);
+
+        // Set the imageButton from the view with title to toggle the slidingMenu
+        ((ImageButton) mViewActionBarWithTitle.findViewById(R.id.navButton))
+                .setOnClickListener(this);
+
+        // Get the title textView from the view so the title can be set later
+        mActionTitleText = (TextView) mViewActionBarWithTitle.findViewById(R.id.textTitle);
 
         // Initialize and set up the ActionBar
         mActionBar = getActionBar();
@@ -309,6 +328,9 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             toggleCoolThingSettings(false);
         }
 
+        // Set the title of the ActionBar via the mFragsTags title/tag
+        setActionBarTitle(mFragTags[index]);
+
         // Finally, change the index of the currently used fragment
         currentFragmentIndex = index;
     }
@@ -368,6 +390,11 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         mRightMenuScrollView.scrollTo(0, 0);
     }
 
+    // Sets the title on the ActionBar view that contains the title
+    private void setActionBarTitle(String title) {
+        mActionTitleText.setText(title);
+    }
+
     /**
      * Toggle the settings necessary for the CoolThing views
      * @param enable - True if now enabling the CoolThing center view. Vice versa if removing view
@@ -378,6 +405,9 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
         // Toggle the landscape mode - if enabling the CoolThing view, disable the landscape mode
         toggleLandscapeMode(!enable);
+
+        // Toggle the actionBar view- true for the simpler ActionBar
+        toggleSimpleActionBar(enable);
     }
 
     /**
@@ -413,6 +443,19 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         }
     }
 
+    /**
+     * Switches the ActionBar out
+     * @param enable - True if to use the simple actionBar, false if using one with title
+     */
+    private void toggleSimpleActionBar(boolean enable) {
+        if(enable) {
+            mActionBar.setCustomView(mViewActionBarSimple);
+        }
+        else {
+            mActionBar.setCustomView(mViewActionBarWithTitle);
+        }
+    }
+
     // Override the menu key press so sliding menu can be open and closed by it
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -428,11 +471,35 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.mSlidingMenuLeft.toggle();
+                if(!mSlidingMenuRight.isMenuShowing())
+                    this.mSlidingMenuLeft.toggle();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // To remove the options menu - and make the custom actionBar take the full space -
+            // always return false
+        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        // The only onClickListener that uses the Activity simply toggles the left slidingMenu
+
+        // If the rightSlidingMenu is showing, close it
+        if(mSlidingMenuRight.isMenuShowing()) mSlidingMenuRight.toggle();
+
+        // Toggle the slidingMenu
+        this.mSlidingMenuLeft.toggle();
     }
 
     // Adapter for the left sliding menu's listView

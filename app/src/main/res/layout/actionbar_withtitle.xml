@@ -3,7 +3,7 @@
   android:orientation="horizontal"
   android:layout_width="match_parent"
   android:layout_height="?android:actionBarSize"
-  android:background="@color/transparent">
+  android:background="@color/white">
     <ImageButton
         android:id="@+id/navButton"
         android:layout_width="wrap_content"
@@ -11,8 +11,20 @@
         android:paddingTop="@dimen/padding_actionbar_icon"
         android:paddingBottom="@dimen/padding_actionbar_icon"
         android:paddingRight="@dimen/padding_actionbar_icon"
+        android:paddingEnd="@dimen/padding_actionbar_icon"
         android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
+        android:layout_marginStart="@dimen/margin_actionbar_icon_left"
         android:src="@drawable/ic_drawer_normal"
         android:background="?android:attr/selectableItemBackground"
+        />
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_general"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_normal"
+        android:text="@string/garbage_fill_short"
         />
 </LinearLayout>
