@@ -2,17 +2,17 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_general"
     >
     <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
         android:id="@+id/name"
         onecoolthing:fontName="Nunito-Regular.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_nav_item"
+        android:layout_marginTop="@dimen/margin_nav_item"
+        android:layout_marginBottom="@dimen/margin_nav_item"
         android:text="@string/garbage_fill_short"
         android:textColor="@color/white"
         android:textSize="@dimen/text_nav"

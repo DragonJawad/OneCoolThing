@@ -12,14 +12,15 @@
     <dimen name="text_normal">20sp</dimen>
     <dimen name="text_small">9sp</dimen>
     <dimen name="text_cool_titles">26sp</dimen>
-    <dimen name="text_nav">20sp</dimen> <!-- Size of each item in the left sliding menu's nav -->
+    <dimen name="text_nav">17sp</dimen> <!-- Size of each item in the left sliding menu's nav -->
     <dimen name="text_rightmenu_body">18dp</dimen> <!-- Size of body scrollview and share text -->
 
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>
     <dimen name="margin_actionbar_icon_left">0dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
-    <dimen name="margin_nav_item">8dp</dimen> <!-- Margins between each left sliding menu item -->
+        <!-- Margins between each left sliding menu item -->
+    <dimen name="margin_nav_item">18dp</dimen>
         <!-- Margin between the left edge of the right menu, which includes the shadow -->
     <dimen name="margin_rightmenu_leftpush">20dp</dimen>
         <!-- Margin between right sliding menu's title and body scrollview -->
@@ -29,12 +30,12 @@
     <dimen name="padding_general">5dp</dimen>
     <dimen name="padding_actionbar_icon">10dp</dimen>
     <dimen name="padding_drawer_left">10dp</dimen>
-    <dimen name="padding_rightmenu_betweenbodytitle">20dp</dimen>
+    <dimen name="padding_rightmenu_betweenbodytitle">15dp</dimen>
     <dimen name="padding_rightmenu_rightedge">20dp</dimen>
     <dimen name="padding_rightmenu_rightedge_share">10dp</dimen>
 
     <!-- Sliding Menu -->
-    <dimen name="slidingmenu_shadow_width">15dp</dimen>
+    <dimen name="slidingmenu_shadow_width">5dp</dimen>
     <dimen name="slidingmenu_width_main">240dp</dimen>
     <dimen name="slidingmenu_width_content">200dp</dimen>
     <dimen name="slidingmenu_width_content_offset">40dp</dimen>
