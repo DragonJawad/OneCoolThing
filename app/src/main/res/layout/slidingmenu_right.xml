@@ -2,6 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container_right_sliding"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -15,8 +16,9 @@
         android:layout_height="0dp"
         android:layout_weight="2">
 
-        <TextView
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
             android:id="@+id/subTitle"
+            onecoolthing:fontName="Nunito-Regular.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_cool_titles"
@@ -30,8 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="4">
-        <TextView
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
             android:id="@+id/bodyText"
+            onecoolthing:fontName="Nunito-Regular.ttf"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/garbage_fill_medium"

@@ -2,6 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent">
@@ -65,8 +66,9 @@
             />
 
         <!-- Displays title of cool thing -->
-        <TextView
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
             android:id="@+id/title"
+            onecoolthing:fontName="Nunito-Regular.ttf"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
