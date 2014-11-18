@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -21,7 +21,7 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
  *
  * Displays FragmentCoolThings in PagerAdapter
  */
-public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.JSONUser,
+public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements ParseCoolThings.JSONUser,
         ImageLoaderNoCache.LoaderManager{
     private static final String TAG = "MD/CoolThingsPagerAdapter";
 

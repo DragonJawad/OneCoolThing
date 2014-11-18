@@ -1,5 +1,6 @@
 package edu.umich.engin.cm.onecoolthing.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,6 +9,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,6 +23,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -60,9 +63,6 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     TextView mRightMenuBodyTextView;
     ScrollView mRightMenuScrollView;
 
-    // Actionbar itself
-    ActionBar mActionBar;
-
     // Actionbar Views
     View mViewActionBarSimple;
     View mViewActionBarWithTitle;
@@ -85,13 +85,34 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
      */
     int currentFragmentIndex = -1;
 
+    @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Remove the actionBar in its evil entirety
+        getActionBar().hide();
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setHomeButtonEnabled(false);
+
+        actionBar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        View homeIcon = findViewById(android.R.id.home);
+        // Hides the View (and so the icon)
+        if (homeIcon != null)
+            ((View) homeIcon.getParent()).setVisibility(View.GONE);
+
+        overridePendingTransition(0, 0);
+
         setContentView(R.layout.activity_test);
+        // Remove the rest of the evilness of the ActionBar
+        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.mainContainer);
+    //    viewGroup.removeAllViews();
 
         // Initialize the custom actionBar views and set the first actionBar up
-        initActionBar();
+        initCustomActionBar();
 
         // Initialize the sliding menus
         initBothSlidingMenus();
@@ -105,7 +126,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         initOneCoolFeedFrag();
     }
 
-    private void initActionBar() {
+    private void initCustomActionBar() {
         // Get the LayoutInflater to inflate the views
         LayoutInflater inflater = getLayoutInflater();
 
@@ -126,15 +147,13 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         // Get the title textView from the view so the title can be set later
         mActionTitleText = (TextView) mViewActionBarWithTitle.findViewById(R.id.textTitle);
 
-        // Initialize and set up the ActionBar
-        mActionBar = getActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(false);
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
-        mActionBar.setDisplayShowCustomEnabled(true);
+        // Add the actionBars to the respective container
+        RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.actionbar_container);
+        viewGroup.addView(mViewActionBarSimple);
+        viewGroup.addView(mViewActionBarWithTitle);
 
-        // Set the actionBar layout initially to the simple one
-        mActionBar.setCustomView(mViewActionBarSimple);
+        // Hide the actionBar with the title- the simple actionBar is the one to use at the moment
+        mViewActionBarWithTitle.setVisibility(View.INVISIBLE);
     }
 
     private void initOneCoolFeedFrag() {
@@ -146,7 +165,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
         // Add in the fragment to the place specified in the layout file
         getFragmentManager().beginTransaction()
-                .add(R.id.container, mFragOneCoolFeed, mFragTags[0])
+                .add(R.id.fragContainer, mFragOneCoolFeed, mFragTags[0])
                 .commit();
 
         // Set the particular activity settings for the center view
@@ -306,7 +325,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             FragmentTumblrFeed frag = FragmentTumblrFeed.newInstance(this_url, this_title);
 
             // Add the url to the center view
-            fragmentTransaction.add(R.id.container, frag, mFragTags[index]);
+            fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
             fragmentTransaction.commit();
 
             // Set settings for this view
@@ -320,7 +339,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             FragmentBase frag = new FragmentBase();
             frag.changeBG(R.color.dev_blue);
 
-            fragmentTransaction.add(R.id.container, frag, mFragTags[index]);
+            fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
             fragmentTransaction.commit();
 
             // Set settings for this view
@@ -449,10 +468,24 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
      */
     private void toggleSimpleActionBar(boolean enable) {
         if(enable) {
-            mActionBar.setCustomView(mViewActionBarSimple);
+            // If the simple actionbar is NOT visible, then must switch it out
+            if(mViewActionBarSimple.getVisibility() != View.VISIBLE) {
+                // Make the title actionbar invisible
+                mViewActionBarWithTitle.setVisibility(View.INVISIBLE);
+
+                // Make the simple actionbar visible
+                mViewActionBarSimple.setVisibility(View.VISIBLE);
+            }
         }
         else {
-            mActionBar.setCustomView(mViewActionBarWithTitle);
+            // If the title actionbar is NOT visible, then must switch it out
+            if(mViewActionBarWithTitle.getVisibility() != View.VISIBLE) {
+                // Make the simple actionbar invisible
+                mViewActionBarSimple.setVisibility(View.INVISIBLE);
+
+                // Make the title actionbar visible
+                mViewActionBarWithTitle.setVisibility(View.VISIBLE);
+            }
         }
     }
 
