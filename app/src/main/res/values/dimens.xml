@@ -11,13 +11,16 @@
     <dimen name="text_large">48sp</dimen>
     <dimen name="text_normal">20sp</dimen>
     <dimen name="text_small">9sp</dimen>
-    <dimen name="text_cool_titles">26sp</dimen>
+    <dimen name="text_coolthing_title">32sp</dimen>
     <dimen name="text_nav">17sp</dimen> <!-- Size of each item in the left sliding menu's nav -->
     <dimen name="text_rightmenu_body">18dp</dimen> <!-- Size of body scrollview and share text -->
+    <dimen name="text_rightmenu_title">26sp</dimen>
 
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>
     <dimen name="margin_actionbar_icon_left">0dp</dimen>
+    <dimen name="margin_coolthing_title_push_right">15dp</dimen>
+    <dimen name="margin_coolthing_title_push_bottom">40dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
         <!-- Margins between each left sliding menu item -->
     <dimen name="margin_nav_item">18dp</dimen>

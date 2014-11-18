@@ -23,7 +23,7 @@
             onecoolthing:fontName="Nunito-Regular.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_cool_titles"
+            android:textSize="@dimen/text_rightmenu_title"
             android:textColor="@color/white"
             android:text="@string/garbage_fill_short"/>
 

@@ -53,9 +53,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/margin_general"
-        android:layout_marginRight="@dimen/margin_general"
-        android:layout_marginEnd="@dimen/margin_general"
+        android:layout_marginBottom="@dimen/margin_coolthing_title_push_bottom"
+        android:layout_marginRight="@dimen/margin_coolthing_title_push_right"
+        android:layout_marginEnd="@dimen/margin_coolthing_title_push_right"
         >
 
         <!-- Empty spacer view -->
@@ -72,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:textSize="@dimen/text_cool_titles"
+            android:textSize="@dimen/text_coolthing_title"
             android:textColor="@color/white"
             android:gravity="end"
             />
