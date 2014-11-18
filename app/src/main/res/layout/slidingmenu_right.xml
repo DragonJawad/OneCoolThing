@@ -41,6 +41,18 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_normal"/>
     </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        </LinearLayout>
+    <!--
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -48,6 +60,6 @@
         android:src="@drawable/ic_launcher"
         android:scaleType="fitXY"
         />
-
+    -->
 
 </LinearLayout>
