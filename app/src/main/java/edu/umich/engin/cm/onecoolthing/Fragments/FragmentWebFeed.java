@@ -15,9 +15,9 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 06/11/14.
  *
- * A Fragment that shows a Tumblr feed via a WebView
+ * A Fragment that shows a feed via a WebView
  */
-public class FragmentTumblrFeed extends Fragment {
+public class FragmentWebFeed extends Fragment {
     private String mUrl; // URL of this Tumblr feed
     private String mTitle; // Title of this Tumblr feed
 
@@ -27,9 +27,9 @@ public class FragmentTumblrFeed extends Fragment {
     private WebView mWebView;
 
     // Creates a new instance- note, non-default constructors should not be used with a fragment
-    public static FragmentTumblrFeed newInstance(String url, String title) {
+    public static FragmentWebFeed newInstance(String url, String title) {
         // Instantiate the fragment
-        FragmentTumblrFeed frag = new FragmentTumblrFeed();
+        FragmentWebFeed frag = new FragmentWebFeed();
 
         // Create a new bundle that the fragment will later access
         Bundle bundle = new Bundle(2);

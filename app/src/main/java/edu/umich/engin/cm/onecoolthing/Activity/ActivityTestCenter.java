@@ -31,7 +31,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.Fragments.FragmentOneCoolFeed;
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentTumblrFeed;
+import edu.umich.engin.cm.onecoolthing.Fragments.FragmentWebFeed;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -322,7 +322,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             String this_title = mFragTags[index];
 
             // Create a new TumblrFeed fragment, with its title and url
-            FragmentTumblrFeed frag = FragmentTumblrFeed.newInstance(this_url, this_title);
+            FragmentWebFeed frag = FragmentWebFeed.newInstance(this_url, this_title);
 
             // Add the url to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
