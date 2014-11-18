@@ -12,8 +12,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentCoolThing;
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentOneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 
 /**

@@ -14,8 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.umich.engin.cm.onecoolthing.Fragments.NavigationDrawerFragment;
 import edu.umich.engin.cm.onecoolthing.R;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.NavigationDrawerFragment;
 
 
 public class ActivityMain extends ActionBarActivity

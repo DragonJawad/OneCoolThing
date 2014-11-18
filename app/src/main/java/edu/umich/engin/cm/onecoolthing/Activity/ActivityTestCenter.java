@@ -29,10 +29,10 @@ import android.widget.TextView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentBase;
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentOneCoolFeed;
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentWebFeed;
+import edu.umich.engin.cm.onecoolthing.CoolThings.FragmentOneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.R;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentBase;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentWebFeed;
 
 /**
  * Created by jawad on 12/10/14.

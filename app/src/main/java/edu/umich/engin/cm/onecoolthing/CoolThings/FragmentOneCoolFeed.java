@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.Fragments;
+package edu.umich.engin.cm.onecoolthing.CoolThings;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingsPagerAdapter;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 import edu.umich.engin.cm.onecoolthing.R;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;

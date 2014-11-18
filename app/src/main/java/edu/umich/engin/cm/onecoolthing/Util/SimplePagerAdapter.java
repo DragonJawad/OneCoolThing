@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v13.app.FragmentPagerAdapter;
 
-import edu.umich.engin.cm.onecoolthing.Fragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.R;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentBase;
 
 /**
  * Created by jawad on 14/10/14.

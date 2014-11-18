@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.Fragments;
+package edu.umich.engin.cm.onecoolthing.CoolThings;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
