@@ -7,14 +7,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin_general"
-    android:paddingLeft="@dimen/slidingmenu_shadow_width"
+    android:paddingLeft="@dimen/padding_rightmenu_betweenbodytitle"
     android:background="@color/purple_dark">
 
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/padding_rightmenu_rightedge"
+        android:gravity="start"
+        >
 
         <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
             android:id="@+id/subTitle"
@@ -31,7 +33,11 @@
         android:id="@+id/scroll_description"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="4">
+        android:layout_weight="4"
+        android:layout_marginTop="@dimen/margin_rightmenu_betweenbodytitle"
+        android:layout_marginBottom="@dimen/margin_general"
+        android:paddingRight="@dimen/padding_rightmenu_rightedge"
+        >
         <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
             android:id="@+id/bodyText"
             onecoolthing:fontName="Nunito-Regular.ttf"
@@ -39,18 +45,33 @@
             android:layout_height="wrap_content"
             android:text="@string/garbage_fill_medium"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_normal"/>
+            android:textSize="@dimen/text_rightmenu_body"/>
     </ScrollView>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+        android:layout_weight="1"
+        android:paddingRight="@dimen/padding_rightmenu_rightedge_share"
+        >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                onecoolthing:fontName="Nunito-Regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/share_intro"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_rightmenu_body"
+                />
+
+            </LinearLayout>
         </LinearLayout>
     <!--
     <ImageView
