@@ -54,6 +54,12 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
     private SlidingMenu mSlidingMenuLeft;
     private SlidingMenu mSlidingMenuRight;
 
+    // ListView of the left slidingMenu
+    ListView mListNav;
+    View mCurrentNavView; // Represents the currently selected nav row
+    int mNavSelected = 0;
+    boolean mNavFirstSetup = false; // Represents if a nav item has been selected yet
+
     // Determines whether or not the right sliding menu is enabled
     private boolean mRightMenuEnabled = false;
 
@@ -189,18 +195,25 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         View viewLeftMenu = inflater.inflate(R.layout.slidingmenu_left, null);
 
         // Set up the listView within the left sliding menu
-        ListView listNav = (ListView)viewLeftMenu.findViewById(R.id.list);
+        mListNav = (ListView)viewLeftMenu.findViewById(R.id.list);
         NavAdapter adapter = new NavAdapter(this);
-        listNav.setAdapter(adapter);
+        mListNav.setAdapter(adapter);
         // Set a click listener for the listView
-        listNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Set the selected position
+                setHighlightedNavRow(view);
+
+                // Cache this view for later
+                mCurrentNavView = view;
+
+                // TODO: Skip if currently at this posit
                 // Change out the current fragment displayed in the center
                 changeFrag(position);
 
                 // Toggle/close the left sliding menu
-                mSlidingMenuLeft.toggle();
+            //    toggleLeftSlidingMenu();
             }
         });
 
@@ -489,11 +502,44 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         }
     }
 
+    /**
+     * Toggle the left sliding menu
+     */
+    private void toggleLeftSlidingMenu() {
+        // If not showing the left sliding menu, show it
+        if(!mSlidingMenuLeft.isMenuShowing()) {
+            // Simply toggle it to show it
+            mSlidingMenuLeft.toggle();
+
+            // Then, set the highlighted nav item
+            setHighlightedNavRow();
+        }
+        // If showing, then hide it
+        else {
+            mSlidingMenuLeft.toggle();
+        }
+    }
+
+    private void setHighlightedNavRow() {
+        // In case this is the first setup, then check that a mCurrentNav was already set
+    //    if(mCurrentNavView != null)
+    //        mCurrentNavView.setSelected(true);
+
+        Log.d(TAG, "Set the selected nav row with position " + mNavSelected);
+
+        // Get the selected row
+        (mListNav.getChildAt(mNavSelected)).setSelected(true);
+    }
+
+    private void setHighlightedNavRow(View navView) {
+        navView.setSelected(true);
+    }
+
     // Override the menu key press so sliding menu can be open and closed by it
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ( keyCode == KeyEvent.KEYCODE_MENU && !mSlidingMenuRight.isMenuShowing()) {
-            this.mSlidingMenuLeft.toggle();
+            toggleLeftSlidingMenu();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -505,7 +551,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         switch (item.getItemId()) {
             case android.R.id.home:
                 if(!mSlidingMenuRight.isMenuShowing())
-                    this.mSlidingMenuLeft.toggle();
+                    toggleLeftSlidingMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -532,7 +578,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
         if(mSlidingMenuRight.isMenuShowing()) mSlidingMenuRight.toggle();
 
         // Toggle the slidingMenu
-        this.mSlidingMenuLeft.toggle();
+        toggleLeftSlidingMenu();
     }
 
     // Adapter for the left sliding menu's listView
@@ -581,6 +627,18 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
             TextView navTitle = (TextView) row.findViewById(R.id.name);
             // Set the text
             navTitle.setText(navText[position]);
+
+            // If a nav has yet to be selected and this is the first item, set it as selected
+            if(!mNavFirstSetup && position == 0) {
+                // Set this row as selected
+                setHighlightedNavRow(row);
+
+                // Indicate that the first item has been highlighted already
+                mNavFirstSetup = true;
+
+                // Cache this row for later, to state it's the current row
+                mCurrentNavView = row;
+            }
 
             return row;
         }
