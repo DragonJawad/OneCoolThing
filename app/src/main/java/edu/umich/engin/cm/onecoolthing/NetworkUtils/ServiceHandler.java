@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ServiceHandler {
 
-    static String response = null;
+    private String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
 
@@ -73,11 +73,9 @@ public class ServiceHandler {
                 HttpGet httpGet = new HttpGet(url);
 
                 httpResponse = httpClient.execute(httpGet);
-
             }
             httpEntity = httpResponse.getEntity();
             response = EntityUtils.toString(httpEntity);
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
@@ -87,6 +85,5 @@ public class ServiceHandler {
         }
 
         return response;
-
     }
 }
