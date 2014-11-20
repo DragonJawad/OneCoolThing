@@ -26,12 +26,12 @@ public class CoolThingsListAdapter extends BaseAdapter {
     ImageLoader imageLoader;
 
     // List of cool things
-    ArrayList<CoolThing> coolThings;
+    ArrayList<CoolThingData> coolThings;
 
     // Determines whether or not to use images
     boolean useImages = false;
 
-    public CoolThingsListAdapter(Context context, ArrayList<CoolThing> coolThings) {
+    public CoolThingsListAdapter(Context context, ArrayList<CoolThingData> coolThings) {
         this.coolThings = coolThings;
         this.mContext = context;
 
@@ -40,7 +40,7 @@ public class CoolThingsListAdapter extends BaseAdapter {
         imageLoader.clearCache();
     }
 
-    public CoolThingsListAdapter(Context context, ArrayList<CoolThing> coolThings, boolean useImages) {
+    public CoolThingsListAdapter(Context context, ArrayList<CoolThingData> coolThings, boolean useImages) {
         this.coolThings = coolThings;
         this.mContext = context;
         this.useImages = useImages;
@@ -92,7 +92,7 @@ public class CoolThingsListAdapter extends BaseAdapter {
         }
 
         // Set the current row's data
-        CoolThing thisThing = coolThings.get(position);
+        CoolThingData thisThing = coolThings.get(position);
         holder.id.setText(thisThing.getId());
         holder.name.setText(thisThing.getTitle());
         holder.body.setText(thisThing.getBodyText());

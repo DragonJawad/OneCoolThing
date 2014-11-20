@@ -3,7 +3,7 @@ package edu.umich.engin.cm.onecoolthing.CoolThings;
 /**
  * Created by jawad on 18/10/14.
  */
-public class CoolThing {
+public class CoolThingData {
     private String id;
     private boolean includeInApp;
 
@@ -83,7 +83,7 @@ public class CoolThing {
         }
     // end of getter/setter methods
 
-    public CoolThing(String id, String title, String bodyText){
+    public CoolThingData(String id, String title, String bodyText){
         setId(id);
         setTitle(title);
         setBodyText(bodyText);

@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import edu.umich.engin.cm.onecoolthing.CoolThings.FragmentOneCoolFeed;
+import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentWebFeed;
@@ -37,13 +37,13 @@ import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentWebFeed;
 /**
  * Created by jawad on 12/10/14.
  */
-public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.VertPagerCommunicator,
+public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.VertPagerCommunicator,
     View.OnClickListener {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
     // The single One Cool Feed fragment to use
-    private FragmentOneCoolFeed mFragOneCoolFeed;
+    private OneCoolFeedFrag mFragOneCoolFeed;
 
     // Tags for all fragments
     private String[] mFragTags;
@@ -164,7 +164,7 @@ public class ActivityTestCenter extends Activity implements FragmentOneCoolFeed.
 
     private void initOneCoolFeedFrag() {
         // Actually initialize the fragment
-        mFragOneCoolFeed = new FragmentOneCoolFeed();
+        mFragOneCoolFeed = new OneCoolFeedFrag();
 
         // Let the frag communicate with this activity
         mFragOneCoolFeed.setCommunicator(this);

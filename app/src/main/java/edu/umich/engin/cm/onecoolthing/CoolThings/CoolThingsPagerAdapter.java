@@ -24,10 +24,10 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
     private static final String TAG = "MD/CoolThingsPagerAdapter";
 
     // List of fragments to display
-    ArrayList<FragmentCoolThing> mListOfFragCoolThings;
+    ArrayList<CoolThingFrag> mListOfFragCoolThings;
 
     // Array of all coolThings
-    ArrayList<CoolThing> mListOfCoolThings;
+    ArrayList<CoolThingData> mListOfCoolThings;
 
     // Contains all the cool things in raw JSON form
     JSONArray mJsonArray;
@@ -36,7 +36,7 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
     int skipCounter = 0;
 
     // Simply save a reference to the frag that calls this pager, to give it the url of its bg
-    FragmentOneCoolFeed mFragCaller;
+    OneCoolFeedFrag mFragCaller;
         // TODO: Make an interface... again?
 
     public CoolThingsPagerAdapter(FragmentManager fm) {
@@ -44,16 +44,16 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
     }
 
     // Intializes the adapter, MUST get
-    public void initAdapter(Context context, FragmentOneCoolFeed frag) {
+    public void initAdapter(Context context, OneCoolFeedFrag frag) {
         // Cache the mFragCaller to give it its background url later
         this.mFragCaller = frag;
 
         // Initialize teh array lists
-        mListOfFragCoolThings = new ArrayList<FragmentCoolThing>();
-        mListOfCoolThings = new ArrayList<CoolThing>();
+        mListOfFragCoolThings = new ArrayList<CoolThingFrag>();
+        mListOfCoolThings = new ArrayList<CoolThingData>();
 
         // Create and display first fragment, with loading animation
-        FragmentCoolThing firstFrag = new FragmentCoolThing();
+        CoolThingFrag firstFrag = new CoolThingFrag();
         mListOfFragCoolThings.add(firstFrag);
 
         // Call an Async in the parser to get the JSON and call on this object once its done
@@ -68,7 +68,7 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
         this.mJsonArray = jsonArray;
 
         // Create a new cool thing, for easy data retrieval now and later
-        CoolThing coolThing = new CoolThing("N/A", "N/A", "N/A");
+        CoolThingData coolThing = new CoolThingData("N/A", "N/A", "N/A");
         try {
             int FIRST_INDEX = 0; // Index of the very first cool thing
             ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(FIRST_INDEX),
@@ -92,7 +92,7 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
         mListOfCoolThings.add(coolThing);
 
         // Give the data to the fragment
-        FragmentCoolThing frag = mListOfFragCoolThings.get(0);
+        CoolThingFrag frag = mListOfFragCoolThings.get(0);
         frag.setData(coolThing.getImageURL(), coolThing.getTitle(), this);
 
         // Notify the frag to use this coolThing's url for its background
@@ -118,11 +118,11 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
         if(mListOfFragCoolThings.size() >= mJsonArray.length()) return;
 
         // Create a placeholder fragment and add it to the list of fragments
-        FragmentCoolThing frag = new FragmentCoolThing();
+        CoolThingFrag frag = new CoolThingFrag();
         mListOfFragCoolThings.add(frag);
 
         // Create a placeholder cool thing and add it to the list of cool things
-        CoolThing coolThing = new CoolThing("N/A", "N/A", "N/A");
+        CoolThingData coolThing = new CoolThingData("N/A", "N/A", "N/A");
         mListOfCoolThings.add(coolThing);
 
         // Notify adapter that the data set has been changed
@@ -132,10 +132,10 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
     // Set up the placeholder, loading fragment
     private void setUpFrag(int index) {
         // Get the frag to set up
-        FragmentCoolThing frag = mListOfFragCoolThings.get(index);
+        CoolThingFrag frag = mListOfFragCoolThings.get(index);
 
         // Get the cool thing that represents this fragment and fill it with data
-        CoolThing coolThing = mListOfCoolThings.get(index);
+        CoolThingData coolThing = mListOfCoolThings.get(index);
         try {
             // Get the first CoolThing to check
             ParseCoolThings.JSONToCoolThing(mJsonArray.getJSONObject(index+skipCounter),
@@ -178,7 +178,7 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
     @Override
     public Fragment getItem(int i) {
         // Get the fragment
-        FragmentCoolThing frag = mListOfFragCoolThings.get(i);
+        CoolThingFrag frag = mListOfFragCoolThings.get(i);
 
         // If the fragment hasn't been set yet and this isn't the special first fragment's case,
             // then set it up

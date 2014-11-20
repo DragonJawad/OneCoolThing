@@ -19,7 +19,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  *
  * Displays a single "CoolThing" object, with only title and background
  */
-public class FragmentCoolThing extends Fragment implements ImageLoaderNoCache.LoaderManager {
+public class CoolThingFrag extends Fragment implements ImageLoaderNoCache.LoaderManager {
     // View elements
     private ImageView background;
     private TextView titleView;

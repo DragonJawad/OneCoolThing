@@ -36,7 +36,7 @@ public class ParseCoolThings {
      * @param jsonObject - Contains the Cool Thing with the appropriate tags in JSON format
      * @param coolThing - CoolThing who's data is to be modified
      */
-    static public void JSONToCoolThing(JSONObject jsonObject, CoolThing coolThing) throws JSONException {
+    static public void JSONToCoolThing(JSONObject jsonObject, CoolThingData coolThing) throws JSONException {
 
         // Get the necessary data from the object
         String id = jsonObject.getString(TAG_ID);

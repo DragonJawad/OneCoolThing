@@ -17,7 +17,7 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 /**
  * Created by jawad on 14/10/14.
  */
-public class FragmentOneCoolFeed extends Fragment implements ViewPager.OnPageChangeListener,
+public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeListener,
         ImageLoaderNoCache.LoaderManager {
     private final String TAG = "MD/OneCoolFeed"; // Tag for logging from this class
 
