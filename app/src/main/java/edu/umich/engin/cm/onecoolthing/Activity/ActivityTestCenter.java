@@ -57,7 +57,6 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     // ListView of the left slidingMenu
     ListView mListNav;
     View mCurrentNavView; // Represents the currently selected nav row
-    int mNavSelected = 0;
     boolean mNavFirstSetup = false; // Represents if a nav item has been selected yet
 
     // Determines whether or not the right sliding menu is enabled
@@ -525,10 +524,15 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     //    if(mCurrentNavView != null)
     //        mCurrentNavView.setSelected(true);
 
-        Log.d(TAG, "Set the selected nav row with position " + mNavSelected);
+        Log.d(TAG, "Set the selected nav row with position " + currentFragmentIndex);
 
-        // Get the selected row
-        (mListNav.getChildAt(mNavSelected)).setSelected(true);
+        // If the current fragment index is not yet set, just use the first position
+        int selection = currentFragmentIndex;
+        if(currentFragmentIndex == -1) selection = 0;
+
+        // Get the selected row and set it as focused and selected
+        View view = mListNav.getChildAt(selection);
+        view.setSelected(true);
     }
 
     private void setHighlightedNavRow(View navView) {

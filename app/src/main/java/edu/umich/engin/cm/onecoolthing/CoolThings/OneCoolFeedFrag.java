@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         initCoolViewPager(getActivity());
     }
 
-    public void initCoolViewPager(Context context) {
+    private void initCoolViewPager(Context context) {
         // Bug fix of "Observer... was not registered" error
             // Ie, adapter kept getting reset and app crashes when leaving and coming back from
                 // ANYWHERE
@@ -69,12 +70,32 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         mViewPager.setOnPageChangeListener(this);
     }
 
+    // Passes the appropriate data for the communicator at the position
+    private void notifyCommunicator(int position) {
+        // Double check that the communicator has been set
+        if(communicator == null) {
+           Log.e(TAG, "Communicator was null!");
+            return;
+        }
+
+        // Get the data from the page to pass on
+        String subTitle = pagerAdapter.getSubTitle(position);
+        String body = pagerAdapter.getBodyText(position);
+        String paletteColor = pagerAdapter.getPaletteColor(position);
+
+        // Send the information to the activity
+        communicator.changeRightSlide(subTitle, body, paletteColor);
+    }
+
     // Set the background of the ViewPager
     public void setBackground(String url) {
         // Use the ImageLoader to get the background bitmap
         ImageLoaderNoCache imageLoader = new ImageLoaderNoCache();
         ImageLoaderNoCache.LoaderManager manager[] = {this};
         imageLoader.GetImage(url, manager);
+
+        // Now the right sliding menu can be set up finally for the first time
+        notifyCommunicator(0);
     }
 
     @Override
@@ -84,7 +105,6 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void notifyRetrievedBitmap(Bitmap bitmap) {
-        // TODO: Check this is working as expected!
         // Set the background of the ViewPager to the bitmap's
         background.setImageBitmap(bitmap);
     }
@@ -105,21 +125,8 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         // If no communicator set, do nothing
         if(communicator == null) return;
 
-        // Get the data from the page to pass on
-        String subTitle = pagerAdapter.getSubTitle(i);
-        String body = pagerAdapter.getBodyText(i);
-        String paletteColor = pagerAdapter.getPaletteColor(i);
-
-        // Send the information to the activity
-        communicator.changeRightSlide(subTitle, body, paletteColor);
-
-        /*
-        // When a new page is selected, take notice!
-        int color = pagerAdapterTest.getFragColor(i);
-
-        // Notify the activity of changes
-        communicator.changeRightSlide(color);
-        */
+        // Let the function notify the communicator of the data at position i
+        notifyCommunicator(i);
     }
 
     @Override

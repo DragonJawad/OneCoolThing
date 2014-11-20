@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/padding_rightmenu_betweenbodytitle"
-    android:background="@color/purple_dark">
+    android:background="@drawable/slidingright_greydarker">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_rightmenu_title"
             android:textColor="@color/white"
-            android:text="@string/garbage_fill_short"/>
+        />
 
         </LinearLayout>
 
@@ -43,7 +43,6 @@
             onecoolthing:fontName="Nunito-Regular.ttf"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/garbage_fill_medium"
             android:textColor="@color/white"
             android:textSize="@dimen/text_rightmenu_body"/>
     </ScrollView>
