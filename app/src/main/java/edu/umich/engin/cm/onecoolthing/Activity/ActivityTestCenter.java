@@ -56,8 +56,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
     // ListView of the left slidingMenu
     ListView mListNav;
-    View mCurrentNavView; // Represents the currently selected nav row
-    boolean mNavFirstSetup = false; // Represents if a nav item has been selected yet
+    NavAdapter mNavAdapter;
 
     // Determines whether or not the right sliding menu is enabled
     private boolean mRightMenuEnabled = false;
@@ -195,24 +194,18 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         // Set up the listView within the left sliding menu
         mListNav = (ListView)viewLeftMenu.findViewById(R.id.list);
-        NavAdapter adapter = new NavAdapter(this);
-        mListNav.setAdapter(adapter);
+        mNavAdapter = new NavAdapter(this);
+        mListNav.setAdapter(mNavAdapter);
         // Set a click listener for the listView
         mListNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Set the selected position
-                setHighlightedNavRow(view);
-
-                // Cache this view for later
-                mCurrentNavView = view;
-
                 // TODO: Skip if currently at this posit
                 // Change out the current fragment displayed in the center
                 changeFrag(position);
 
                 // Toggle/close the left sliding menu
-            //    toggleLeftSlidingMenu();
+                toggleLeftSlidingMenu();
             }
         });
 
@@ -511,7 +504,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             mSlidingMenuLeft.toggle();
 
             // Then, set the highlighted nav item
-            setHighlightedNavRow();
+        //    setHighlightedNavRow();
         }
         // If showing, then hide it
         else {
@@ -526,6 +519,10 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         Log.d(TAG, "Set the selected nav row with position " + currentFragmentIndex);
 
+        // TODO: Test
+        mListNav.invalidateViews();
+
+        /*
         // If the current fragment index is not yet set, just use the first position
         int selection = currentFragmentIndex;
         if(currentFragmentIndex == -1) selection = 0;
@@ -533,6 +530,13 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         // Get the selected row and set it as focused and selected
         View view = mListNav.getChildAt(selection);
         view.setSelected(true);
+
+        if(view == null) Log.d(TAG, "View was null!");
+        */
+    }
+
+    private void setHighlightedNavRow(int position) {
+        mListNav.setItemChecked(position, true);
     }
 
     private void setHighlightedNavRow(View navView) {
@@ -617,34 +621,47 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = null;
+            ViewHolder holder = null;
 
             if(convertView == null) {
                 // Then have to inflate this row for the first time
                 LayoutInflater inflater =
                         (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 row = inflater.inflate(R.layout.list_drawer_item, parent, false);
+
+                // Create a ViewHolder to save all the different parts of the row
+                holder = new ViewHolder();
+                holder.navTitle = (TextView) row.findViewById(R.id.name);
+                holder.indicator = row.findViewById(R.id.arrow_indicator);
+
+                // Make the row reuse the ViewHolder
+                row.setTag(holder);
             }
-            // Else, use the recycled view
-            else row = convertView;
-
-            // Change the text of the item
-            TextView navTitle = (TextView) row.findViewById(R.id.name);
-            // Set the text
-            navTitle.setText(navText[position]);
-
-            // If a nav has yet to be selected and this is the first item, set it as selected
-            if(!mNavFirstSetup && position == 0) {
-                // Set this row as selected
-                setHighlightedNavRow(row);
-
-                // Indicate that the first item has been highlighted already
-                mNavFirstSetup = true;
-
-                // Cache this row for later, to state it's the current row
-                mCurrentNavView = row;
+            // Else, use the recycled view and holder
+            else {
+                row = convertView;
+                holder = (ViewHolder) row.getTag();
             }
+
+            // Set the text for this item
+            holder.navTitle.setText(navText[position]);
+
+            // Set the view's indicator as visible if this is the current one
+            if(position == currentFragmentIndex || (position == 0 && currentFragmentIndex < 0) ){
+                holder.indicator.setVisibility(View.VISIBLE);
+            }
+            else {
+                // Otherwise, just hide it
+                holder.indicator.setVisibility(View.INVISIBLE);
+            }
+
 
             return row;
+        }
+
+        class ViewHolder {
+            TextView navTitle;
+            View indicator;
         }
     }
 }

@@ -24,10 +24,9 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/arrow_indicator"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/arrow_right"
+            android:background="@drawable/arrow_nav_selected"
             android:scaleType="fitXY"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
