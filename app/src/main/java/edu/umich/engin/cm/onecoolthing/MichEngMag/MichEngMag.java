@@ -10,7 +10,6 @@ public class MichEngMag {
     private String shortTitle;
 
     private int level;
-    private String date;
 
     private String url;
     private String imageUrl;
@@ -37,14 +36,6 @@ public class MichEngMag {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getUrl() {
