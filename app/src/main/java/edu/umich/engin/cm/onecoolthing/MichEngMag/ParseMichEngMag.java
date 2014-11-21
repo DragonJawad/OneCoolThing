@@ -25,7 +25,7 @@ public class ParseMichEngMag {
     private static final String URL = "http://engcomm.engin.umich.edu/magjson.php";
 
     // JSON Tags
-    private static final String TAG_STORES = "Stories";
+    private static final String TAG_STORIES = "Stories";
     private static final String TAG_TITLE = "Title";
     private static final String TAG_SHORTTITLE = "Short Title";
     private static final String TAG_LEVEL = "Level";
@@ -77,7 +77,7 @@ public class ParseMichEngMag {
                 JSONObject jsonObject = new JSONObject(jsonStr);
 
                 // Then get the subArray of all the magazine items
-                JSONArray jsonArray = jsonObject.getJSONArray(TAG_STORES);
+                JSONArray jsonArray = jsonObject.getJSONArray(TAG_STORIES);
                 int sizeOfArray = jsonArray.length();
 
                 // Create a new list of the jsonArray size
