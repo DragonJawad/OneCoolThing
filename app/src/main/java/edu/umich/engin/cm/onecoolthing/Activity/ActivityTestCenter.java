@@ -21,10 +21,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -33,6 +33,8 @@ import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentWebFeed;
+import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
+import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
 
 /**
  * Created by jawad on 12/10/14.
@@ -65,7 +67,8 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     LinearLayout mRightMenuLinearLayout;
     TextView mRightMenuTitleTextView;
     TextView mRightMenuBodyTextView;
-    ScrollView mRightMenuScrollView;
+    ObservableScrollView mRightMenuScrollView;
+    ImageView mRightMenuScrollArrow;
 
     // Actionbar Views
     View mViewActionBarSimple;
@@ -224,7 +227,29 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         mRightMenuLinearLayout = (LinearLayout) rightMenuView.findViewById(R.id.container_right_sliding);
         mRightMenuTitleTextView = (TextView) rightMenuView.findViewById(R.id.subTitle);
         mRightMenuBodyTextView = (TextView) rightMenuView.findViewById(R.id.bodyText);
-        mRightMenuScrollView = (ScrollView) rightMenuView.findViewById(R.id.scroll_description);
+        mRightMenuScrollView = (ObservableScrollView) rightMenuView.findViewById(R.id.scroll_description);
+        mRightMenuScrollArrow = (ImageView) rightMenuView.findViewById(R.id.scroll_arrow);
+
+        // Set a click listener on the textView to hide the flashing arrow animation
+        mRightMenuBodyTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the flashing scroll arrow
+                mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // Take notice when a scrollView scroll event occurs, and if it occurs, hide the indicator
+        mRightMenuScrollView.setScrollViewListener(new ScrollViewListener() {
+            @Override
+            public void onScrollChanged() {
+                // Hide the flashing scroll arrow
+                mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // Set the flashing arrow animation/indicator to be hidden by default
+        mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
 
         // Set listeners for the left and right sliding menus [so both aren't open at once]
         // TODO: Make them call a function that takes in a boolean.
@@ -412,6 +437,30 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         // Reset the ScrollView ie description to the top
         mRightMenuScrollView.scrollTo(0, 0);
+
+        // TODO: On first run, arrow does not show. Double check this works and get it to update properly
+        // Check if the scrollView is scrollable, and if so, set the indicator to visible
+        View child = mRightMenuScrollView.getChildAt(0);
+        if (child != null) {
+            int childHeight = child.getHeight();
+            boolean isScrollable = mRightMenuScrollView.getHeight() < childHeight +
+                    mRightMenuScrollView.getPaddingTop() +
+                    mRightMenuScrollView.getPaddingBottom();
+
+            if(isScrollable) {
+                //Log.d(TAG, "Decided it was scrollable!");
+                mRightMenuScrollArrow.setVisibility(View.VISIBLE);
+            }
+            else {
+                //Log.d(TAG, "Decided it was not scrollable");
+                mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
+            }
+        }
+       else {
+            //Log.d(TAG, "No child found! ='<");
+            // If can't even find the child, play it safe and hide the arrow
+            mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
+        }
     }
 
     // Sets the title on the ActionBar view that contains the title
