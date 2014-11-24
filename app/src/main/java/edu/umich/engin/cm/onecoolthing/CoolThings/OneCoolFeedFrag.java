@@ -68,6 +68,10 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
 
         // Make this fragment listen to the adapter's changes
         mViewPager.setOnPageChangeListener(this);
+
+        // Set the pager to retain 3 of the Cool Things at one time
+            // Otherwise, only saves one Cool Thing at a time- so have to reload every one
+        mViewPager.setOffscreenPageLimit(3);
     }
 
     // Passes the appropriate data for the communicator at the position
