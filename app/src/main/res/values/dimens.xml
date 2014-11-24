@@ -20,7 +20,7 @@
     <dimen name="margin_general">5dp</dimen>
     <dimen name="margin_actionbar_icon_left">0dp</dimen>
     <dimen name="margin_coolthing_title_push_right">15dp</dimen>
-    <dimen name="margin_coolthing_title_push_bottom">40dp</dimen>
+    <dimen name="margin_coolthing_title_push_bottom">15dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
         <!-- Margins between each left sliding menu item -->
     <dimen name="margin_nav_item">18dp</dimen>
