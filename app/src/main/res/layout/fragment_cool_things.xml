@@ -68,7 +68,7 @@
         <!-- Displays title of cool thing -->
         <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
             android:id="@+id/title"
-            onecoolthing:fontName="Nunito-Regular.ttf"
+            onecoolthing:fontName="@string/customfont_normal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"

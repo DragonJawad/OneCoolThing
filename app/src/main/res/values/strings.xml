@@ -45,6 +45,10 @@
         <item name="nav_About"></item>
     </string-array>
 
+    <!-- Parameters -->
+    <string name="customfont_normal">Nunito-Regular.ttf</string>
+    <string name="customfont_bold">Nunito-Bold.ttf</string>
+
 
     <!-- Etc/Deprecated? -->
     <string name="action_example">Example action</string>
