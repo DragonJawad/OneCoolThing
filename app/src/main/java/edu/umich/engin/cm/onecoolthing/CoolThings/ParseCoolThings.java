@@ -30,6 +30,7 @@ public class ParseCoolThings {
     private static final String TAG_BODYTEXT = "Body Text";
     private static final String TAG_PALETTECOLOR = "Color Palette";
     private static final String TAG_IMAGEURL = "iPhone 5 Retina Image";
+    private static final String TAG_FULLITEMURL = "Full Item URL";
 
     /**
      * Returns the jsonObject in CoolThing format
@@ -49,6 +50,8 @@ public class ParseCoolThings {
         String paletteColor = jsonObject.getString(TAG_PALETTECOLOR);
         String imageURL = jsonObject.getString(TAG_IMAGEURL);
 
+        String fullItemURL = jsonObject.getString(TAG_FULLITEMURL);
+
         // Add the data to the Cool Thing object to hold this data
         coolThing.setId(id);
         coolThing.setIncludeInApp(includeInApp);
@@ -59,6 +62,8 @@ public class ParseCoolThings {
         coolThing.setPaletteColor(paletteColor);
         coolThing.setImageURL(imageURL);
         coolThing.setSubTitle(subTitle);
+
+        coolThing.setFullItemURL(fullItemURL);
     }
 
     // Interface any interactables need in order to get notified of finished JSON array

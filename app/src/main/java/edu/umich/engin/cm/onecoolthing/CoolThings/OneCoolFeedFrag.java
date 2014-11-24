@@ -86,9 +86,10 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         String subTitle = pagerAdapter.getSubTitle(position);
         String body = pagerAdapter.getBodyText(position);
         String paletteColor = pagerAdapter.getPaletteColor(position);
+        String fullItemURL = pagerAdapter.getFullItemURL(position);
 
         // Send the information to the activity
-        communicator.changeRightSlide(subTitle, body, paletteColor);
+        communicator.changeRightSlide(subTitle, body, paletteColor, fullItemURL);
     }
 
     // Set the background of the ViewPager
@@ -142,6 +143,6 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     // Currently, simply tells the ActivityTestCenter to change the right slider's color
     //      to the color that the center fragment is using
     public interface VertPagerCommunicator {
-      public void changeRightSlide(String subTitle, String body, String paletteColor);
+      public void changeRightSlide(String subTitle, String body, String paletteColor, String fullItemURL);
     }
 }

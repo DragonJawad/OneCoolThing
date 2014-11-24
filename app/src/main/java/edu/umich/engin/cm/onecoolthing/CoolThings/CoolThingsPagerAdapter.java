@@ -175,6 +175,11 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
     // Return the palette color of a CoolThing at the given position
     public String getPaletteColor(int i) {return mListOfCoolThings.get(i).getPaletteColor(); }
 
+    // Return the fullItemURL of a CoolThing at the given position
+    public String getFullItemURL(int i) {
+        return mListOfCoolThings.get(i).getFullItemURL();
+    }
+
     @Override
     public Fragment getItem(int i) {
         // Get the fragment

@@ -7,9 +7,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -67,6 +69,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     LinearLayout mRightMenuLinearLayout;
     TextView mRightMenuTitleTextView;
     TextView mRightMenuBodyTextView;
+    TextView mRightMenuTapMoreTextView;
     ObservableScrollView mRightMenuScrollView;
     ImageView mRightMenuScrollArrow;
 
@@ -227,6 +230,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         mRightMenuLinearLayout = (LinearLayout) rightMenuView.findViewById(R.id.container_right_sliding);
         mRightMenuTitleTextView = (TextView) rightMenuView.findViewById(R.id.subTitle);
         mRightMenuBodyTextView = (TextView) rightMenuView.findViewById(R.id.bodyText);
+        mRightMenuTapMoreTextView = (TextView) rightMenuView.findViewById(R.id.tapForMoreText);
         mRightMenuScrollView = (ObservableScrollView) rightMenuView.findViewById(R.id.scroll_description);
         mRightMenuScrollArrow = (ImageView) rightMenuView.findViewById(R.id.scroll_arrow);
 
@@ -247,6 +251,9 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
                 mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
             }
         });
+
+        // Initially hide the TapMore textView
+        mRightMenuTapMoreTextView.setVisibility(View.GONE);
 
         // Set the flashing arrow animation/indicator to be hidden by default
         mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
@@ -385,7 +392,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     }
 
     // Change the right slide to match the current CoolThing
-    public void changeRightSlide(String subTitle, String body, String paletteColor) {
+    public void changeRightSlide(String subTitle, String body, String paletteColor, final String fullItemURL) {
         // Change the body and subtitle texts
         mRightMenuTitleTextView.setText(subTitle);
         mRightMenuBodyTextView.setText(body);
@@ -433,6 +440,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         // Now, finally set the colors
         mRightMenuTitleTextView.setTextColor(textColor);
         mRightMenuBodyTextView.setTextColor(textColor);
+        mRightMenuTapMoreTextView.setTextColor(textColor);
         mRightMenuLinearLayout.setBackgroundResource(idSliderBackground);
 
         // Reset the ScrollView ie description to the top
@@ -460,6 +468,31 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             //Log.d(TAG, "No child found! ='<");
             // If can't even find the child, play it safe and hide the arrow
             mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
+        }
+
+        // If there IS a full item URL, then include the tap more link
+        if(fullItemURL == null) {
+            // Hide the tap for more, if not necessary
+            mRightMenuTapMoreTextView.setVisibility(View.GONE);
+        }
+        else {
+            // Otherwise, make the tap for more textview visible then set its link
+            mRightMenuTapMoreTextView.setVisibility(View.VISIBLE);
+
+            // Create a new listener to open up the link
+                // TODO: Think of a more efficient way to do this
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Start an intent to open up the URL in a browser
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(fullItemURL));
+                    startActivity(intent);
+                }
+            };
+
+            // Set the listener on the tap for more link
+            mRightMenuTapMoreTextView.setOnClickListener(listener);
         }
     }
 

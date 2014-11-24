@@ -42,14 +42,31 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             >
-            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
-                android:id="@+id/bodyText"
-                onecoolthing:fontName="@string/customfont_normal"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_rightmenu_body"
-                />
+                android:layout_height="wrap_content">
+
+                <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                    android:id="@+id/bodyText"
+                    onecoolthing:fontName="@string/customfont_normal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_rightmenu_body"
+                    />
+
+                <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                    android:id="@+id/tapForMoreText"
+                    onecoolthing:fontName="@string/customfont_bold"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tap_for_more"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_rightmenu_body"
+                    />
+
+                </LinearLayout>
         </edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView>
 
         <ImageView

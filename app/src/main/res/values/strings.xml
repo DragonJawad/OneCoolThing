@@ -10,6 +10,7 @@
     <!-- Titles -->
     <string name="left_drawer_title">More Cool Things</string>
     <string name="share_intro">Share This Cool Thing</string>
+    <string name="tap_for_more">\nTap for more &gt;</string>
 
     <string name="title_section1">Test 1</string>
     <string name="title_section2">Section 2</string>

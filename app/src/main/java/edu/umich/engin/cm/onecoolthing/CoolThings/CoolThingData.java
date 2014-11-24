@@ -34,7 +34,7 @@ public class CoolThingData {
             this.includeInApp = includeInApp;
         }
 
-    public String getTitle() {
+        public String getTitle() {
             return title;
         }
 
@@ -66,7 +66,7 @@ public class CoolThingData {
             this.paletteColor = paletteColor;
         }
 
-    public String getImageURL() {
+        public String getImageURL() {
             return imageURL;
         }
 
