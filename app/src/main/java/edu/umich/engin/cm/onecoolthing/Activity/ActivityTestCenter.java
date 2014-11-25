@@ -32,7 +32,7 @@ import android.widget.TextView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
-import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
+import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagParserFrag;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentWebFeed;
@@ -355,7 +355,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             String this_title = mFragTags[index];
 
             // Create a new fragment to use
-            MichEngMagFrag frag = new MichEngMagFrag();
+            MichEngMagParserFrag frag = new MichEngMagParserFrag();
 
             // Add the frag to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);

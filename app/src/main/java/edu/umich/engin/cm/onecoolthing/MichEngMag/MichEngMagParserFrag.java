@@ -6,22 +6,23 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
+import android.widget.ListView;
 
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
  * Created by jawad on 20/11/14.
  */
-public class MichEngMagFrag extends Fragment implements ParseMichEngMag.MagSubscriber {
-    // Holds all of the individual story items
-    ArrayList<MichEngMag> mMagazineList;
+public class MichEngMagParserFrag extends Fragment {
+    ListView mListView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_michengmag, container, false);
+
+        // Cache the listView to set it up later
+        mListView = (ListView) view.findViewById(R.id.list);
 
         return view;
     }
@@ -35,16 +36,10 @@ public class MichEngMagFrag extends Fragment implements ParseMichEngMag.MagSubsc
     }
 
     private void initSetup() {
-        // Use the parser to asynchronously get the data
-        ParseMichEngMag parser = new ParseMichEngMag();
-        parser.getData(getActivity(), this);
-    }
+        // Set up the adapter for the listView
+        MichEngMagListAdapter adapter = new MichEngMagListAdapter(getActivity());
 
-    @Override
-    public void gotMagazine(ArrayList<MichEngMag> magazineList) {
-        // Cache the data
-        this.mMagazineList = magazineList;
-
-        // Display the data
+        // Set the adapter as the listView's adapter
+        mListView.setAdapter(adapter);
     }
 }

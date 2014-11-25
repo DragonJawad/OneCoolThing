@@ -3,23 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?android:actionBarSize">
+    android:layout_marginTop="?android:actionBarSize"
+    android:layout_marginLeft="@dimen/margin_general"
+    android:layout_marginRight="@dimen/margin_general">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_normal"
-        android:text="@string/garbage_fill_short"/>
-
-    <ScrollView
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ListView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
-        </ScrollView>
+        android:layout_weight="1"/>
 
 </LinearLayout>

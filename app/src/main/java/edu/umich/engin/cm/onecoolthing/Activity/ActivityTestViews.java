@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMag;
+import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagItem;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.ParseMichEngMag;
 import edu.umich.engin.cm.onecoolthing.R;
 
@@ -17,7 +17,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  *
  * Used to test different things first
  */
-public class ActivityTestViews extends Activity implements ParseMichEngMag.MagSubscriber {
+public class ActivityTestViews extends Activity implements ParseMichEngMag.MagParserSubscriber {
     private ProgressBar spinner;
 
     @Override
@@ -38,7 +38,7 @@ public class ActivityTestViews extends Activity implements ParseMichEngMag.MagSu
     }
 
     @Override
-    public void gotMagazine(ArrayList<MichEngMag> magazineList) {
+    public void gotMagazine(ArrayList<MichEngMagItem> magazineList) {
         Log.d("MD/ActivityTestViews", "Got teh data!");
     }
 }

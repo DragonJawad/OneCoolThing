@@ -7,10 +7,10 @@
 
     <!-- If using a full width item... -->
     <RelativeLayout
-        android:id="@+id/container_full"
+        android:id="@+id/container_single"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/margin_michengmag_level1_height"
-        android:background="@color/blue226">
+        >
 
         <!-- The loaded background -->
         <ImageView

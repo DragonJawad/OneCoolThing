@@ -33,12 +33,12 @@ public class ParseMichEngMag {
     private static final String TAG_IMAGEURL = "Magazine Image";
 
     // Interface for anyone who wishes to actually receive the data
-    public interface MagSubscriber {
-        public void gotMagazine(ArrayList<MichEngMag> magazineList);
+    public interface MagParserSubscriber {
+        public void gotMagazine(ArrayList<MichEngMagItem> magazineList);
     }
 
     // Gets the magazine from the webs and gives it to the subscriber
-    public void getData(Context context, MagSubscriber subscriber) {
+    public void getData(Context context, MagParserSubscriber subscriber) {
         // Create and run an Async to do all the work
         GetMagazine task = new GetMagazine(context, subscriber);
         task.execute();
@@ -52,12 +52,12 @@ public class ParseMichEngMag {
         Context mContext;
 
         // Subscriber to be notified once data has been accumulated
-        MagSubscriber mSubscriber;
+        MagParserSubscriber mSubscriber;
 
         // Holds all the magazine items
-        ArrayList<MichEngMag> magazineList;
+        ArrayList<MichEngMagItem> magazineList;
 
-        public GetMagazine(Context context, MagSubscriber subscriber) {
+        public GetMagazine(Context context, MagParserSubscriber subscriber) {
             this.mContext = context;
             this.mSubscriber = subscriber;
         }
@@ -81,7 +81,7 @@ public class ParseMichEngMag {
                 int sizeOfArray = jsonArray.length();
 
                 // Create a new list of the jsonArray size
-                magazineList = new ArrayList<MichEngMag>(sizeOfArray);
+                magazineList = new ArrayList<MichEngMagItem>(sizeOfArray);
 
                 // Loop through the entire array and convert to magazine items
                 for(int i = 0; i < sizeOfArray; ++i) {
@@ -96,12 +96,13 @@ public class ParseMichEngMag {
                     int level = jsonObj.getInt(TAG_LEVEL);
 
                     // Create a new magazine item and fill it with the data
-                    MichEngMag magazineItem = new MichEngMag();
+                    MichEngMagItem magazineItem = new MichEngMagItem();
                     magazineItem.setTitle(title);
                     magazineItem.setShortTitle(shortTitle);
                     magazineItem.setUrl(url);
                     magazineItem.setImageUrl(imageUrl);
                     magazineItem.setLevel(level);
+
                     // Add the magazine item to the magazine
                     magazineList.add(magazineItem);
                 }

@@ -5,7 +5,7 @@ package edu.umich.engin.cm.onecoolthing.MichEngMag;
  *
  * Holds the data necessary for a single Michigan Engineering Magazine item.
  */
-public class MichEngMag {
+public class MichEngMagItem {
     private String title;
     private String shortTitle;
 
