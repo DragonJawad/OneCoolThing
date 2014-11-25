@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
+import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentBase;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentWebFeed;
@@ -341,8 +342,6 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
-        //    Log.d(TAG, "Showing center fragment");
-
             // Simply show the OneCoolFeed and set up the settings using its function
             fragmentTransaction.show(mFragOneCoolFeed);
             fragmentTransaction.commit();
@@ -350,10 +349,24 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             // Apply the settings for the OneCoolFeed
             toggleCoolThingSettings(true);
         }
+        // If so, then add in the Michigan Engineer Magazine fragment
+        else if(index == 3) {
+            // Get the title/tag separately, for ease of typing/reading
+            String this_title = mFragTags[index];
+
+            // Create a new fragment to use
+            MichEngMagFrag frag = new MichEngMagFrag();
+
+            // Add the frag to the center view
+            fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
+            fragmentTransaction.commit();
+
+            // Set settings for this view
+            // Currently: Undo the settings for the One Cool Feed
+            toggleCoolThingSettings(false);
+        }
         // Otherwise, if this index has an URL, open up a feed
         else if(!mFragUrls[index].equals("")) {
-        //    Log.d(TAG, "Opening up a webview");
-
             // Get the url and title separately, for ease of typing/reading
             String this_url = mFragUrls[index];
             String this_title = mFragTags[index];
@@ -361,7 +374,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             // Create a new TumblrFeed fragment, with its title and url
             FragmentWebFeed frag = FragmentWebFeed.newInstance(this_url, this_title);
 
-            // Add the url to the center view
+            // Add the webview to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
             fragmentTransaction.commit();
 

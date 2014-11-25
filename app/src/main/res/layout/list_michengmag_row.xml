@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_general">
+
+    <!-- If using a full width item... -->
+    <RelativeLayout
+        android:id="@+id/container_full"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/margin_michengmag_level1_height"
+        android:background="@color/blue226">
+
+        <!-- The loaded background -->
+        <ImageView
+            android:id="@+id/level1_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
+
+        <!-- The overlay -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/graydiant"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/level1_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:paddingTop="@dimen/padding_michengmag_level1_texttop"
+            android:paddingLeft="@dimen/padding_general"
+            android:paddingRight="@dimen/padding_general"
+            android:text="@string/garbage_fill_short"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_michengmag_level1_title"
+            />
+
+    </RelativeLayout>
+
+    <!-- If using a level 2, double items... -->
+    <LinearLayout
+        android:id="@+id/container_split"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_michengmag_level2_height"
+        >
+
+        <!-- The left item -->
+        <RelativeLayout
+            android:id="@+id/level2_left"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="2.5dp">
+
+            <!-- The loaded background -->
+            <ImageView
+                android:id="@+id/level2_left_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"/>
+
+            <!-- The overlay -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/graydiant"
+                android:scaleType="fitXY"/>
+
+            <TextView
+                android:id="@+id/level2_left_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:paddingTop="@dimen/padding_michengmag_level2_texttop"
+                android:paddingLeft="@dimen/padding_general"
+                android:paddingRight="@dimen/padding_general"
+                android:text="@string/garbage_fill_short"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_michengmag_level2_title"
+                />
+
+        </RelativeLayout>
+
+        <!-- The right item -->
+        <RelativeLayout
+            android:id="@+id/level2_right"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="2.5dp">
+
+            <!-- The loaded background -->
+            <ImageView
+                android:id="@+id/level2_right_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"/>
+
+            <!-- The overlay -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/graydiant"
+                android:scaleType="fitXY"/>
+
+            <TextView
+                android:id="@+id/level2_right_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:paddingTop="@dimen/padding_michengmag_level2_texttop"
+                android:paddingLeft="@dimen/padding_general"
+                android:paddingRight="@dimen/padding_general"
+                android:text="@string/garbage_fill_short"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_michengmag_level2_title"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

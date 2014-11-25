@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import edu.umich.engin.cm.onecoolthing.R;
+
 /**
  * Created by jawad on 20/11/14.
  */
@@ -19,7 +21,9 @@ public class MichEngMagFrag extends Fragment implements ParseMichEngMag.MagSubsc
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_michengmag, container, false);
+
+        return view;
     }
 
     @Override

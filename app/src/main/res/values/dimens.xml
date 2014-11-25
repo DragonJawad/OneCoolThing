@@ -15,6 +15,9 @@
     <dimen name="text_nav">17sp</dimen> <!-- Size of each item in the left sliding menu's nav -->
     <dimen name="text_rightmenu_body">18sp</dimen> <!-- Size of body scrollview and share text -->
     <dimen name="text_rightmenu_title">26sp</dimen>
+        <!-- Text sizes for the Michigan Engineer Magazine magazine items -->
+    <dimen name="text_michengmag_level1_title">25sp</dimen>
+    <dimen name="text_michengmag_level2_title">15sp</dimen>
 
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>
@@ -28,6 +31,9 @@
     <dimen name="margin_rightmenu_leftpush">20dp</dimen>
         <!-- Margin between right sliding menu's title and body scrollview -->
     <dimen name="margin_rightmenu_betweenbodytitle">15dp</dimen>
+        <!-- Margins for the Michigan Engineer Magazine magazine items -->
+    <dimen name="margin_michengmag_level1_height">260dp</dimen>
+    <dimen name="margin_michengmag_level2_height">120dp</dimen>
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
@@ -36,6 +42,9 @@
     <dimen name="padding_rightmenu_betweenbodytitle">15dp</dimen>
     <dimen name="padding_rightmenu_rightedge">20dp</dimen>
     <dimen name="padding_rightmenu_rightedge_share">10dp</dimen>
+        <!-- Padding for the Michigan Engineer Magazine magazine items -->
+    <dimen name="padding_michengmag_level1_texttop">200dp</dimen>
+    <dimen name="padding_michengmag_level2_texttop">70dp</dimen>
 
     <!-- Sliding Menu -->
     <dimen name="slidingmenu_shadow_width">5dp</dimen>
