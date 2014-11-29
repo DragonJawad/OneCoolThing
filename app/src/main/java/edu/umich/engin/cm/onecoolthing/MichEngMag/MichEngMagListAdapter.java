@@ -1,6 +1,7 @@
 package edu.umich.engin.cm.onecoolthing.MichEngMag;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -41,6 +43,10 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
         // Start the process for retrieving the JSON data
         ParseMichEngMag parser = new ParseMichEngMag();
         parser.getData(mContext, this);
+    }
+
+    public interface MagazineViewer{
+        public void openItem(Bitmap image, String url);
     }
 
     // Be notified once the magazineList is retrieved and parsed
@@ -108,6 +114,11 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
     }
 
     @Override
+    public boolean isEnabled(int position) {
+        return false;
+    } // To disable ListView clicking
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.d(TAG, "Size of data: " + mRowList.size() + " | @pos: " + position);
 
@@ -128,6 +139,9 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             holder.singeLevelTitle = (TextView) row.findViewById(R.id.level1_title);
 
             holder.splitLevelContainer = (View) row.findViewById(R.id.container_split);
+            holder.splitLevelContainerLeft = (View) row.findViewById(R.id.level2_left);
+            holder.splitLevelContainerRight = (View) row.findViewById(R.id.level2_right);
+
             holder.splitLeftBackground = (ImageView) row.findViewById(R.id.level2_left_background);
             holder.splitLeftTitle = (TextView) row.findViewById(R.id.level2_left_title);
             holder.splitRightBackground = (ImageView) row.findViewById(R.id.level2_right_background);
@@ -154,7 +168,11 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             holder.singeLevelTitle.setText(curRowData.getFirstShortTitle());
 
             // Lazily load the background
-            mImageLoader.DisplayImage(curRowData.getFirstUrl(), holder.singleLevelBackground);
+            mImageLoader.DisplayImage(curRowData.getFirstBgUrl(), holder.singleLevelBackground);
+
+            // Set the listener to open up this item in-depth
+            holder.singeLevelContainer.setOnClickListener(
+                    new MagazineClickListener(holder.singleLevelBackground, curRowData.getFirstUrl()));
         }
         // Otherwise, set it up as a multi level row
         else {
@@ -167,8 +185,14 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             holder.splitRightTitle.setText(curRowData.getSecondShortTitle());
 
             // Lazily load the backgrounds
-            mImageLoader.DisplayImage(curRowData.getFirstUrl(), holder.splitLeftBackground);
-            mImageLoader.DisplayImage(curRowData.getSecondUrl(), holder.splitRightBackground);
+            mImageLoader.DisplayImage(curRowData.getFirstBgUrl(), holder.splitLeftBackground);
+            mImageLoader.DisplayImage(curRowData.getSecondBgUrl(), holder.splitRightBackground);
+
+            // Set the listeners to open up these items in-depth
+            holder.splitLevelContainerLeft.setOnClickListener(
+                    new MagazineClickListener(holder.splitLeftBackground, curRowData.getFirstUrl()));
+            holder.splitLevelContainerRight.setOnClickListener(
+                    new MagazineClickListener(holder.splitRightBackground, curRowData.getSecondUrl()));
         }
 
         return row;
@@ -183,9 +207,30 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
 
         // Views for a split display
         View splitLevelContainer;
+        View splitLevelContainerLeft;
+        View splitLevelContainerRight;
+
         ImageView splitLeftBackground;
         TextView splitLeftTitle;
         ImageView splitRightBackground;
         TextView splitRightTitle;
+    }
+
+    // The click listener for each magazine item
+    class MagazineClickListener implements View.OnClickListener {
+        ImageView targetImageView; // The ImageView which contains the target bitmap
+        String targetUrl; // The URL to get the text from
+
+        // Default constructor, save the target data
+        public MagazineClickListener(ImageView imageView, String url) {
+            this.targetImageView = imageView;
+            this.targetUrl = url;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(mContext, "Clicked on an item with url: " + targetUrl, Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 }
