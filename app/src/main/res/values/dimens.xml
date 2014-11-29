@@ -32,8 +32,8 @@
         <!-- Margin between right sliding menu's title and body scrollview -->
     <dimen name="margin_rightmenu_betweenbodytitle">15dp</dimen>
         <!-- Margins for the Michigan Engineer Magazine magazine items -->
-    <dimen name="margin_michengmag_level1_height">260dp</dimen>
-    <dimen name="margin_michengmag_level2_height">120dp</dimen>
+    <dimen name="michengmag_level1_height">280dp</dimen>
+    <dimen name="michengmag_level2_height">150dp</dimen>
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
@@ -43,8 +43,8 @@
     <dimen name="padding_rightmenu_rightedge">20dp</dimen>
     <dimen name="padding_rightmenu_rightedge_share">10dp</dimen>
         <!-- Padding for the Michigan Engineer Magazine magazine items -->
-    <dimen name="padding_michengmag_level1_texttop">200dp</dimen>
-    <dimen name="padding_michengmag_level2_texttop">70dp</dimen>
+    <dimen name="padding_michengmag_level1_texttop">220dp</dimen>
+    <dimen name="padding_michengmag_level2_texttop">100dp</dimen>
 
     <!-- Sliding Menu -->
     <dimen name="slidingmenu_shadow_width">5dp</dimen>
