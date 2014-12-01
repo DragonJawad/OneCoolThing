@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -234,6 +237,39 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         mRightMenuTapMoreTextView = (TextView) rightMenuView.findViewById(R.id.tapForMoreText);
         mRightMenuScrollView = (ObservableScrollView) rightMenuView.findViewById(R.id.scroll_description);
         mRightMenuScrollArrow = (ImageView) rightMenuView.findViewById(R.id.scroll_arrow);
+
+        // Set a click listener on the "Share This Cool Thing" button/icon to show the share buttons
+        ImageView shareImage = (ImageView) rightMenuView.findViewById(R.id.share_text_icon);
+        shareImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        ImageView view = (ImageView) v;
+
+                        // Overlay is black with transparency of 0x66 (40%)
+                        view.getDrawable().setColorFilter(0x66000000, PorterDuff.Mode.SRC_ATOP);
+                        view.invalidate();
+
+                        Toast.makeText(getBaseContext(), "Tapped the image!", Toast.LENGTH_SHORT).show();
+
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL: {
+                        ImageView view = (ImageView) v;
+
+                        // Clear the overlay
+                        view.getDrawable().clearColorFilter();
+                        view.invalidate();
+
+                        break;
+                    }
+                }
+
+                return true;
+            }
+        });
 
         // Set a click listener on the textView to hide the flashing arrow animation
         mRightMenuBodyTextView.setOnClickListener(new View.OnClickListener() {

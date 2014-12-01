@@ -31,9 +31,10 @@
     <dimen name="margin_rightmenu_leftpush">20dp</dimen>
         <!-- Margin between right sliding menu's title and body scrollview -->
     <dimen name="margin_rightmenu_betweenbodytitle">15dp</dimen>
-        <!-- Margins for the Michigan Engineer Magazine magazine items -->
-    <dimen name="michengmag_level1_height">280dp</dimen>
-    <dimen name="michengmag_level2_height">150dp</dimen>
+        <!-- Top offset margin for the one cool feed share icons -->
+    <dimen name="shareicon_top_offset">20dp</dimen>
+        <!-- Right offset margin for the container of the one cool feed share icons -->
+    <dimen name="shareicon_container_right_offset">70dp</dimen>
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
@@ -45,6 +46,13 @@
         <!-- Padding for the Michigan Engineer Magazine magazine items -->
     <dimen name="padding_michengmag_level1_texttop">220dp</dimen>
     <dimen name="padding_michengmag_level2_texttop">100dp</dimen>
+
+    <!-- Size Dimensions -->
+        <!-- Heights for the Michigan Engineer Magazine magazine items -->
+    <dimen name="michengmag_level1_height">280dp</dimen>
+    <dimen name="michengmag_level2_height">150dp</dimen>
+        <!-- Height for the One Cool Feed share icons -->
+    <dimen name="shareicon_height">30dp</dimen>
 
     <!-- Sliding Menu -->
     <dimen name="slidingmenu_shadow_width">5dp</dimen>
