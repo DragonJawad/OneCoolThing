@@ -92,22 +92,17 @@
             >
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_gravity="bottom"
-                android:gravity="end"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    />
-
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="end"
+                android:layout_marginTop="@dimen/shareicon_main_top_offset">
                 <ImageView
                     android:id="@+id/share_text_icon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/share_mainicon_height"
                     android:src="@drawable/sharecoolthingicon"
+                    android:scaleType="fitEnd"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -122,23 +117,23 @@
 
             <ImageView
                 android:id="@+id/share_icon_facebook"
-                android:layout_width="@dimen/shareicon_height"
-                android:layout_height="@dimen/shareicon_height"
+                android:layout_width="@dimen/share_specificicons_height"
+                android:layout_height="@dimen/share_specificicons_height"
                 android:layout_marginTop="@dimen/shareicon_top_offset"
                 android:src="@drawable/share_facebook_icon"
                 />
 
             <ImageView
                 android:id="@+id/share_icon_twitter"
-                android:layout_width="@dimen/shareicon_height"
-                android:layout_height="@dimen/shareicon_height"
+                android:layout_width="@dimen/share_specificicons_height"
+                android:layout_height="@dimen/share_specificicons_height"
                 android:src="@drawable/share_twitter_icon"
                 />
 
             <ImageView
                 android:id="@+id/share_icon_email"
-                android:layout_width="@dimen/shareicon_height"
-                android:layout_height="@dimen/shareicon_height"
+                android:layout_width="@dimen/share_specificicons_height"
+                android:layout_height="@dimen/share_specificicons_height"
                 android:layout_marginTop="@dimen/shareicon_top_offset"
                 android:src="@drawable/share_email_icon"
                 />

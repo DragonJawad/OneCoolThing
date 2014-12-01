@@ -35,6 +35,8 @@
     <dimen name="shareicon_top_offset">20dp</dimen>
         <!-- Right offset margin for the container of the one cool feed share icons -->
     <dimen name="shareicon_container_right_offset">70dp</dimen>
+        <!-- Top offset for the main share "text" icon/button -->
+    <dimen name="shareicon_main_top_offset">20dp</dimen>
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
@@ -52,7 +54,9 @@
     <dimen name="michengmag_level1_height">280dp</dimen>
     <dimen name="michengmag_level2_height">150dp</dimen>
         <!-- Height for the One Cool Feed share icons -->
-    <dimen name="shareicon_height">30dp</dimen>
+    <dimen name="share_specificicons_height">30dp</dimen>
+        <!-- Height for the Share This Cool Thing "text" icon/button -->
+    <dimen name="share_mainicon_height">40dp</dimen>
 
     <!-- Sliding Menu -->
     <dimen name="slidingmenu_shadow_width">5dp</dimen>
@@ -60,6 +64,10 @@
     <dimen name="slidingmenu_width_content">200dp</dimen>
     <dimen name="slidingmenu_width_content_offset">40dp</dimen>
 
+    <!-- Parameters -->
     <integer name="slidingright_gradient_angle">315</integer>
+        <!-- Deltas for the share container to animate -->
+    <integer name="shareicons_container_xdelta">-600</integer>
+    <integer name="shareicons_container_ydelta">150</integer>
 
 </resources>

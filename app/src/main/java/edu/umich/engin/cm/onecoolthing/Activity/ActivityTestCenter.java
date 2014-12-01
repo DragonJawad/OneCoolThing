@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -76,6 +78,10 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     TextView mRightMenuTapMoreTextView;
     ObservableScrollView mRightMenuScrollView;
     ImageView mRightMenuScrollArrow;
+
+    // Views for the share icons within the right sliding menu
+    ImageView mShareMainImage;
+    boolean isShareIconShowing = false; // States if the share icons are showing are not
 
     // Actionbar Views
     View mViewActionBarSimple;
@@ -238,9 +244,23 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         mRightMenuScrollView = (ObservableScrollView) rightMenuView.findViewById(R.id.scroll_description);
         mRightMenuScrollArrow = (ImageView) rightMenuView.findViewById(R.id.scroll_arrow);
 
+        // Get the share icons and the container for the specific share icons
+        mShareMainImage = (ImageView) rightMenuView.findViewById(R.id.share_text_icon);
+        final ImageView shareFacebook = (ImageView) rightMenuView.findViewById(R.id.share_icon_facebook);
+        final ImageView shareTwitter = (ImageView) rightMenuView.findViewById(R.id.share_icon_twitter);
+        final ImageView shareEmail = (ImageView) rightMenuView.findViewById(R.id.share_icon_email);
+        final View shareSpecificContainer = (View) rightMenuView.findViewById(R.id.container_small_share_icons);
+
+        // Create the reusable animations for the share icons
+        final Animation shareSlideIn = AnimationUtils.loadAnimation(this, R.anim.shareicons_container_slidein);
+        final Animation shareSlideOut = AnimationUtils.loadAnimation(this, R.anim.shareicons_container_slideout);
+
+        // Initially animate the share icons out of view
+        shareSpecificContainer.startAnimation(shareSlideOut);
+        isShareIconShowing = false; // Make sure the system is stating that the icons are not showing
+
         // Set a click listener on the "Share This Cool Thing" button/icon to show the share buttons
-        ImageView shareImage = (ImageView) rightMenuView.findViewById(R.id.share_text_icon);
-        shareImage.setOnTouchListener(new View.OnTouchListener() {
+        mShareMainImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -252,6 +272,23 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
                         view.invalidate();
 
                         Toast.makeText(getBaseContext(), "Tapped the image!", Toast.LENGTH_SHORT).show();
+
+                        // Either animate the share icons in or out
+                        if(isShareIconShowing) {
+                            // If the icons are showing, slide em out of here
+                            shareSpecificContainer.startAnimation(shareSlideOut);
+
+                            // State that the share icons are now not showing anymore
+                            isShareIconShowing = false;
+                        }
+                        else {
+                            // Otherwise, the icons are not showing so show em now
+                            shareSpecificContainer.startAnimation(shareSlideIn);
+
+                            // State that the share icons are now not showing anymore
+                            isShareIconShowing = true;
+                        }
+
 
                         break;
                     }
@@ -270,6 +307,53 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
                 return true;
             }
         });
+
+        // Set a single listener for the specific share icons
+        View.OnTouchListener shareSpecificTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        ImageView view = (ImageView) v;
+
+                        // Overlay is black with transparency of 0x66 (40%)
+                        view.getDrawable().setColorFilter(0x66000000, PorterDuff.Mode.SRC_ATOP);
+                        view.invalidate();
+
+                        // React depending on which button was tapped
+                        if(v == shareFacebook) {
+                            Toast.makeText(getBaseContext(), "Tapped the Facebook share button!", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(v == shareTwitter) {
+                            Toast.makeText(getBaseContext(), "Tapped the Twitter share button!", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(v == shareEmail) {
+                            Toast.makeText(getBaseContext(), "Tapped the Email share button!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Log.e(TAG, "From share touch listener: Couldn't find matching view!");
+                        }
+
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL: {
+                        ImageView view = (ImageView) v;
+
+                        // Clear the overlay
+                        view.getDrawable().clearColorFilter();
+                        view.invalidate();
+
+                        break;
+                    }
+                }
+
+                return true;
+            }
+        };
+        shareFacebook.setOnTouchListener(shareSpecificTouchListener);
+        shareTwitter.setOnTouchListener(shareSpecificTouchListener);
+        shareEmail.setOnTouchListener(shareSpecificTouchListener);
 
         // Set a click listener on the textView to hide the flashing arrow animation
         mRightMenuBodyTextView.setOnClickListener(new View.OnClickListener() {
