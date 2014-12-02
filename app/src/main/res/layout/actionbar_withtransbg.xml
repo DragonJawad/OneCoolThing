@@ -4,12 +4,13 @@
     xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?android:actionBarSize"
-    android:background="@color/white"
+    android:background="@color/transparent"
     >
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="?android:actionBarSize"
+      android:background="@color/transparent"
         >
         <ImageButton
             android:id="@+id/navButton"
@@ -33,8 +34,7 @@
             android:layout_gravity="center"
             android:textColor="@color/black"
             android:textSize="@dimen/text_normal"
-            android:text="@string/garbage_fill_short"
-            onecoolthing:fontName="Nunito-Regular.ttf"
+            onecoolthing:fontName="@string/customfont_normal"
             />
     </LinearLayout>
 </RelativeLayout>

@@ -52,6 +52,13 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
+    // Enums for Activity setting configurations
+    private static enum SettingsType {
+        ONECOOLFEED, // Settings for the One Cool Feed
+        WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
+        ABOUT        // Settings for the About page
+    }
+
     // The single One Cool Feed fragment to use
     private OneCoolFeedFrag mFragOneCoolFeed;
 
@@ -84,9 +91,10 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     boolean isShareIconShowing = false; // States if the share icons are showing are not
 
     // Actionbar Views
-    View mViewActionBarSimple;
-    View mViewActionBarWithTitle;
-    TextView mActionTitleText;
+    View mViewActionBarTransparent;
+    View mViewActionBarSolidBg;
+    TextView mActionTransBgTitle;
+    TextView mActionSolidBgTitle;
 
     /* Current center fragment index, for reference
      * Below is the master list - If the nav is changed, change the below and any
@@ -151,29 +159,32 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         LayoutInflater inflater = getLayoutInflater();
 
         // Inflate the simple ActionBar view
-        mViewActionBarSimple = inflater.inflate(R.layout.actionbar_simple, null);
+        mViewActionBarTransparent = inflater.inflate(R.layout.actionbar_withtransbg, null);
 
         // Set the imageButton from the simple view to toggle the slidingMenu
-        ((ImageButton) mViewActionBarSimple.findViewById(R.id.navButton))
+        ((ImageButton) mViewActionBarTransparent.findViewById(R.id.navButton))
                 .setOnClickListener(this);
 
-        // Inflate the ActionBar with the title view
-        mViewActionBarWithTitle = inflater.inflate(R.layout.actionbar_withtitle, null);
+        // Inflate the ActionBar with the title view and solid white background
+        mViewActionBarSolidBg = inflater.inflate(R.layout.actionbar_withsolidbg, null);
 
         // Set the imageButton from the view with title to toggle the slidingMenu
-        ((ImageButton) mViewActionBarWithTitle.findViewById(R.id.navButton))
+        ((ImageButton) mViewActionBarSolidBg.findViewById(R.id.navButton))
                 .setOnClickListener(this);
 
-        // Get the title textView from the view so the title can be set later
-        mActionTitleText = (TextView) mViewActionBarWithTitle.findViewById(R.id.textTitle);
+        // Get the title textView from the transparent bg view so the title can be set later
+        mActionTransBgTitle = (TextView) mViewActionBarTransparent.findViewById(R.id.textTitle);
+
+        // Get the title textView from the solid bg view so the title can be set later
+        mActionSolidBgTitle = (TextView) mViewActionBarSolidBg.findViewById(R.id.textTitle);
 
         // Add the actionBars to the respective container
         RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.actionbar_container);
-        viewGroup.addView(mViewActionBarSimple);
-        viewGroup.addView(mViewActionBarWithTitle);
+        viewGroup.addView(mViewActionBarTransparent);
+        viewGroup.addView(mViewActionBarSolidBg);
 
         // Hide the actionBar with the title- the simple actionBar is the one to use at the moment
-        mViewActionBarWithTitle.setVisibility(View.INVISIBLE);
+        mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
     }
 
     private void initOneCoolFeedFrag() {
@@ -188,8 +199,8 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
                 .add(R.id.fragContainer, mFragOneCoolFeed, mFragTags[0])
                 .commit();
 
-        // Set the particular activity settings for the center view
-        toggleCoolThingSettings(true);
+        // Set the particular activity settings for the initial, One Cool Feed center view
+        changeSettingsMode(SettingsType.ONECOOLFEED);
 
         // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
         currentFragmentIndex = 0;
@@ -380,8 +391,6 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         mRightMenuScrollArrow.setVisibility(View.INVISIBLE);
 
         // Set listeners for the left and right sliding menus [so both aren't open at once]
-        // TODO: Make them call a function that takes in a boolean.
-        // Function would possibly close other if open, check if already disabled, etc
         mSlidingMenuLeft.setOnOpenListener(new SlidingMenu.OnOpenListener() {
             @Override
             public void onOpen() {
@@ -467,7 +476,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             fragmentTransaction.commit();
 
             // Apply the settings for the OneCoolFeed
-            toggleCoolThingSettings(true);
+            changeSettingsMode(SettingsType.ONECOOLFEED);
         }
         // If so, then add in the Michigan Engineer Magazine fragment
         else if(index == 3) {
@@ -481,9 +490,8 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
             fragmentTransaction.commit();
 
-            // Set settings for this view
-            // Currently: Undo the settings for the One Cool Feed
-            toggleCoolThingSettings(false);
+            // Set settings for this view- same as a Webview
+            changeSettingsMode(SettingsType.WEBVIEW);
         }
         // Otherwise, if this index has an URL, open up a feed
         else if(!mFragUrls[index].equals("")) {
@@ -498,9 +506,8 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
             fragmentTransaction.commit();
 
-            // Set settings for this view
-            // Currently: Undo the settings for the One Cool Feed
-            toggleCoolThingSettings(false);
+            // Set settings for this web view
+            changeSettingsMode(SettingsType.WEBVIEW);
         }
         else {
             //    Log.d(TAG, "Created general fragment " + index);
@@ -512,9 +519,8 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
             fragmentTransaction.commit();
 
-            // Set settings for this view
-            // Currently: Undo the settings for the One Cool Feed
-            toggleCoolThingSettings(false);
+            // Set settings for this test view- currently, just set it like a web view
+            changeSettingsMode(SettingsType.WEBVIEW);
         }
 
         // Set the title of the ActionBar via the mFragsTags title/tag
@@ -530,8 +536,6 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         mRightMenuTitleTextView.setText(subTitle);
         mRightMenuBodyTextView.setText(body);
 
-        // TODO: ...Find some nice midpoint between strings values and readability in code here
-            // Ie, so that not hardcoding exact strings but can still easily tell what color here
         // Set the right slider's background and UI text color based on the pre-determined colors
         Resources res = getResources();
         int textColor;
@@ -631,22 +635,38 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
     // Sets the title on the ActionBar view that contains the title
     private void setActionBarTitle(String title) {
-        mActionTitleText.setText(title);
+        mActionSolidBgTitle.setText(title);
     }
 
     /**
-     * Toggle the settings necessary for the CoolThing views
-     * @param enable - True if now enabling the CoolThing center view. Vice versa if removing view
+     * Changes the settings according to the passed in mode
+     * @param mode - A specific SettingsType mode that states which group of settings to use
      */
-    private void toggleCoolThingSettings(boolean enable) {
-        // Toggle the right slider (in terms of enabling or disabling it)
-        enableRightSlider(enable);
+    private void changeSettingsMode(SettingsType mode) {
+        // First, decide on whether or not to enable the right slider
+        if(mode == SettingsType.ONECOOLFEED) {
+            // Enable the right sliding menu ONLY if this is the One Cool Feed
+            enableRightSlider(true);
+        }
+        else {
+            // Otherwise, all other modes currently don't use the right sliding menu
+            enableRightSlider(false);
+        }
 
-        // Toggle the landscape mode - if enabling the CoolThing view, disable the landscape mode
-        toggleLandscapeMode(!enable);
+        // Then toggle the landscape mode as necessary
+            // TODO: Currently, landscape mode is too buggy to use
+        toggleLandscapeMode(false); // For now, permanently disable landscape mode
 
-        // Toggle the actionBar view- true for the simpler ActionBar
-        toggleSimpleActionBar(enable);
+        // Finally, change the ActionBar as necessary
+        if(mode == SettingsType.ONECOOLFEED) {
+            // If so, then set the transparent ActionBar up without a title
+            toggleTransparentActionBar(true);
+            mActionTransBgTitle.setText("");
+        }
+        else if(mode == SettingsType.WEBVIEW) {
+            // If so, show the ActionBar with a solid white bg
+            toggleTransparentActionBar(false);
+        }
     }
 
     /**
@@ -684,27 +704,27 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
     /**
      * Switches the ActionBar out
-     * @param enable - True if to use the simple actionBar, false if using one with title
+     * @param enable - True if to show the transparent actionBar, false if using one with solid bg
      */
-    private void toggleSimpleActionBar(boolean enable) {
+    private void toggleTransparentActionBar(boolean enable) {
         if(enable) {
-            // If the simple actionbar is NOT visible, then must switch it out
-            if(mViewActionBarSimple.getVisibility() != View.VISIBLE) {
+            // If the simple, transparent actionbar is NOT visible, then must switch it out
+            if(mViewActionBarTransparent.getVisibility() != View.VISIBLE) {
                 // Make the title actionbar invisible
-                mViewActionBarWithTitle.setVisibility(View.INVISIBLE);
+                mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
 
                 // Make the simple actionbar visible
-                mViewActionBarSimple.setVisibility(View.VISIBLE);
+                mViewActionBarTransparent.setVisibility(View.VISIBLE);
             }
         }
         else {
             // If the title actionbar is NOT visible, then must switch it out
-            if(mViewActionBarWithTitle.getVisibility() != View.VISIBLE) {
+            if(mViewActionBarSolidBg.getVisibility() != View.VISIBLE) {
                 // Make the simple actionbar invisible
-                mViewActionBarSimple.setVisibility(View.INVISIBLE);
+                mViewActionBarTransparent.setVisibility(View.INVISIBLE);
 
                 // Make the title actionbar visible
-                mViewActionBarWithTitle.setVisibility(View.VISIBLE);
+                mViewActionBarSolidBg.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -804,8 +824,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         toggleLeftSlidingMenu();
     }
 
-    // Adapter for the left sliding menu's listView
-        // TODO: Make this cleaner, more efficient, and more towards the final design
+    // Adapter for the left sliding menu's nav listView
     class NavAdapter extends BaseAdapter {
         Context mContext;
         String[] navText;
