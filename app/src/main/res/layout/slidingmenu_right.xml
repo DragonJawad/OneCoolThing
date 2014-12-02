@@ -49,7 +49,7 @@
 
                 <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
                     android:id="@+id/bodyText"
-                    onecoolthing:fontName="@string/customfont_normal"
+                    onecoolthing:fontName="@string/customfont_light"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"

@@ -53,6 +53,7 @@
     <!-- Parameters -->
     <string name="customfont_normal">Nunito-Regular.ttf</string>
     <string name="customfont_bold">Nunito-Bold.ttf</string>
+    <string name="customfont_light">Nunito-Light.ttf</string>
 
 
     <!-- Etc/Deprecated? -->
