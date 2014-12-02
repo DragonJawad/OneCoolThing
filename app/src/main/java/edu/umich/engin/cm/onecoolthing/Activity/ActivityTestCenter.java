@@ -39,8 +39,8 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagParserFrag;
 import edu.umich.engin.cm.onecoolthing.R;
-import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentBase;
-import edu.umich.engin.cm.onecoolthing.StandaloneFragments.FragmentWebFeed;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
 import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
 import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
 
@@ -110,6 +110,8 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
      * 6 - MichEpedia
      * 7 - Decoder
      * 8 - About
+     */
+    /* NOTE: Decoder removed for now from app! Search for "DECODE-FIX" to find code where it is specifically circumvented
      */
     int currentFragmentIndex = -1;
 
@@ -450,6 +452,10 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         // First check if user clicked on the current fragment again
         if (index == currentFragmentIndex) return;
 
+        // DECODE-FIX
+        if( (index == 7 && currentFragmentIndex == 8) ||
+                (index == 8 && currentFragmentIndex == 7) ) return;
+
         // Begin the fragment transaction
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -482,12 +488,14 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         else if(index == 3) {
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
+            // Put the title on the actionBar that will be used
+            mActionSolidBgTitle.setText(this_title);
 
             // Create a new fragment to use
             MichEngMagParserFrag frag = new MichEngMagParserFrag();
 
             // Add the frag to the center view
-            fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
+            fragmentTransaction.add(R.id.fragContainer, frag, this_title);
             fragmentTransaction.commit();
 
             // Set settings for this view- same as a Webview
@@ -499,8 +507,11 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             String this_url = mFragUrls[index];
             String this_title = mFragTags[index];
 
+            // Set the actionBar's title text (on the one that will be used)
+            mActionSolidBgTitle.setText(this_title);
+
             // Create a new TumblrFeed fragment, with its title and url
-            FragmentWebFeed frag = FragmentWebFeed.newInstance(this_url, this_title);
+            WebFeedFragment frag = WebFeedFragment.newInstance(this_url, this_title);
 
             // Add the webview to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
@@ -509,22 +520,23 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             // Set settings for this web view
             changeSettingsMode(SettingsType.WEBVIEW);
         }
-        else {
-            //    Log.d(TAG, "Created general fragment " + index);
+        // If so, then add in the About fragment
+        else if(index == 8 || index == 7) { // DECODE-FIX
+            // Get the title/tag separately, for ease of typing/reading
+            String this_title = mFragTags[index];
+            // Put the title on the actionBar that will be used
+            mActionTransBgTitle.setText(this_title);
 
-            // Otherwise, add a fill-in frag
-            FragmentBase frag = new FragmentBase();
-            frag.changeBG(R.color.dev_blue);
+            // Create a new fragment to use
+            AboutFragment frag = new AboutFragment();
 
-            fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
+            // Add the frag to the center view
+            fragmentTransaction.add(R.id.fragContainer, frag, this_title);
             fragmentTransaction.commit();
 
-            // Set settings for this test view- currently, just set it like a web view
-            changeSettingsMode(SettingsType.WEBVIEW);
+            // Set settings for this view- same as a Webview
+            changeSettingsMode(SettingsType.ABOUT);
         }
-
-        // Set the title of the ActionBar via the mFragsTags title/tag
-        setActionBarTitle(mFragTags[index]);
 
         // Finally, change the index of the currently used fragment
         currentFragmentIndex = index;
@@ -633,11 +645,6 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         }
     }
 
-    // Sets the title on the ActionBar view that contains the title
-    private void setActionBarTitle(String title) {
-        mActionSolidBgTitle.setText(title);
-    }
-
     /**
      * Changes the settings according to the passed in mode
      * @param mode - A specific SettingsType mode that states which group of settings to use
@@ -666,6 +673,11 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         else if(mode == SettingsType.WEBVIEW) {
             // If so, show the ActionBar with a solid white bg
             toggleTransparentActionBar(false);
+        }
+        else if(mode == SettingsType.ABOUT) {
+            // If so, then set the transparent ActionBar up with its specific title
+            toggleTransparentActionBar(true);
+            mActionTransBgTitle.setText(mFragTags[8]); // Index for About is currently 8
         }
     }
 
@@ -839,7 +851,9 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         @Override
         public int getCount() {
-            return navText.length;
+            // DECODE-FIX
+            return navText.length-1;
+            //return navText.length;
         }
 
         @Override
@@ -878,7 +892,9 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             }
 
             // Set the text for this item
-            holder.navTitle.setText(navText[position]);
+            if(position != 7 && position != 8) // DECODE-FIX
+                holder.navTitle.setText(navText[position]);
+            else holder.navTitle.setText(navText[8]);
 
             // Set the view's indicator as visible if this is the current one
             if(position == currentFragmentIndex || (position == 0 && currentFragmentIndex < 0) ){

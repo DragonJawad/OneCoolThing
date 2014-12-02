@@ -17,7 +17,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  *
  * A Fragment that shows a feed via a WebView
  */
-public class FragmentWebFeed extends Fragment {
+public class WebFeedFragment extends Fragment {
     private String mUrl; // URL of this Tumblr feed
     private String mTitle; // Title of this Tumblr feed
 
@@ -27,9 +27,9 @@ public class FragmentWebFeed extends Fragment {
     private WebView mWebView;
 
     // Creates a new instance- note, non-default constructors should not be used with a fragment
-    public static FragmentWebFeed newInstance(String url, String title) {
+    public static WebFeedFragment newInstance(String url, String title) {
         // Instantiate the fragment
-        FragmentWebFeed frag = new FragmentWebFeed();
+        WebFeedFragment frag = new WebFeedFragment();
 
         // Create a new bundle that the fragment will later access
         Bundle bundle = new Bundle(2);
@@ -48,7 +48,7 @@ public class FragmentWebFeed extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tumblrfeed, container, false);
+        View view = inflater.inflate(R.layout.fragment_webfeed, container, false);
 
         // Get the mUrl and mTitle from the arguments
         mUrl = getArguments().getString(KEY_URL);

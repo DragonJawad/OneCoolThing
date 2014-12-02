@@ -31,7 +31,7 @@
         <item name="nav_SomeCoolApps">Some Cool Apps</item>
         <item name="nav_MichEpedia">MichEpedia</item>
         <item name="nav_Decoder">Decoder</item>
-        <item name="nav_About">About</item>
+        <item name="nav_About">About One Cool Thing</item>
     </string-array>
         <!-- The URLS for the feeds- "" == no url/no webview -->
     <string-array name="nav_items_urls">
@@ -45,6 +45,10 @@
         <item name="nav_Decoder"></item>
         <item name="nav_About"></item>
     </string-array>
+
+    <!-- About page -->
+    <string name="about_click_tutorial">Click here to re-enable tutorial</string>
+    <string name="about_click_privacypolicy">Click here to read our Privacy Policy.</string>
 
     <!-- Parameters -->
     <string name="customfont_normal">Nunito-Regular.ttf</string>
