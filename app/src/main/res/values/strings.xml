@@ -47,6 +47,7 @@
     </string-array>
 
     <!-- About page -->
+    <string name="about_description">It\'s a simple promise.\n\nOne cool thing delivered to you every day.\n\n	•	Cutting-edge technology\n	•	Amazing photos\n	•	New discoveries\n\nNo matter what it is, we promise that it will be cool.\n\nThe One Cool Thing app comes to you from the editors of The Michigan Engineer magazine and the University of Michigan College of Engineering -- one of the top ranked engineering colleges in the world. Content in One Cool Thing is not limited to research from Michigan and includes stories from every corner of the world -- anywhere revolutionary technology and innovation lives.\nIt\'s easy. It\'s free. And it\'s cool.</string>
     <string name="about_click_tutorial">Click here to re-enable tutorial</string>
     <string name="about_click_privacypolicy">Click here to read our Privacy Policy.</string>
 

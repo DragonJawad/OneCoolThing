@@ -16,8 +16,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/garbage_fill_short"
+            android:text="@string/about_description"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
             />
+
+        <TextView
+            android:id="@+id/text_reenable_tutorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_click_tutorial"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"/>
+
+        <TextView
+            android:id="@+id/text_privacypolicy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_click_privacypolicy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"/>
 
     </LinearLayout>
 </RelativeLayout>
