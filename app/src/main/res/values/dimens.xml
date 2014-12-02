@@ -15,6 +15,8 @@
     <dimen name="text_nav">17sp</dimen> <!-- Size of each item in the left sliding menu's nav -->
     <dimen name="text_rightmenu_body">18sp</dimen> <!-- Size of body scrollview and share text -->
     <dimen name="text_rightmenu_title">26sp</dimen>
+    <dimen name="text_about_main">15sp</dimen> <!-- Size of the primary text in the About page -->
+    <dimen name="text_about_clicks">18sp</dimen>
         <!-- Text sizes for the Michigan Engineer Magazine magazine items -->
     <dimen name="text_michengmag_level1_title">25sp</dimen>
     <dimen name="text_michengmag_level2_title">15sp</dimen>
@@ -37,6 +39,10 @@
     <dimen name="shareicon_container_right_offset">70dp</dimen>
         <!-- Top offset for the main share "text" icon/button -->
     <dimen name="shareicon_main_top_offset">20dp</dimen>
+        <!-- Offsets of the text in the about page -->
+    <dimen name="about_text_left_offset">20dp</dimen>
+    <dimen name="about_text_right_offset">20dp</dimen>
+    <dimen name="about_text_vertical_separation">20dp</dimen>
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
