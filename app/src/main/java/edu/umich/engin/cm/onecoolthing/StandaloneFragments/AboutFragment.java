@@ -23,10 +23,16 @@ public class AboutFragment extends Fragment {
     // Full screen dialog which will show the privacy policy
     Dialog dialogPrivacyPolicy;
 
+    // View for the dialog
+    View viewDialog;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
+
+        // Inflate the view for the Privacy Policy dialog
+        viewDialog = inflater.inflate(R.layout.dialog_privacypolicy, null);
 
         // Cache the textViews to set listeners on them later
         textViewTutorial = (TextView) view.findViewById(R.id.text_reenable_tutorial);
@@ -41,7 +47,15 @@ public class AboutFragment extends Fragment {
 
         // Create the dialog to show the Privacy Policy now
         dialogPrivacyPolicy = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        dialogPrivacyPolicy.setContentView(R.layout.dialog_privacypolicy);
+        dialogPrivacyPolicy.setContentView(viewDialog);
+
+        // Set the close/dismiss button up
+        viewDialog.findViewById(R.id.button_dismiss).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogPrivacyPolicy.dismiss();
+            }
+        });
 
         // Add the listeners now to the textViews
         textViewTutorial.setOnClickListener(new View.OnClickListener() {
@@ -56,8 +70,6 @@ public class AboutFragment extends Fragment {
             public void onClick(View v) {
                 // Show the privacy policy dialog
                 dialogPrivacyPolicy.show();
-
-                Toast.makeText(getActivity(), "Sorry, privacy not enabled =3", Toast.LENGTH_SHORT).show();
             }
         });
     }
