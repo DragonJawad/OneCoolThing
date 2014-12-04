@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
@@ -11,12 +12,114 @@
         android:src="@drawable/tutorial_background"
         android:scaleType="fitXY"/>
 
-    <TextView
+    <!-- Tap to close text, in near center -->
+    <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/turoail_taptoclose"
-        android:textColor="@color/white"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="225dp"
+        android:text="@string/tutorial_taptoclose"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_tutorial_taptoclose"
+        onecoolthing:fontName="@string/customfont_light"/>
+
+    <!-- Container for swipe left and right text and arrows -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center">
+
+        <!-- Text container -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:gravity="center_horizontal"
+                android:text="@string/tutorial_swipe_forotherfeeds"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_tutorial_chalk"
+                onecoolthing:fontName="@string/customfont_chalk"/>
+
+            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/tutorial_swipe_toreadtoday"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_tutorial_chalk"
+                onecoolthing:fontName="@string/customfont_chalk"/>
+
+        </LinearLayout>
+
+        <!-- Arrows container -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="40dp"
+                android:gravity="center"
+                android:src="@drawable/tutorial_arrow_right"
+                />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="40dp"
+                android:gravity="center"
+                android:src="@drawable/tutorial_arrow_left"
+            />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Swipe up arrow and text -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true">
+
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+            android:id="@+id/text_swipe_toseeprevious"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/tutorial_swipe_toseeprevious"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_tutorial_chalk"
+            onecoolthing:fontName="@string/customfont_chalk"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tutorial_arrow_up"
+            android:layout_toLeftOf="@id/text_swipe_toseeprevious"/>
+
+    </RelativeLayout>
 
     <!-- View is on top of everything, for grabbing a tap anywhere -->
     <View

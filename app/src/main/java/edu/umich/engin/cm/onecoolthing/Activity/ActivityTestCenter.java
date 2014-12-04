@@ -9,6 +9,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
@@ -49,7 +50,7 @@ import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
  * Created by jawad on 12/10/14.
  */
 public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.VertPagerCommunicator,
-    View.OnClickListener {
+    View.OnClickListener, AboutFragment.TutorialEnforcer {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
@@ -96,6 +97,11 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
     View mViewActionBarSolidBg;
     TextView mActionTransBgTitle;
     TextView mActionSolidBgTitle;
+
+    // Keeps track if seen the tutorial or not already
+    boolean seenTutorialAlready = false; // False if not seen tutorial yet
+    // Key for getting tutorial seen boolean from sharedPreferences
+    private static final String KEY_SEENTUTORIAL = "seenTutorialYet";
 
     /* Current center fragment index, for reference
      * Below is the master list - If the nav is changed, change the below and any
@@ -214,7 +220,14 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
     private void showTutorialIfNecessary() {
         // TODO: Insert check for if tutorial is necessary or not
+        // Get from sharedPreferences whether or not the tutorial has been seen yet or not
+        seenTutorialAlready = getSeenTutorial();
 
+        // If haven't seen the tutorial yet, display it
+        if(!seenTutorialAlready) displayTutorial();
+    }
+
+    private void displayTutorial() {
         // Inflate the view for the tutorial
         View tutorialView = getLayoutInflater().inflate(R.layout.overlay_tutorial, null);
 
@@ -226,6 +239,10 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         tutorialDialog.findViewById(R.id.tap_wrapper).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Save that the tutorial has been seen
+                setSeenTutorial(true);
+
+                // Close the tutorial
                 tutorialDialog.dismiss();
             }
         });
@@ -234,6 +251,37 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         tutorialDialog.show();
     }
 
+    // Sets sharedPreferences boolean of whether or not tutorial has been seen yet
+    public void setSeenTutorial(boolean isTutorialSeen) {
+        // Get the shared preferences' editor
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Set the saved bool to whatever isTutorialSeen is
+        editor.putBoolean(KEY_SEENTUTORIAL, isTutorialSeen);
+
+        // Commit the changes
+        editor.commit();
+    }
+
+    public boolean getSeenTutorial() {
+        // Get and return the value from the preferences
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        return sharedPreferences.getBoolean(KEY_SEENTUTORIAL, false);
+    }
+
+
+    @Override
+    public void showTutorialAgain() {
+        // First, set that the tutorial has not to be seen, ie needs to be checked as seen again
+        setSeenTutorial(false);
+
+        // Then, make sure the One Cool Feed frag is in place
+        changeFrag(0);
+
+        // Finally, actually show the tutorial
+        displayTutorial();
+    }
     // Set up the right and left sliding menus
     private void initBothSlidingMenus() {
         // Get the LayoutInflater to inflate the views for the left sliding menu
@@ -553,8 +601,10 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
             // Put the title on the actionBar that will be used
             mActionTransBgTitle.setText(this_title);
 
-            // Create a new fragment to use
+            // Create a new AboutFragment to use
             AboutFragment frag = new AboutFragment();
+            // Make sure to set the TutorialEnforcer if user decides to see tutorial again
+            frag.setTutorialEnforcer(this);
 
             // Add the frag to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, this_title);

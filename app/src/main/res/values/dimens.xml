@@ -20,6 +20,9 @@
         <!-- Text sizes for the Michigan Engineer Magazine magazine items -->
     <dimen name="text_michengmag_level1_title">25sp</dimen>
     <dimen name="text_michengmag_level2_title">15sp</dimen>
+        <!-- Text sizes for the tutorial -->
+    <dimen name="text_tutorial_taptoclose">20sp</dimen>
+    <dimen name="text_tutorial_chalk">30sp</dimen>
 
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>

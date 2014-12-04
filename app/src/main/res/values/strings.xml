@@ -57,13 +57,13 @@
     <string name="tutorial_swipe_forotherfeeds">Swipe to explore other cool feeds</string>
     <string name="tutorial_swipe_toreadtoday">Swipe to read today\'s cool thing</string>
     <string name="tutorial_swipe_toseeprevious">Swipe to see previous cool things</string>
-    <string name="turoail_taptoclose">Tap anywhere to close</string>
+    <string name="tutorial_taptoclose">Tap anywhere to close</string>
 
     <!-- Parameters -->
     <string name="customfont_normal">Nunito-Regular.ttf</string>
     <string name="customfont_bold">Nunito-Bold.ttf</string>
     <string name="customfont_light">Nunito-Light.ttf</string>
-
+    <string name="customfont_chalk">DK_Crayon_Crumble.ttf</string>
 
     <!-- Etc/Deprecated? -->
     <string name="action_example">Example action</string>

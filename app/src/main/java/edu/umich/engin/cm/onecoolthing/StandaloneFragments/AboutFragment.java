@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.umich.engin.cm.onecoolthing.R;
 
@@ -25,6 +24,15 @@ public class AboutFragment extends Fragment {
 
     // View for the dialog
     View viewDialog;
+
+    // Instance of TutorialEnforcer to tell to show the tutorial
+    TutorialEnforcer mTutorialEnforcer;
+
+    // Interface the Activity should implement to show the tutorial
+    public interface TutorialEnforcer {
+        // Tells the interface to show the tutorial
+        public void showTutorialAgain();
+    }
 
     @Nullable
     @Override
@@ -61,7 +69,10 @@ public class AboutFragment extends Fragment {
         textViewTutorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "You want the tutorial? Too bad! =3", Toast.LENGTH_SHORT).show();
+                // Tell the enforcer to show the tutorial
+                mTutorialEnforcer.showTutorialAgain();
+
+               // Note: Chosen not to check if the tutorial enforcer is null or not
             }
         });
 
@@ -72,5 +83,10 @@ public class AboutFragment extends Fragment {
                 dialogPrivacyPolicy.show();
             }
         });
+    }
+
+    // Set the TutorialEnforcer
+    public void setTutorialEnforcer(TutorialEnforcer enforcer) {
+        this.mTutorialEnforcer = enforcer;
     }
 }
