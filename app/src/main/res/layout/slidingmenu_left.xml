@@ -13,7 +13,7 @@
     android:background="@drawable/slidingmenu_left">
 
     <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
-        onecoolthing:fontName="@string/customfont_normal"
+        onecoolthing:fontName="@string/customfont_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/left_drawer_title"
