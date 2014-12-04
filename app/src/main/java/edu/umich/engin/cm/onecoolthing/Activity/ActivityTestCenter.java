@@ -3,6 +3,7 @@ package edu.umich.engin.cm.onecoolthing.Activity;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -154,6 +155,9 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         // Initialize the one cool feed [which also adds it to the center as well]
         initOneCoolFeedFrag();
+
+        // Show the tutorial, if necessary
+        showTutorialIfNecessary();
     }
 
     private void initCustomActionBar() {
@@ -206,6 +210,28 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
         currentFragmentIndex = 0;
+    }
+
+    private void showTutorialIfNecessary() {
+        // TODO: Insert check for if tutorial is necessary or not
+
+        // Inflate the view for the tutorial
+        View tutorialView = getLayoutInflater().inflate(R.layout.overlay_tutorial, null);
+
+        // Create the dialog and set the inflated view as its contentView
+        final Dialog tutorialDialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+        tutorialDialog.setContentView(tutorialView);
+
+        // Add an onClickListener to the specified region to close the dialog
+        tutorialDialog.findViewById(R.id.tap_wrapper).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tutorialDialog.dismiss();
+            }
+        });
+
+        // Now show the tutorial finally
+        tutorialDialog.show();
     }
 
     // Set up the right and left sliding menus
