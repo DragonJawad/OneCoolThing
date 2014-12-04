@@ -63,7 +63,7 @@
     <string name="customfont_normal">Nunito-Regular.ttf</string>
     <string name="customfont_bold">Nunito-Bold.ttf</string>
     <string name="customfont_light">Nunito-Light.ttf</string>
-    <string name="customfont_chalk">DK_Crayon_Crumble.ttf</string>
+    <string name="customfont_chalk">Rudiment.ttf</string>
 
     <!-- Etc/Deprecated? -->
     <string name="action_example">Example action</string>
