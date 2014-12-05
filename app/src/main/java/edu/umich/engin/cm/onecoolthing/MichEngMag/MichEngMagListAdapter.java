@@ -21,7 +21,8 @@ import edu.umich.engin.cm.onecoolthing.R;
  *
  * Adapter for the MichEngMag ListView
  */
-public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMag.MagParserSubscriber {
+public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMag.MagParserSubscriber,
+                    ImageLoaderNoCache.SpecializedManager {
     private static final String TAG = "MD/MichEngMagListAdapter";
 
     Context mContext;
@@ -29,6 +30,9 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
 
     // Holds all of the rows' data in a single list
     ArrayList<MichEngMagRow> mRowList;
+
+    // Caches all of the views and bitmaps for the rows in a single list
+    ArrayList<RowViewDataHolder> mRowViewList;
 
     // Default constructor
     MichEngMagListAdapter(Context context) {
@@ -67,7 +71,7 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             rowData.setFirstBgUrl(itemData.getImageUrl());
 
             // If the item is a single level item, then set up the row as such
-            if(itemData.getLevel() == 1) {
+            if(itemData.getLevel() == 1 || itemData.getLevel() == 2) {
                 // Tell the rowData that this IS a single level row
                 rowData.setSingleLevel(true);
             }
@@ -94,8 +98,77 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             mRowList.add(rowData);
         }
 
+        // Instantiate the mRowViewList
+        mRowViewList = new ArrayList<RowViewDataHolder>(mRowList.size());
+
+        // Fill the rowDataHolder with dummy data for each row
+        for(int i = 0; i < mRowList.size(); ++i) {
+            // Create a new dummy RowViewDataHolder
+            RowViewDataHolder rowViewDataHolder = new RowViewDataHolder();
+
+            // Add the RowViewDataHolder to the list
+            mRowViewList.add(rowViewDataHolder);
+        }
+
         // Notify the adapter that the data set has been changed
         notifyDataSetChanged();
+    }
+
+    // TODO: All of this
+
+    /**
+     * Lazily loads in the bitmap, if necessary
+     * @param bitmap
+     * @param paramA - Determines the row this bitmap belongs to [0 is first row]
+     * @param paramB - Determines the spot this bitmap belongs to [0 is singeLevel,
+     *                      1 is splitLeft, 2 is splitRight]
+     */
+    @Override
+    public void notifyRetrievedBitmap(Bitmap bitmap, int paramA, int paramB) {
+        // First, get the rowViewData for this position
+        RowViewDataHolder curViewData = mRowViewList.get(paramA);
+
+        // Cache the bitmap in the appropriate location
+        switch(paramB) {
+            case 0:
+                curViewData.singleLevelBitmap = bitmap;
+                break;
+            case 1:
+                curViewData.splitLeftBitmap = bitmap;
+                break;
+            case 2:
+                curViewData.splitRightBitmap = bitmap;
+                break;
+            default:
+                Log.e(TAG, "Error: paramB is outside of expected values");
+                break;
+        }
+
+        // See if the imageView for this location is still usable
+        if(paramB == 0) {
+            // Check the singleLevel imageView
+            if(curViewData.singeLevelImage != null) {
+                // If it's not null, then set the bitmap onto it
+                curViewData.singeLevelImage.setImageBitmap(bitmap);
+            }
+        }
+        else if(paramB == 1) {
+            // Check the splitLeft imageView
+            if(curViewData.splitLeftImage != null) {
+                // If it's not null, then set the bitmap onto it
+                curViewData.splitLeftImage.setImageBitmap(bitmap);
+            }
+        }
+        else {
+            // Check the splitLeft imageView
+            if(curViewData.splitRightImage != null) {
+                // If it's not null, then set the bitmap onto it
+                curViewData.splitRightImage.setImageBitmap(bitmap);
+            }
+        }
+
+        // State that finished loading the current row's bitmap
+        curViewData.loadingBitmap = false;
     }
 
     @Override
@@ -167,8 +240,44 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             // Set the title
             holder.singeLevelTitle.setText(curRowData.getFirstShortTitle());
 
-            // Lazily load the background
-            mImageLoader.DisplayImage(curRowData.getFirstBgUrl(), holder.singleLevelBackground);
+            // Get the row view data so far
+            RowViewDataHolder thisRowViewData = mRowViewList.get(position);
+            // If the bitmap has already been cached, then use it
+            if(thisRowViewData.singleLevelBitmap != null) {
+                holder.singleLevelBackground.setImageBitmap(thisRowViewData.singleLevelBitmap);
+            }
+            // Otherwise, get the bitmap
+            else {
+                // Clear the background, just in case this is recycled and already has a bg
+                holder.singleLevelBackground.setImageBitmap(null);
+
+                // Add the current imageView to this row's view data
+                thisRowViewData.singeLevelImage = holder.singleLevelBackground;
+
+                // Check all other singleLevelImages to check if there is a match
+                for(int i = 0; i < mRowViewList.size(); i++) {
+                    // If this is the current row, then skip redundantly checking this row
+                    if(i == position) continue;
+
+                    // Get the current rowViewDataHolder
+                    RowViewDataHolder curRowViewData = mRowViewList.get(i);
+
+                    // Check if the current rowViewDataHolder holds the same imageView
+                    if(curRowViewData.singeLevelImage == holder.singleLevelBackground) {
+                        // Then set the repeat to null, to show that it's unneccessary now
+                        curRowViewData.singeLevelImage = null;
+
+                        // As there should only be one repeat possible, save some time and break
+                        break;
+                    }
+                }
+
+                // Check if not already loading the bitmap
+                if(!thisRowViewData.loadingBitmap) {
+                    // If not, then get the bitmap
+                    mImageLoader.GetImage(curRowData.getFirstBgUrl(), this, position, 0);
+                }
+            }
 
             // Set the listener to open up this item in-depth
             holder.singeLevelContainer.setOnClickListener(
@@ -184,9 +293,84 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             holder.splitLeftTitle.setText(curRowData.getFirstShortTitle());
             holder.splitRightTitle.setText(curRowData.getSecondShortTitle());
 
-            // Lazily load the backgrounds
-            mImageLoader.DisplayImage(curRowData.getFirstBgUrl(), holder.splitLeftBackground);
-            mImageLoader.DisplayImage(curRowData.getSecondBgUrl(), holder.splitRightBackground);
+            // Get the row view data so far
+            RowViewDataHolder thisRowViewData = mRowViewList.get(position);
+
+            // First, check the bitmap for the splitLeft item
+            if(thisRowViewData.splitLeftBitmap != null) {
+                // If the bitmap has already been cached, then use it
+                holder.splitLeftBackground.setImageBitmap(thisRowViewData.splitLeftBitmap);
+            }
+            // Otherwise, get the bitmap
+            else {
+                // Clear the background, just in case this is recycled and already has a bg
+                holder.splitLeftBackground.setImageBitmap(null);
+
+                // Add the current imageView to this row's view data
+                thisRowViewData.splitLeftImage = holder.splitLeftBackground;
+
+                // Check all other singleLevelImages to check if there is a match
+                for (int i = 0; i < mRowViewList.size(); i++) {
+                    // If this is the current row, then skip redundantly checking this row
+                    if (i == position) continue;
+
+                    // Get the current rowViewDataHolder
+                    RowViewDataHolder curRowViewData = mRowViewList.get(i);
+
+                    // Check if the current rowViewDataHolder holds the same imageView
+                    if (curRowViewData.splitLeftImage == holder.splitLeftBackground) {
+                        // Then set the repeat to null, to show that it's unneccessary now
+                        curRowViewData.splitLeftImage = null;
+
+                        // As there should only be one repeat possible, save some time and break
+                        break;
+                    }
+                }
+
+                // Check if not already loading the bitmap
+                if(!thisRowViewData.loadingBitmap) {
+                    // If not, then get the bitmap
+                    mImageLoader.GetImage(curRowData.getFirstBgUrl(), this, position, 1);
+                }
+            }
+
+            // Now check the bitmap for the splitRight item
+            if(thisRowViewData.splitRightBitmap != null) {
+                // If the bitmap has already been cached, then use it
+                holder.splitRightBackground.setImageBitmap(thisRowViewData.splitRightBitmap);
+            }
+            // Otherwise, get the bitmap
+            else {
+                // Clear the background, just in case this is recycled and already has a bg
+                holder.splitRightBackground.setImageBitmap(null);
+
+                // Add the current imageView to this row's view data
+                thisRowViewData.splitRightImage = holder.splitRightBackground;
+
+                // Check all other singleLevelImages to check if there is a match
+                for (int i = 0; i < mRowViewList.size(); i++) {
+                    // If this is the current row, then skip redundantly checking this row
+                    if (i == position) continue;
+
+                    // Get the current rowViewDataHolder
+                    RowViewDataHolder curRowViewData = mRowViewList.get(i);
+
+                    // Check if the current rowViewDataHolder holds the same imageView
+                    if (curRowViewData.splitRightImage == holder.splitRightBackground) {
+                        // Then set the repeat to null, to show that it's unneccessary now
+                        curRowViewData.splitRightImage = null;
+
+                        // As there should only be one repeat possible, save some time and break
+                        break;
+                    }
+                }
+
+                // Check if not already loading the bitmap
+                if(!thisRowViewData.loadingBitmap) {
+                    // If not, then get the bitmap
+                    mImageLoader.GetImage(curRowData.getSecondBgUrl(), this, position, 2);
+                }
+            }
 
             // Set the listeners to open up these items in-depth
             holder.splitLevelContainerLeft.setOnClickListener(
@@ -232,5 +416,18 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
             Toast.makeText(mContext, "Clicked on an item with url: " + targetUrl, Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    // Holds the respective ImageViews and Bitmaps for a row
+    class RowViewDataHolder {
+        public boolean loadingBitmap;
+
+        public ImageView singeLevelImage;
+        public ImageView splitLeftImage;
+        public ImageView splitRightImage;
+
+        public Bitmap singleLevelBitmap;
+        public Bitmap splitLeftBitmap;
+        public Bitmap splitRightBitmap;
     }
 }

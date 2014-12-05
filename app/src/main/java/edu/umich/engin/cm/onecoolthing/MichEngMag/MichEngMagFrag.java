@@ -13,7 +13,7 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 20/11/14.
  */
-public class MichEngMagParserFrag extends Fragment {
+public class MichEngMagFrag extends Fragment {
     ListView mListView;
 
     @Nullable

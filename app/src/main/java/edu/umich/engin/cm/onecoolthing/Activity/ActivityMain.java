@@ -38,7 +38,7 @@ import android.widget.TextView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
-import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagParserFrag;
+import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
@@ -578,7 +578,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             mActionSolidBgTitle.setText(this_title);
 
             // Create a new fragment to use
-            MichEngMagParserFrag frag = new MichEngMagParserFrag();
+            MichEngMagFrag frag = new MichEngMagFrag();
 
             // Add the frag to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, this_title);
