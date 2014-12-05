@@ -1,35 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin_general"
-    android:paddingRight="@dimen/slidingmenu_shadow_width"
-    android:paddingLeft="@dimen/padding_drawer_left"
-    android:paddingTop="@dimen/padding_general"
-    android:background="@drawable/slidingmenu_left">
+    android:background="@drawable/slidingmenu_left"
+    >
 
-    <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
-        onecoolthing:fontName="@string/customfont_bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/left_drawer_title"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textAllCaps="true"
-        android:textSize="@dimen/text_normal"
-        />
-
-    <ListView
-        android:id="@+id/list"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@null"
-        android:choiceMode="singleChoice"
-        />
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_general"
+        android:paddingRight="@dimen/slidingmenu_shadow_width"
+        android:paddingLeft="@dimen/padding_drawer_left"
+        android:paddingTop="@dimen/padding_general"
+        >
 
-</LinearLayout>
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+            onecoolthing:fontName="@string/customfont_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/left_drawer_title"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_normal"
+            />
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="@null"
+            android:choiceMode="singleChoice"
+            />
+
+    </LinearLayout>
+
+    <!-- Shadow overlay -->
+    <ImageView
+        android:layout_width="@dimen/slidingmenu_shadow_width"
+        android:layout_height="match_parent"
+        android:src="@drawable/slidingmenu_shadow_left"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

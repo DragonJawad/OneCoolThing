@@ -1,144 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container_right_sliding"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/padding_rightmenu_betweenbodytitle"
     android:background="@drawable/slidingright_greydarker">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="@dimen/padding_rightmenu_rightedge"
-        android:gravity="start"
+        android:id="@+id/container_right_sliding"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/padding_rightmenu_betweenbodytitle"
         >
 
-        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
-            android:id="@+id/subTitle"
-            onecoolthing:fontName="Nunito-Regular.ttf"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_rightmenu_title"
-            android:textColor="@color/white"
-        />
+            android:paddingRight="@dimen/padding_rightmenu_rightedge"
+            android:gravity="start"
+            >
+
+            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                android:id="@+id/subTitle"
+                onecoolthing:fontName="Nunito-Regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_rightmenu_title"
+                android:textColor="@color/white"
+                />
 
         </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        android:layout_marginTop="@dimen/margin_rightmenu_betweenbodytitle"
-        android:layout_marginBottom="@dimen/margin_general"
-        android:paddingRight="@dimen/padding_rightmenu_rightedge"
-        >
-        <edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView
-            android:id="@+id/scroll_description"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:layout_marginTop="@dimen/margin_rightmenu_betweenbodytitle"
+            android:layout_marginBottom="@dimen/margin_general"
+            android:paddingRight="@dimen/padding_rightmenu_rightedge"
             >
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
-                    android:id="@+id/bodyText"
-                    onecoolthing:fontName="@string/customfont_light"
+            <edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView
+                android:id="@+id/scroll_description"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                >
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_rightmenu_body"
-                    />
+                    android:layout_height="wrap_content">
 
-                <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
-                    android:id="@+id/tapForMoreText"
-                    onecoolthing:fontName="@string/customfont_bold"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tap_for_more"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_rightmenu_body"
-                    />
+                    <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                        android:id="@+id/bodyText"
+                        onecoolthing:fontName="@string/customfont_light"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_rightmenu_body"
+                        />
+
+                    <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                        android:id="@+id/tapForMoreText"
+                        onecoolthing:fontName="@string/customfont_bold"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tap_for_more"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_rightmenu_body"
+                        />
 
                 </LinearLayout>
-        </edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView>
+            </edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView>
 
-        <ImageView
-            android:id="@+id/scroll_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/arrow_down_blinkanim"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"/>
+            <ImageView
+                android:id="@+id/scroll_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blinkanim"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingRight="@dimen/padding_rightmenu_rightedge_share"
-        >
-        <LinearLayout
-            android:orientation="horizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingRight="@dimen/padding_rightmenu_rightedge_share"
             >
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="end"
+                    android:layout_marginTop="@dimen/shareicon_main_top_offset">
+                    <ImageView
+                        android:id="@+id/share_text_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/share_mainicon_height"
+                        android:src="@drawable/sharecoolthingicon"
+                        android:scaleType="fitEnd"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/container_small_share_icons"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="end"
-                android:layout_marginTop="@dimen/shareicon_main_top_offset">
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/shareicon_container_right_offset">
+
                 <ImageView
-                    android:id="@+id/share_text_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/share_mainicon_height"
-                    android:src="@drawable/sharecoolthingicon"
-                    android:scaleType="fitEnd"
+                    android:id="@+id/share_icon_facebook"
+                    android:layout_width="@dimen/share_specificicons_height"
+                    android:layout_height="@dimen/share_specificicons_height"
+                    android:layout_marginTop="@dimen/shareicon_top_offset"
+                    android:src="@drawable/share_facebook_icon"
                     />
-            </LinearLayout>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/container_small_share_icons"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/shareicon_container_right_offset">
+                <ImageView
+                    android:id="@+id/share_icon_twitter"
+                    android:layout_width="@dimen/share_specificicons_height"
+                    android:layout_height="@dimen/share_specificicons_height"
+                    android:src="@drawable/share_twitter_icon"
+                    />
 
-            <ImageView
-                android:id="@+id/share_icon_facebook"
-                android:layout_width="@dimen/share_specificicons_height"
-                android:layout_height="@dimen/share_specificicons_height"
-                android:layout_marginTop="@dimen/shareicon_top_offset"
-                android:src="@drawable/share_facebook_icon"
-                />
-
-            <ImageView
-                android:id="@+id/share_icon_twitter"
-                android:layout_width="@dimen/share_specificicons_height"
-                android:layout_height="@dimen/share_specificicons_height"
-                android:src="@drawable/share_twitter_icon"
-                />
-
-            <ImageView
-                android:id="@+id/share_icon_email"
-                android:layout_width="@dimen/share_specificicons_height"
-                android:layout_height="@dimen/share_specificicons_height"
-                android:layout_marginTop="@dimen/shareicon_top_offset"
-                android:src="@drawable/share_email_icon"
-                />
+                <ImageView
+                    android:id="@+id/share_icon_email"
+                    android:layout_width="@dimen/share_specificicons_height"
+                    android:layout_height="@dimen/share_specificicons_height"
+                    android:layout_marginTop="@dimen/shareicon_top_offset"
+                    android:src="@drawable/share_email_icon"
+                    />
 
             </LinearLayout>
-    </RelativeLayout>
+        </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <!-- Shadow overlay -->
+    <ImageView
+        android:layout_width="@dimen/slidingmenu_shadow_width"
+        android:layout_height="match_parent"
+        android:src="@drawable/slidingmenu_shadow_right"
+        android:layout_alignParentLeft="true"/>
+</RelativeLayout>

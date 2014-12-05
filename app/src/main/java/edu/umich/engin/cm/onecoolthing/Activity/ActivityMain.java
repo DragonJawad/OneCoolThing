@@ -49,7 +49,7 @@ import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
 /**
  * Created by jawad on 12/10/14.
  */
-public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.VertPagerCommunicator,
+public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerCommunicator,
     View.OnClickListener, AboutFragment.TutorialEnforcer {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
@@ -290,7 +290,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         // Initialize the left sliding menu
         mSlidingMenuLeft = new SlidingMenu(this);
         mSlidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
-        mSlidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
+    //    mSlidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
 
         // Inflate a view for the left sliding menu
         View viewLeftMenu = inflater.inflate(R.layout.slidingmenu_left, null);
@@ -317,7 +317,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
         // Initialize the right sliding menu
         mSlidingMenuRight = new SlidingMenu(this);
         mSlidingMenuRight.setMode(SlidingMenu.RIGHT); // Define the orientation to the right
-        mSlidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
+    //    mSlidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
         // Initialize and set the right sliding menu's content
         View rightMenuView = inflater.inflate(R.layout.slidingmenu_right,null);
