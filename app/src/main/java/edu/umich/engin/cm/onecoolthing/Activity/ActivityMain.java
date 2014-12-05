@@ -37,6 +37,8 @@ import android.widget.TextView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import java.util.ArrayList;
+
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
@@ -45,6 +47,7 @@ import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagListAdapter;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
+import edu.umich.engin.cm.onecoolthing.Util.BackStackSettings;
 import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
 import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
 import edu.umich.engin.cm.onecoolthing.Util.ShareIntent;
@@ -53,12 +56,12 @@ import edu.umich.engin.cm.onecoolthing.Util.ShareIntent;
  * Created by jawad on 12/10/14.
  */
 public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerCommunicator,
-    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer {
+    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer, FragmentManager.OnBackStackChangedListener {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
     // Enums for Activity setting configurations
-    private static enum SettingsType {
+    public enum SettingsType {
         ONECOOLFEED, // Settings for the One Cool Feed
         WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
         ABOUT        // Settings for the About page
@@ -126,6 +129,11 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
      */
     int currentFragmentIndex = -1;
 
+    // List of backstack settings
+    ArrayList<BackStackSettings> mBackStackList;
+    // Tracks how many backStack items there are
+    int backStackSize = 0;
+
     @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,9 +156,6 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         overridePendingTransition(0, 0);
 
         setContentView(R.layout.activity_main);
-        // Remove the rest of the evilness of the ActionBar
-        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.mainContainer);
-    //    viewGroup.removeAllViews();
 
         // Initialize the custom actionBar views and set the first actionBar up
         initCustomActionBar();
@@ -162,6 +167,9 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         mFragTags = getResources().getStringArray(R.array.nav_items);
         // Get all fragments' urls, if they exist
         mFragUrls = getResources().getStringArray(R.array.nav_items_urls);
+
+        // Initialize the backStack listening system
+        initBackStackSystem();
 
         // Initialize the one cool feed [which also adds it to the center as well]
         initOneCoolFeedFrag();
@@ -201,6 +209,14 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
 
         // Hide the actionBar with the title- the simple actionBar is the one to use at the moment
         mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
+    }
+
+    private void initBackStackSystem() {
+        // Initialize the list of backStack settings tracking
+        mBackStackList = new ArrayList<BackStackSettings>();
+
+        // Add this Activity as a listener for backstack changes
+        getFragmentManager().addOnBackStackChangedListener(this);
     }
 
     private void initOneCoolFeedFrag() {
@@ -550,16 +566,29 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        // Create the BackStack instance that will keep track of the changes
+        BackStackSettings backStackSettings = new BackStackSettings();
+        backStackSettings.setPreviousFragPosition(index);
+
         // First, clear out the center container - if not the main frag, then simply remove middle
         if (currentFragmentIndex != 0) {
             // Get the fragment to remove
             Fragment fragment = fragmentManager.findFragmentByTag(mFragTags[currentFragmentIndex]);
             fragmentTransaction.remove(fragment);
+
+            // Save the previous settings based off of the index
+            if(index == 7 || index == 8) // DECODE-FIX
+                backStackSettings.setPreviousSettings(SettingsType.ABOUT);
+            else
+                backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
         }
         // Otherwise, if this is the One Cool Feed, simply hide it- don't remove it
         // in order to avoid fixing the lifecycle
         else {
             fragmentTransaction.hide(mFragOneCoolFeed);
+
+            // Save that the previous settings were the OneCoolFeed settings
+            backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
         }
 
         // Then add in the chosen fragment and set the appropriate settings
@@ -625,11 +654,33 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         }
 
         // Add the transaction to the backstack then finally commit it
-    //    fragmentTransaction.addToBackStack(null);
+// TODO:        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        // Add the previous changes to the backStack settings tracker list
+        mBackStackList.add(backStackSettings);
 
         // Finally, change the index of the currently used fragment
         currentFragmentIndex = index;
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        // Cache the official backStack entry count
+        int officialBackStackEntryCount = getFragmentManager().getBackStackEntryCount();
+
+        // If the personal count is greater than the official, then have to restore settings
+        if(backStackSize > officialBackStackEntryCount) {
+            // Pop off a BackStackSettings item from the list
+            BackStackSettings backStackSettings = mBackStackList.get(mBackStackList.size()-1 );
+            mBackStackList.remove(mBackStackList.size()-1);
+
+            // Restore the settings
+            changeSettingsMode(backStackSettings.getPreviousSettings());
+        }
+
+        // Save the new size of the backStack, to compare to later
+        backStackSize = officialBackStackEntryCount;
     }
 
     @Override
@@ -662,10 +713,8 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
 
         // Add the transaction to the backStack then commit it
-    //    fragmentTransaction.addToBackStack(null);
+    // TODO:    fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-        // TODO: Change the settings for the fragContainer
     }
 
     // Change the right slide to match the current CoolThing
