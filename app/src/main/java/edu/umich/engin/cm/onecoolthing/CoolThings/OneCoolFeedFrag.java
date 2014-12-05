@@ -32,6 +32,9 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     // The adapter that controls the pager
     CoolThingsPagerAdapter pagerAdapter;
 
+    // Caches the current page selected
+    int currentPageSelected = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_coolfeed, container, false);
@@ -103,6 +106,28 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         notifyCommunicator(0);
     }
 
+
+    // Sets the communicator so the fragment can notify the activity of changes in pager
+    public void setCommunicator(VertPagerCommunicator comm) {
+        this.communicator = comm;
+    }
+
+    // Gets the url to share to everybody
+    public String getShareUrl() {
+        // Simply get and return the current url from the pagerAdapter
+        return pagerAdapter.getFullItemURL(currentPageSelected);
+    }
+
+    // Gets the text for tweeting
+    public String getTweetText() {
+        return pagerAdapter.getTweetText(currentPageSelected);
+    }
+
+    // Get the subject line - ie short title - for general sharing
+    public String getSubjectForSharing() {
+        return pagerAdapter.getSubTitle(currentPageSelected);
+    }
+
     @Override
     public void notifyDataLoaded() {
         // Unneccessary
@@ -112,11 +137,6 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     public void notifyRetrievedBitmap(Bitmap bitmap) {
         // Set the background of the ViewPager to the bitmap's
         background.setImageBitmap(bitmap);
-    }
-
-    // Sets the communicator so the fragment can notify the activity of changes in pager
-    public void setCommunicator(VertPagerCommunicator comm) {
-        this.communicator = comm;
     }
 
     @Override
@@ -132,6 +152,9 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
 
         // Let the function notify the communicator of the data at position i
         notifyCommunicator(i);
+
+        // Cache the current position
+        currentPageSelected = i;
     }
 
     @Override

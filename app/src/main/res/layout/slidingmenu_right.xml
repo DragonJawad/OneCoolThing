@@ -140,7 +140,7 @@
                     android:layout_width="@dimen/share_specificicons_height"
                     android:layout_height="@dimen/share_specificicons_height"
                     android:layout_marginTop="@dimen/shareicon_top_offset"
-                    android:src="@drawable/share_email_icon"
+                    android:src="@drawable/share_general_icon"
                     />
 
             </LinearLayout>

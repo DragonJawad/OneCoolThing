@@ -180,6 +180,9 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
         return mListOfCoolThings.get(i).getFullItemURL();
     }
 
+    // Returns the tweetText of a CoolThng at the given position
+    public String getTweetText(int i) { return mListOfCoolThings.get(i).getTweetText(); }
+
     @Override
     public Fragment getItem(int i) {
         // Get the fragment

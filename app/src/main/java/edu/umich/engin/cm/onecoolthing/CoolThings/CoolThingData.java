@@ -15,6 +15,7 @@ public class CoolThingData {
     private String imageURL;
 
     private String fullItemURL;
+    private String tweetText;
 
 
     // Getter/setter methods:
@@ -81,6 +82,15 @@ public class CoolThingData {
         public void setFullItemURL(String fullItemURL) {
             this.fullItemURL = fullItemURL;
         }
+
+        public String getTweetText() {
+            return tweetText;
+        }
+
+        public void setTweetText(String tweetText) {
+            this.tweetText = tweetText;
+        }
+
     // end of getter/setter methods
 
     public CoolThingData(String id, String title, String bodyText){

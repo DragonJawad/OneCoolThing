@@ -34,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -45,6 +44,7 @@ import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
 import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
 import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
+import edu.umich.engin.cm.onecoolthing.Util.ShareIntent;
 
 /**
  * Created by jawad on 12/10/14.
@@ -335,7 +335,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         mShareMainImage = (ImageView) rightMenuView.findViewById(R.id.share_text_icon);
         final ImageView shareFacebook = (ImageView) rightMenuView.findViewById(R.id.share_icon_facebook);
         final ImageView shareTwitter = (ImageView) rightMenuView.findViewById(R.id.share_icon_twitter);
-        final ImageView shareEmail = (ImageView) rightMenuView.findViewById(R.id.share_icon_email);
+        final ImageView shareGeneral = (ImageView) rightMenuView.findViewById(R.id.share_icon_email);
         final View shareSpecificContainer = (View) rightMenuView.findViewById(R.id.container_small_share_icons);
 
         // Create the reusable animations for the share icons
@@ -357,8 +357,6 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
                         // Overlay is black with transparency of 0x66 (40%)
                         view.getDrawable().setColorFilter(0x66000000, PorterDuff.Mode.SRC_ATOP);
                         view.invalidate();
-
-                        Toast.makeText(getBaseContext(), "Tapped the image!", Toast.LENGTH_SHORT).show();
 
                         // Either animate the share icons in or out
                         if(isShareIconShowing) {
@@ -409,13 +407,27 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
 
                         // React depending on which button was tapped
                         if(v == shareFacebook) {
-                            Toast.makeText(getBaseContext(), "Tapped the Facebook share button!", Toast.LENGTH_SHORT).show();
+                            // Unfortunately, can only share the url to FB, Get that data first from the feed
+                            String shareUrl = mFragOneCoolFeed.getShareUrl();
+
+                            // Then, use the Util to share it to Facebook
+                            ShareIntent.shareToFacebook(ActivityMain.this, shareUrl);
                         }
                         else if(v == shareTwitter) {
-                            Toast.makeText(getBaseContext(), "Tapped the Twitter share button!", Toast.LENGTH_SHORT).show();
+                            // Get the text to share to Twitter
+                            String tweetText = mFragOneCoolFeed.getTweetText();
+                            String shareUrl = mFragOneCoolFeed.getShareUrl();
+
+                            // Then, use the Util to share to Twitter
+                            ShareIntent.shareToTwitter(ActivityMain.this, tweetText, shareUrl);
                         }
-                        else if(v == shareEmail) {
-                            Toast.makeText(getBaseContext(), "Tapped the Email share button!", Toast.LENGTH_SHORT).show();
+                        else if(v == shareGeneral) {
+                            // Get the text for sharing
+                            String shareSubject = mFragOneCoolFeed.getSubjectForSharing();
+                            String shareUrl = mFragOneCoolFeed.getShareUrl();
+
+                            // Then, use the Util to share generally
+                            ShareIntent.shareToGeneral(ActivityMain.this, shareSubject, shareUrl);
                         }
                         else {
                             Log.e(TAG, "From share touch listener: Couldn't find matching view!");
@@ -440,7 +452,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         };
         shareFacebook.setOnTouchListener(shareSpecificTouchListener);
         shareTwitter.setOnTouchListener(shareSpecificTouchListener);
-        shareEmail.setOnTouchListener(shareSpecificTouchListener);
+        shareGeneral.setOnTouchListener(shareSpecificTouchListener);
 
         // Set a click listener on the textView to hide the flashing arrow animation
         mRightMenuBodyTextView.setOnClickListener(new View.OnClickListener() {
