@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:actionBarSize"
+    android:background="@color/white"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="?android:actionBarSize"
+        >
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_actionbar_icon"
+            android:paddingBottom="@dimen/padding_actionbar_icon"
+            android:paddingRight="@dimen/padding_actionbar_icon"
+            android:paddingEnd="@dimen/padding_actionbar_icon"
+            android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
+            android:layout_marginStart="@dimen/margin_actionbar_icon_left"
+            android:src="@drawable/ic_ab_back_holo_light_am"
+            android:background="?android:attr/selectableItemBackground"
+            />
+    </LinearLayout>
+</RelativeLayout>

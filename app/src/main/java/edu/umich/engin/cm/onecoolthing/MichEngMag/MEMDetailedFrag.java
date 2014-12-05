@@ -76,13 +76,13 @@ public class MEMDetailedFrag extends Fragment {
     }
 
     // Load in the data
-    public void setData(Bitmap bitmap, String title, String category, String author, String htmlData) {
+    public void setData(MEMDetailedData data) {
         // Cache all the inputs
-        this.mTopImageBitmap = bitmap;
-        this.mTitle = title;
-        this.mCategory = category;
-        this.mAuthor = author;
-        this.mWebHTMLData = htmlData;
+        this.mTopImageBitmap = data.getmTopImageBitmap();
+        this.mTitle = data.getmTitle();
+        this.mCategory = data.getmCategory();
+        this.mAuthor = data.getmAuthor();
+        this.mWebHTMLData = data.getmWebHTMLData();
 
         // State that the data was set
         hasDataBeenSet = true;

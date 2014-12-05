@@ -33,6 +33,7 @@
         <item name="nav_MichEpedia">MichEpedia</item>
         <item name="nav_Decoder">Decoder</item>
         <item name="nav_About">About One Cool Thing</item>
+        <item name="nav_MEMDEtailed">MEMDetailed</item>
     </string-array>
         <!-- The URLS for the feeds- "" == no url/no webview -->
     <string-array name="nav_items_urls">

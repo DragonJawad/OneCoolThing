@@ -32,9 +32,17 @@ public class ParseMichEngMag {
     private static final String TAG_URL = "URL";
     private static final String TAG_IMAGEURL = "Magazine Image";
 
+    // JSON tags for the detailed items
+    private static final String TAG_DETAILED_TITLE = "Title";
+    private static final String TAG_DETAILED_CATEGORY = "Magazine Dept/Category";
+    private static final String TAG_DETAILED_AUTHOR = "Author";
+    private static final String TAG_DETAILED_CONTENTHTML = "Body content";
+
     // Interface for anyone who wishes to actually receive the data
     public interface MagParserSubscriber {
         public void gotMagazine(ArrayList<MichEngMagItem> magazineList);
+
+        public void gotDetailedItem(MEMDetailedData data);
     }
 
     // Gets the magazine from the webs and gives it to the subscriber
@@ -44,9 +52,16 @@ public class ParseMichEngMag {
         task.execute();
     }
 
+    // Gets the detailed data and gives it to the subscriber [without the bitmap]
+    public void getDetailedData(Context context, MagParserSubscriber subscriber, MEMDetailedData data, String url) {
+        // Create and run an Async to do all the work
+        GetDetailedItem task = new GetDetailedItem(context, subscriber, data, url);
+        task.execute();
+    }
+
     /**
      * Async class to get String representation of JSON
-     * which then passes it to the jsonUser
+     * which then passes it to the subscriber
      */
     private class GetMagazine extends AsyncTask<Void, Void, Void> {
         Context mContext;
@@ -121,6 +136,76 @@ public class ParseMichEngMag {
         protected void onPostExecute(Void result) {
             // Notify the subscriber of the data
             mSubscriber.gotMagazine(magazineList);
+        }
+    }
+
+    /**
+     * Async class to get the MEMDetailedData from the url
+     * which then passes it to the subscriber
+     */
+    private class GetDetailedItem extends AsyncTask<Void, Void, Void> {
+        Context mContext;
+
+        // Subscriber to be notified once data has been accumulated
+        MagParserSubscriber mSubscriber;
+
+        // Holds all the data to pass around
+        MEMDetailedData mData;
+
+        // Holds the final url to get the JSON from
+        String mUrl;
+
+        public GetDetailedItem(Context context, MagParserSubscriber subscriber, MEMDetailedData data, String url) {
+            this.mContext = context;
+            this.mSubscriber = subscriber;
+            this.mData = data;
+            this.mUrl = url + "/storyjson";
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Create service handler class instance to handle HTTP
+            ServiceHandler sh = new ServiceHandler();
+
+            // Make a request to url and get response
+            String jsonStr = sh.makeServiceCall(mUrl, ServiceHandler.GET);
+
+            // Change the jsonStr into a mJsonArray- save a simple step
+            try {
+                // Get the single JSON object
+                JSONObject jsonObject = new JSONObject(jsonStr);
+
+                // Get the data first from the JSON
+                String title = jsonObject.getString(TAG_DETAILED_TITLE);
+                String author = jsonObject.getString(TAG_DETAILED_AUTHOR);
+                String htmlData = jsonObject.getString(TAG_DETAILED_CONTENTHTML);
+
+                // The category is inside an array, so get it and save the first object
+                    // TODO: Support more than one category
+                JSONArray categoryArray = jsonObject.getJSONArray(TAG_DETAILED_CATEGORY);
+                String category = categoryArray.get(0).toString();
+
+                // Then put the data into the data object
+                mData.setmTitle(title);
+                mData.setmCategory(category);
+                mData.setmAuthor(author);
+                mData.setmWebHTMLData(htmlData);
+
+            } catch (JSONException e) {
+                Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
+                        .show();
+                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
+                cancel(true);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            // Notify the subscriber of the data
+            mSubscriber.gotDetailedItem(mData);
         }
     }
 }

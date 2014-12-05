@@ -15,6 +15,8 @@ import edu.umich.engin.cm.onecoolthing.R;
  */
 public class MichEngMagFrag extends Fragment {
     ListView mListView;
+    MichEngMagListAdapter mAdapter;
+    MichEngMagListAdapter.MagazineViewer magazineViewer;
 
     @Nullable
     @Override
@@ -35,11 +37,21 @@ public class MichEngMagFrag extends Fragment {
         initSetup();
     }
 
+    public void setMagazineViewer(MichEngMagListAdapter.MagazineViewer magazineViewer) {
+        this.magazineViewer = magazineViewer;
+
+        // If the adapter has already been set, then give it the magazineViewer now
+        if(mAdapter != null) mAdapter.setMagazineViewer(magazineViewer);
+    }
+
     private void initSetup() {
         // Set up the adapter for the listView
-        MichEngMagListAdapter adapter = new MichEngMagListAdapter(getActivity());
+        mAdapter = new MichEngMagListAdapter(getActivity());
 
+        // If the magazineViewer is not null, then set it now
+        if(magazineViewer != null) mAdapter.setMagazineViewer(magazineViewer);
+;;;
         // Set the adapter as the listView's adapter
-        mListView.setAdapter(adapter);
+        mListView.setAdapter(mAdapter);
     }
 }

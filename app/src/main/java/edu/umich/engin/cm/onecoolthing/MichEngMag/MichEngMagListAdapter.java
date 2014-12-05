@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,6 +33,17 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
     // Caches all of the views and bitmaps for the rows in a single list
     ArrayList<RowViewDataHolder> mRowViewList;
 
+    // Reference for who is to handle the MEMDetailed data
+    MagazineViewer mMagazineViewer;
+
+    // States whether or not already opening some detailed view
+    boolean isAnItemOpening = false;
+
+    // Interface for passing up the detailed data to whoever can use it
+    public interface MagazineViewer{
+        public void openMagazineItem(MEMDetailedData data);
+    }
+
     // Default constructor
     MichEngMagListAdapter(Context context) {
         this.mContext = context;
@@ -49,8 +59,8 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
         parser.getData(mContext, this);
     }
 
-    public interface MagazineViewer{
-        public void openItem(Bitmap image, String url);
+    public void setMagazineViewer(MagazineViewer magazineViewer) {
+        this.mMagazineViewer = magazineViewer;
     }
 
     // Be notified once the magazineList is retrieved and parsed
@@ -114,7 +124,31 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
         notifyDataSetChanged();
     }
 
-    // TODO: All of this
+    // Be notified once the data for a detailed view has been received
+    @Override
+    public void gotDetailedItem(MEMDetailedData data) {
+        // Give the data the bitmap it specified by getting it from the appropriate row;
+        RowViewDataHolder viewData = mRowViewList.get(data.getAdapterRowPosition());
+        int spot = data.getAdapterSpot();
+        if(spot == 0) {
+            data.setmTopImageBitmap(viewData.singleLevelBitmap);
+        }
+        else if(spot == 1) {
+            data.setmTopImageBitmap(viewData.splitLeftBitmap);
+        }
+        else if(spot == 2) {
+            data.setmTopImageBitmap(viewData.splitRightBitmap);
+        }
+        else {
+            Log.e(TAG, "gotDetailedItem(): Error! spot int is out of expected value range!");
+        }
+
+        // State that the item has opened
+        isAnItemOpening = false;
+
+        // Pass the data up the chain to set up the MEMDetailed display
+        mMagazineViewer.openMagazineItem(data);
+    }
 
     /**
      * Lazily loads in the bitmap, if necessary
@@ -281,7 +315,7 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
 
             // Set the listener to open up this item in-depth
             holder.singeLevelContainer.setOnClickListener(
-                    new MagazineClickListener(holder.singleLevelBackground, curRowData.getFirstUrl()));
+                    new MagazineClickListener(curRowData.getFirstUrl(), position, 0));
         }
         // Otherwise, set it up as a multi level row
         else {
@@ -374,9 +408,9 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
 
             // Set the listeners to open up these items in-depth
             holder.splitLevelContainerLeft.setOnClickListener(
-                    new MagazineClickListener(holder.splitLeftBackground, curRowData.getFirstUrl()));
+                    new MagazineClickListener(curRowData.getFirstUrl(), position, 1));
             holder.splitLevelContainerRight.setOnClickListener(
-                    new MagazineClickListener(holder.splitRightBackground, curRowData.getSecondUrl()));
+                    new MagazineClickListener(curRowData.getSecondUrl(), position, 2));
         }
 
         return row;
@@ -402,19 +436,33 @@ public class MichEngMagListAdapter extends BaseAdapter implements ParseMichEngMa
 
     // The click listener for each magazine item
     class MagazineClickListener implements View.OnClickListener {
-        ImageView targetImageView; // The ImageView which contains the target bitmap
-        String targetUrl; // The URL to get the text from
+        String targetUrl; // The URL to get the data from
+        int rowPosition; // Corresponds to the row that this data belongs to
+        int spot; // Corresponds to the spot that this data belongs to
 
         // Default constructor, save the target data
-        public MagazineClickListener(ImageView imageView, String url) {
-            this.targetImageView = imageView;
+        public MagazineClickListener(String url, int rowPosition, int spot) {
             this.targetUrl = url;
+            this.rowPosition = rowPosition;
+            this.spot = spot;
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(mContext, "Clicked on an item with url: " + targetUrl, Toast.LENGTH_SHORT)
-                    .show();
+            // Check that an item is not already loading
+            if(!isAnItemOpening) {
+                // State an item is now opening
+                isAnItemOpening = true;
+
+                // Create a new MEMDetailedData object and add the position and spot to it
+                MEMDetailedData data = new MEMDetailedData();
+                data.setAdapterRowPosition(rowPosition);
+                data.setAdapterSpot(spot);
+
+                // Use the parser to get the data
+                ParseMichEngMag parser = new ParseMichEngMag();
+                parser.getDetailedData(mContext, MichEngMagListAdapter.this, data, targetUrl);
+            }
         }
     }
 

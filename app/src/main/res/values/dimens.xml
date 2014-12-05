@@ -51,8 +51,9 @@
     <dimen name="about_text_vertical_separation">20dp</dimen>
         <!-- Offsets for the MEM Detailed layout -->
     <dimen name="margin_memdetailed_descriptionoffsetleft">10dp</dimen>
-    <dimen name="margin_memdetialed_titlemain_topnbottomoffsets">20dp</dimen>
-    <dimen name="margin_memdetailed_titlecategory_bottomoffset">10dp</dimen>
+    <dimen name="margin_memdetialed_titlemain_topoffset">5dp</dimen>
+    <dimen name="margin_memdetialed_titlemain_bottomoffset">20dp</dimen>
+    <dimen name="margin_memdetailed_titlecategory_bottomoffset">5dp</dimen>
     <dimen name="margin_memdetailed_titleauthor_bottomoffset">15dp</dimen>
 
     <!-- Padding Dimens -->

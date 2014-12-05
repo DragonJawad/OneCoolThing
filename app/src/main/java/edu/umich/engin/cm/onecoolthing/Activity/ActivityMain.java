@@ -38,7 +38,10 @@ import android.widget.TextView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
+import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
+import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
+import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagListAdapter;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
@@ -50,7 +53,7 @@ import edu.umich.engin.cm.onecoolthing.Util.ShareIntent;
  * Created by jawad on 12/10/14.
  */
 public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerCommunicator,
-    View.OnClickListener, AboutFragment.TutorialEnforcer {
+    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
@@ -117,6 +120,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
      * 6 - MichEpedia
      * 7 - Decoder
      * 8 - About
+     * 9 - MEMDetailed Frag
      */
     /* NOTE: Decoder removed for now from app! Search for "DECODE-FIX" to find code where it is specifically circumvented
      */
@@ -551,21 +555,17 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             // Get the fragment to remove
             Fragment fragment = fragmentManager.findFragmentByTag(mFragTags[currentFragmentIndex]);
             fragmentTransaction.remove(fragment);
-
-            Log.d(TAG, "Removed fragment: " + currentFragmentIndex);
         }
         // Otherwise, if this is the One Cool Feed, simply hide it- don't remove it
         // in order to avoid fixing the lifecycle
         else {
             fragmentTransaction.hide(mFragOneCoolFeed);
-            Log.d(TAG, "Hid center fragment");
         }
 
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
             // Simply show the OneCoolFeed and set up the settings using its function
             fragmentTransaction.show(mFragOneCoolFeed);
-            fragmentTransaction.commit();
 
             // Apply the settings for the OneCoolFeed
             changeSettingsMode(SettingsType.ONECOOLFEED);
@@ -577,12 +577,12 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             // Put the title on the actionBar that will be used
             mActionSolidBgTitle.setText(this_title);
 
-            // Create a new fragment to use
+            // Create and setup the fragment to use
             MichEngMagFrag frag = new MichEngMagFrag();
+            frag.setMagazineViewer(this);
 
             // Add the frag to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, this_title);
-            fragmentTransaction.commit();
 
             // Set settings for this view- same as a Webview
             changeSettingsMode(SettingsType.WEBVIEW);
@@ -601,7 +601,6 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
 
             // Add the webview to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
-            fragmentTransaction.commit();
 
             // Set settings for this web view
             changeSettingsMode(SettingsType.WEBVIEW);
@@ -620,14 +619,53 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
 
             // Add the frag to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, this_title);
-            fragmentTransaction.commit();
 
             // Set settings for this view- same as a Webview
             changeSettingsMode(SettingsType.ABOUT);
         }
 
+        // Add the transaction to the backstack then finally commit it
+    //    fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
         // Finally, change the index of the currently used fragment
         currentFragmentIndex = index;
+    }
+
+    @Override
+    // Open up the MEM Detailed frag
+    public void openMagazineItem(MEMDetailedData data) {
+        // Begin the fragment transaction
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // Create the fragment to add in
+        MEMDetailedFrag frag = new MEMDetailedFrag();
+        // Give the frag the data
+        frag.setData(data);
+
+        // Double check that the current frag isn't the One Cool Feed
+        if(currentFragmentIndex != 0) {
+            // Get the fragment to remove
+            Fragment fragment = fragmentManager.findFragmentByTag(mFragTags[currentFragmentIndex]);
+            fragmentTransaction.remove(fragment);
+        }
+        else {
+            // However, if it is, hide the One Cool Feed then add in the fragment
+            fragmentTransaction.hide(mFragOneCoolFeed);
+        }
+
+        // Indicate that the current frag will be the MEMDetailedFrag
+        currentFragmentIndex = 9;
+
+        // Add in the fragment
+        fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
+
+        // Add the transaction to the backStack then commit it
+    //    fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        // TODO: Change the settings for the fragContainer
     }
 
     // Change the right slide to match the current CoolThing
