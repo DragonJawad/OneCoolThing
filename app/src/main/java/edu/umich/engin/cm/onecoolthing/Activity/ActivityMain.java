@@ -978,7 +978,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         @Override
         public int getCount() {
             // DECODE-FIX
-            return navText.length-1;
+            return navText.length-2;
             //return navText.length;
         }
 
