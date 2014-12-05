@@ -30,6 +30,9 @@ public class ImageLoaderNoCache {
     // Manager(s) to be notified once data is loaded
     LoaderManager mManagers[];
 
+    // Specialized manager to be notified of params to be passed back
+    SpecializedManager mSpecialManager;
+
     // Interface so that user can be notified once data has been finally applied
     public interface LoaderManager {
         // Notifies the manager that the data was loaded
@@ -39,6 +42,12 @@ public class ImageLoaderNoCache {
             // Note: notifyDataLoaded() will be called first, if used
         public void notifyRetrievedBitmap(Bitmap bitmap);
     }
+
+   // Interface for a special manager who needs params back with bitmap
+    public interface SpecializedManager {
+       // Gives back the bitmap as well as stored params
+       public void notifyRetrievedBitmap(Bitmap bitmap, int paramA, int paramB);
+   }
 
     // Default constructor
     public ImageLoaderNoCache() {
@@ -67,6 +76,15 @@ public class ImageLoaderNoCache {
     public void GetImage(String url, LoaderManager managers[]) {
         // Create a simple notifier task
         NotifyRetrievedTask task = new NotifyRetrievedTask(url, managers);
+
+        // Put the task into the que
+        mExecutorService.submit(new BitmapLoader(task));
+    }
+
+    // Notifies the specializedManager once the bitmap is received, and returns paramA and paramB at same time
+    public void GetImage(String url, SpecializedManager specializedManager, int paramA, int paramB) {
+        // Create a specialized notifier task
+        NotifySpecialReceivedTask task = new NotifySpecialReceivedTask(url, specializedManager, paramA, paramB);
 
         // Put the task into the que
         mExecutorService.submit(new BitmapLoader(task));
@@ -129,6 +147,35 @@ public class ImageLoaderNoCache {
             for(LoaderManager manager : mManagers) {
                 manager.notifyRetrievedBitmap(bitmap);
             }
+        }
+    }
+
+    // Simply notifies the manager(s) of the retrieved image
+    private class NotifySpecialReceivedTask extends LoadImageTask {
+        String mUrl;
+        SpecializedManager mManager;
+
+        // Special params to return back to the maanger
+        int paramA;
+        int paramB;
+
+        // Default constructor
+        NotifySpecialReceivedTask(String url, SpecializedManager manager, int paramA, int paramB) {
+            this.mUrl = url;
+            this.mManager = manager;
+            this.paramA = paramA;
+            this.paramB = paramB;
+        }
+
+        @Override
+        public String GetUrl() {
+            return mUrl;
+        }
+
+        @Override
+        public void LoadImage(Bitmap bitmap) {
+            // Notify the manager of the bitmap abd params at once
+            mManager.notifyRetrievedBitmap(bitmap, paramA, paramB);
         }
     }
 
