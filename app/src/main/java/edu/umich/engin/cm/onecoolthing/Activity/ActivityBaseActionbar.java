@@ -42,7 +42,7 @@ public class ActivityBaseActionbar extends Activity {
     @Override
     public void setContentView(int layoutResID)
     {
-        super.setContentView(R.layout.activity_test);
+        super.setContentView(R.layout.activity_main);
         ViewGroup viewGroup = (ViewGroup) findViewById(R.id.mainContainer);
         viewGroup.removeAllViews();
     //    viewGroup.addView(getLayoutInflater().inflate(layoutResID, null));

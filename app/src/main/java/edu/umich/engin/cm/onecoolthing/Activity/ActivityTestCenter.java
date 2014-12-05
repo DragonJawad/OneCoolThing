@@ -143,7 +143,7 @@ public class ActivityTestCenter extends Activity implements OneCoolFeedFrag.Vert
 
         overridePendingTransition(0, 0);
 
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_main);
         // Remove the rest of the evilness of the ActionBar
         ViewGroup viewGroup = (ViewGroup) findViewById(R.id.mainContainer);
     //    viewGroup.removeAllViews();
