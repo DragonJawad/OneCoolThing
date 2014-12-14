@@ -57,24 +57,23 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     }
 
     private void initCoolViewPager(Context context) {
-        // Bug fix of "Observer... was not registered" error
-            // Ie, adapter kept getting reset and app crashes when leaving and coming back from
-                // ANYWHERE
-        if(pagerAdapter != null) return;
+        // ONLY set the pagerAdapter if necessary
+            // ie, when restarting activity/frag, pagerAdapter already exists
+        if(pagerAdapter == null) {
+            // Set up the pagerAdapter to handle the different "pages"/fragments
+            pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
+            pagerAdapter.initAdapter(context, this);
 
-        // Set up the pagerAdapter to handle the different "pages"/fragments
-        pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
-        pagerAdapter.initAdapter(context, this);
+            // Set the pageAdapter to the ViewPager
+            mViewPager.setAdapter(pagerAdapter);
 
-        // Set the pageAdapter to the ViewPager
-        mViewPager.setAdapter(pagerAdapter);
+            // Make this fragment listen to the adapter's changes
+            mViewPager.setOnPageChangeListener(this);
 
-        // Make this fragment listen to the adapter's changes
-        mViewPager.setOnPageChangeListener(this);
-
-        // Set the pager to retain 3 of the Cool Things at one time
+            // Set the pager to retain 3 of the Cool Things at one time
             // Otherwise, only saves one Cool Thing at a time- so have to reload every one
-        mViewPager.setOffscreenPageLimit(3);
+            mViewPager.setOffscreenPageLimit(3);
+        }
     }
 
     // Passes the appropriate data for the communicator at the position
