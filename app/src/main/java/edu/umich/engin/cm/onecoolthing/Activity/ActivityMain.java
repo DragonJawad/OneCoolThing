@@ -209,7 +209,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         mViewActionBarTransparent = inflater.inflate(R.layout.actionbar_withtransbg, null);
 
         // Set the imageButton from the simple view to toggle the slidingMenu
-        ((ImageButton) mViewActionBarTransparent.findViewById(R.id.navButton))
+        mViewActionBarTransparent.findViewById(R.id.navButton)
                 .setOnClickListener(this);
 
         // Inflate the ActionBar with the title view and solid white background
@@ -242,35 +242,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
-    /*
-    private void initOneCoolFeedFrag() {
-        // If the fragment has already been initialized, than why da heck is this function running?
-        if(mFragOneCoolFeed != null) {
-            Log.e(TAG, "mFragOneCoolFeed was already initialized!");
-            return;
-        }
-
-        // Actually initialize the fragment
-        mFragOneCoolFeed = new OneCoolFeedFrag();
-
-        // Let the frag communicate with this activity
-        mFragOneCoolFeed.setCommunicator(this);
-
-        // Add in the fragment to the place specified in the layout file
-        getFragmentManager().beginTransaction()
-                .add(R.id.fragContainer, mFragOneCoolFeed, mFragTags[0])
-                .commit();
-
-        // Set the particular activity settings for the initial, One Cool Feed center view
-        changeSettingsMode(SettingsType.ONECOOLFEED);
-
-        // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
-        currentFragmentIndex = 0;
-    }
-    */
-
     private void showTutorialIfNecessary() {
-        // TODO: Insert check for if tutorial is necessary or not
         // Get from sharedPreferences whether or not the tutorial has been seen yet or not
         seenTutorialAlready = getSeenTutorial();
 
@@ -353,8 +325,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         mListNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: Skip if currently at this posit
-                // Change out the current fragment displayed in the center
+                 // Change out the current fragment displayed in the center
                 changeFrag(position);
 
                 // Toggle/close the left sliding menu
@@ -685,8 +656,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
 
-        // Add the transaction to the backstack then finally commit it
-// TODO:        fragmentTransaction.addToBackStack(null);
+        // TODO Add the transaction to the backstack then finally commit it
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         // Add the previous changes to the backStack settings tracker list
@@ -733,8 +704,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // Add in the fragment
         fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
 
-        // Add the transaction to the backStack then commit it
-    // TODO:    fragmentTransaction.addToBackStack(null);
+        // TODO Add the transaction to the backStack then commit it
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -825,7 +796,6 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             mRightMenuTapMoreTextView.setVisibility(View.VISIBLE);
 
             // Create a new listener to open up the link
-                // TODO: Think of a more efficient way to do this
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
