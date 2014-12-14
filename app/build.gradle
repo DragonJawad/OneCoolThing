@@ -32,9 +32,6 @@ android {
         }
     }
     productFlavors {
-        flavorUnsigned {
-            versionCode = 1;
-        }
     }
 }
 
