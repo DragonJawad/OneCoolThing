@@ -657,7 +657,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         }
 
         // TODO Add the transaction to the backstack then finally commit it
-        fragmentTransaction.addToBackStack(null);
+    //    fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         // Add the previous changes to the backStack settings tracker list
@@ -669,6 +669,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
     @Override
     public void onBackStackChanged() {
+        /*
         // Cache the official backStack entry count
         int officialBackStackEntryCount = getFragmentManager().getBackStackEntryCount();
 
@@ -684,6 +685,30 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         // Save the new size of the backStack, to compare to later
         backStackSize = officialBackStackEntryCount;
+        */
+    }
+
+    @Override
+    public void onBackPressed() {
+        // If either sliding menu is showing, close 'em
+        if(mSlidingMenuLeft.isMenuShowing()) mSlidingMenuLeft.toggle();
+        else if(mSlidingMenuRight.isMenuShowing()) mSlidingMenuRight.toggle();
+
+        // If there are no tracked backstack changed to track, then simply let Android handle the press
+        // TODO: First time adding the central frag adds to backstack. Don't do that
+        else if(mBackStackList.size() < 2) {
+            super.onBackPressed();
+        }
+        
+        // Otherwise, handle the back button as user expects and switch back to the previous fragment
+        else {
+            // Pop off a BackStackSettings item from the list
+            BackStackSettings backStackSettings = mBackStackList.get(mBackStackList.size()-1 );
+            mBackStackList.remove(mBackStackList.size()-1);
+
+            // Restore the settings
+            changeSettingsMode(backStackSettings.getPreviousSettings());
+        }
     }
 
     @Override
@@ -705,7 +730,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
 
         // TODO Add the transaction to the backStack then commit it
-        fragmentTransaction.addToBackStack(null);
+    //    fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
