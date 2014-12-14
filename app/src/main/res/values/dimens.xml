@@ -69,6 +69,7 @@
     <dimen name="padding_michengmag_level2_texttop">100dp</dimen>
 
     <!-- Size Dimensions -->
+    <dimen name="drawer_item_icon_height">25dp</dimen>
         <!-- Heights for the Michigan Engineer Magazine magazine items -->
     <dimen name="michengmag_level1_height">280dp</dimen>
     <dimen name="michengmag_level2_height">150dp</dimen>

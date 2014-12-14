@@ -26,7 +26,8 @@
         <ImageView
             android:id="@+id/arrow_indicator"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/drawer_item_icon_height"
+            android:layout_centerVertical="true"
             android:background="@drawable/arrow_right"
             android:scaleType="fitXY"
             android:layout_alignParentEnd="true"
