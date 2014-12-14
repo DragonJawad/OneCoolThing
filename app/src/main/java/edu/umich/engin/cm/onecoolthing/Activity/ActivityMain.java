@@ -28,6 +28,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,6 +67,9 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
         ABOUT        // Settings for the About page
     }
+
+    // The view that holds all the fragments
+    FrameLayout mFragContainer;
 
     // The single One Cool Feed fragment to use
     private OneCoolFeedFrag mFragOneCoolFeed;
@@ -134,6 +138,9 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
     // Tracks how many backStack items there are
     int backStackSize = 0;
 
+    // Tags for saving and getting restorable state data
+    private static final String KEY_STATE_CURINDEX = "Key_CurrentFragmentIndex";
+
     @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +164,9 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
 
         setContentView(R.layout.activity_main);
 
+        // Find and cache the fragContainer
+        mFragContainer = (FrameLayout) findViewById(R.id.fragContainer);
+
         // Initialize the custom actionBar views and set the first actionBar up
         initCustomActionBar();
 
@@ -171,11 +181,38 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         // Initialize the backStack listening system
         initBackStackSystem();
 
-        // Initialize the one cool feed [which also adds it to the center as well]
-        initOneCoolFeedFrag();
+        // If the bundle is null, then using the One Cool Feed by default
+        if(savedInstanceState == null) {
+            // Initialize the one cool feed [which also adds it to the center as well]
+            initOneCoolFeedFrag();
 
-        // Show the tutorial, if necessary
-        showTutorialIfNecessary();
+            // Show the tutorial, if necessary
+            showTutorialIfNecessary();
+        }
+        else {
+            // Otherwise, get the "current" page index to use
+            int newFragIndex = savedInstanceState.getInt(KEY_STATE_CURINDEX, 0);
+
+            // If the index is still 0, show the tutorial if necessary
+            if(newFragIndex == 0) {
+                // Initialize the one cool feed [which also adds it to the center as well]
+                initOneCoolFeedFrag();
+
+                // Show the tutorial, if necessary
+                showTutorialIfNecessary();
+            }
+            // Otherwise, switch to the appropriate fragment
+            else changeFrag(newFragIndex);
+        }
+    }
+
+    // Save any data before the Activity is destroyed
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the current fragment's index, to pinpoint which page the Activity should restart into
+        outState.putInt(KEY_STATE_CURINDEX, currentFragmentIndex);
     }
 
     private void initCustomActionBar() {
@@ -220,6 +257,12 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
     }
 
     private void initOneCoolFeedFrag() {
+        // If the fragment has already been initialized, than why da heck is this function running?
+        if(mFragOneCoolFeed != null) {
+            Log.e(TAG, "mFragOneCoolFeed was already initialized!");
+            return;
+        }
+
         // Actually initialize the fragment
         mFragOneCoolFeed = new OneCoolFeedFrag();
 
@@ -310,7 +353,6 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         // Initialize the left sliding menu
         mSlidingMenuLeft = new SlidingMenu(this);
         mSlidingMenuLeft.setMode(SlidingMenu.LEFT); // Define the orientation to the left
-    //    mSlidingMenuLeft.setShadowDrawable(R.drawable.slidingmenu_shadow_left);
 
         // Inflate a view for the left sliding menu
         View viewLeftMenu = inflater.inflate(R.layout.slidingmenu_left, null);
@@ -337,7 +379,6 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         // Initialize the right sliding menu
         mSlidingMenuRight = new SlidingMenu(this);
         mSlidingMenuRight.setMode(SlidingMenu.RIGHT); // Define the orientation to the right
-    //    mSlidingMenuRight.setShadowDrawable(R.drawable.slidingmenu_shadow_right);
 
         // Initialize and set the right sliding menu's content
         View rightMenuView = inflater.inflate(R.layout.slidingmenu_right,null);
@@ -570,8 +611,13 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         BackStackSettings backStackSettings = new BackStackSettings();
         backStackSettings.setPreviousFragPosition(index);
 
+        if(currentFragmentIndex < 0) {
+            // In case just restarted the Activity and just changing the frag, clean up everything
+            mFragOneCoolFeed = null;
+            mFragContainer.removeAllViews();
+        }
         // First, clear out the center container - if not the main frag, then simply remove middle
-        if (currentFragmentIndex != 0) {
+        else if (currentFragmentIndex != 0) {
             // Get the fragment to remove
             Fragment fragment = fragmentManager.findFragmentByTag(mFragTags[currentFragmentIndex]);
             fragmentTransaction.remove(fragment);
@@ -585,19 +631,30 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         // Otherwise, if this is the One Cool Feed, simply hide it- don't remove it
         // in order to avoid fixing the lifecycle
         else {
-            fragmentTransaction.hide(mFragOneCoolFeed);
+            // If the OneCoolFeed frag is NOT null, hide it
+            if(mFragOneCoolFeed != null) {
+                fragmentTransaction.hide(mFragOneCoolFeed);
 
-            // Save that the previous settings were the OneCoolFeed settings
-            backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
+                // Save that the previous settings were the OneCoolFeed settings
+                backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
+            }
         }
 
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
-            // Simply show the OneCoolFeed and set up the settings using its function
-            fragmentTransaction.show(mFragOneCoolFeed);
-
             // Apply the settings for the OneCoolFeed
             changeSettingsMode(SettingsType.ONECOOLFEED);
+
+            // If the cached frag is null, then initialize it now
+            if(mFragOneCoolFeed == null) {
+                initOneCoolFeedFrag();
+                showTutorialIfNecessary();
+            }
+            // Otherwise, show the old cached fragment
+            else {
+                // Simply show the OneCoolFeed and set up the settings using its function
+                fragmentTransaction.show(mFragOneCoolFeed);
+            }
         }
         // If so, then add in the Michigan Engineer Magazine fragment
         else if(index == 3) {
@@ -606,15 +663,15 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             // Put the title on the actionBar that will be used
             mActionSolidBgTitle.setText(this_title);
 
+            // Set settings for this view- same as a Webview
+            changeSettingsMode(SettingsType.WEBVIEW);
+
             // Create and setup the fragment to use
             MichEngMagFrag frag = new MichEngMagFrag();
             frag.setMagazineViewer(this);
 
             // Add the frag to the center view
-            fragmentTransaction.add(R.id.fragContainer, frag, this_title);
-
-            // Set settings for this view- same as a Webview
-            changeSettingsMode(SettingsType.WEBVIEW);
+            fragmentTransaction.add(R.id.fragContainer, frag, this_title);;
         }
         // Otherwise, if this index has an URL, open up a feed
         else if(!mFragUrls[index].equals("")) {
@@ -625,14 +682,14 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             // Set the actionBar's title text (on the one that will be used)
             mActionSolidBgTitle.setText(this_title);
 
+            // Set settings for this web view
+            changeSettingsMode(SettingsType.WEBVIEW);
+
             // Create a new TumblrFeed fragment, with its title and url
             WebFeedFragment frag = WebFeedFragment.newInstance(this_url, this_title);
 
             // Add the webview to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
-
-            // Set settings for this web view
-            changeSettingsMode(SettingsType.WEBVIEW);
         }
         // If so, then add in the About fragment
         else if(index == 8 || index == 7) { // DECODE-FIX
@@ -641,6 +698,9 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             // Put the title on the actionBar that will be used
             mActionTransBgTitle.setText(this_title);
 
+            // Set settings for this view- same as a Webview
+            changeSettingsMode(SettingsType.ABOUT);
+
             // Create a new AboutFragment to use
             AboutFragment frag = new AboutFragment();
             // Make sure to set the TutorialEnforcer if user decides to see tutorial again
@@ -648,9 +708,6 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
 
             // Add the frag to the center view
             fragmentTransaction.add(R.id.fragContainer, frag, this_title);
-
-            // Set settings for this view- same as a Webview
-            changeSettingsMode(SettingsType.ABOUT);
         }
 
         // Add the transaction to the backstack then finally commit it
@@ -836,8 +893,10 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         }
 
         // Then toggle the landscape mode as necessary
-            // TODO: Currently, landscape mode is too buggy to use
-        toggleLandscapeMode(false); // For now, permanently disable landscape mode
+        if(mode == SettingsType.ONECOOLFEED)
+            toggleLandscapeMode(false);
+        else // All other modes use landscape
+            toggleLandscapeMode(true);
 
         // Finally, change the ActionBar as necessary
         if(mode == SettingsType.ONECOOLFEED) {
