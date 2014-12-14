@@ -30,6 +30,7 @@
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>
     <dimen name="margin_actionbar_icon_left">0dp</dimen>
+    <dimen name="margin_actionbar_backicon_left">5dp</dimen>
     <dimen name="margin_coolthing_title_push_right">15dp</dimen>
     <dimen name="margin_coolthing_title_push_bottom">15dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
