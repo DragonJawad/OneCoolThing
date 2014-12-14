@@ -56,7 +56,7 @@ import edu.umich.engin.cm.onecoolthing.Util.ShareIntent;
  * Created by jawad on 12/10/14.
  */
 public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.VertPagerCommunicator,
-    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer, FragmentManager.OnBackStackChangedListener {
+    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
@@ -69,9 +69,6 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
     // The view that holds all the fragments
     FrameLayout mFragContainer;
-
-    // The single One Cool Feed fragment to use
- //   private OneCoolFeedFrag mFragOneCoolFeed;
 
     // Tags for all fragments
     private String[] mFragTags;
@@ -132,10 +129,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
      */
     int currentFragmentIndex = -1;
 
-    // List of backstack settings
+    // List of backstack settings to restore
     ArrayList<BackStackSettings> mBackStackList;
-    // Tracks how many backStack items there are
-    int backStackSize = 0;
 
     // Tags for saving and getting restorable state data
     private static final String KEY_STATE_CURINDEX = "Key_CurrentFragmentIndex";
@@ -182,13 +177,12 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         // If the bundle is null, then using the One Cool Feed by default
         if(savedInstanceState == null) {
-            changeFrag(0);
+            changeFrag(0, false);
         }
         else {
             // Otherwise, get the "current" page index to use
             int newFragIndex = savedInstanceState.getInt(KEY_STATE_CURINDEX, 0);
-
-            changeFrag(newFragIndex);
+            changeFrag(newFragIndex, false);
         }
     }
 
@@ -237,9 +231,6 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     private void initBackStackSystem() {
         // Initialize the list of backStack settings tracking
         mBackStackList = new ArrayList<BackStackSettings>();
-
-        // Add this Activity as a listener for backstack changes
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
     private void showTutorialIfNecessary() {
@@ -553,10 +544,19 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     }
 
     /**
-     * Changes out the center fragment as necessary
-     * @param index - Index chosen by user in navigation menu
+     * Changes out the center fragment as necessary and save the previous settings as well
+     * @param index - Index of fragment page to change to
      */
     private void changeFrag(int index) {
+        changeFrag(index, true);
+    }
+
+    /**
+     * Changes out the center fragment and may or may not save the previous settings
+     * @param index - Index of fragment page to change to
+     * @param savePreviousSettings - If true, will save the previous settings to restore to later
+     */
+    private void changeFrag(int index, boolean savePreviousSettings) {
         // First check if user clicked on the current fragment again
         if (index == currentFragmentIndex) return;
 
@@ -570,7 +570,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         // Create the BackStack instance that will keep track of the changes
         BackStackSettings backStackSettings = new BackStackSettings();
-        backStackSettings.setPreviousFragPosition(index);
+        backStackSettings.setPreviousFragPosition(currentFragmentIndex);
 
         // First, clear out the main container, if necessary
         if(currentFragmentIndex < 0) {
@@ -579,7 +579,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         }
         else {
             // Save the previous settings based off of the index
-            if(index == 7 || index == 8) // DECODE-FIX
+            if(currentFragmentIndex == 0)
+                backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
+            else if(currentFragmentIndex == 7 || currentFragmentIndex == 8) // DECODE-FIX
                 backStackSettings.setPreviousSettings(SettingsType.ABOUT);
             else
                 backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
@@ -601,6 +603,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
             // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
             currentFragmentIndex = 0;
+
+            // Show the tutorial if necessary
+            showTutorialIfNecessary();
         }
         // If so, then add in the Michigan Engineer Magazine fragment
         else if(index == 3) {
@@ -656,36 +661,15 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
 
-        // TODO Add the transaction to the backstack then finally commit it
-    //    fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-        // Add the previous changes to the backStack settings tracker list
-        mBackStackList.add(backStackSettings);
+        // Add the previous changes to the backStack settings tracker list IF
+            // previous settings were requested to be saved AND previous index was in bounds
+        if(savePreviousSettings && backStackSettings.getPreviousFragPosition() > -1)
+            mBackStackList.add(backStackSettings);
 
         // Finally, change the index of the currently used fragment
         currentFragmentIndex = index;
-    }
-
-    @Override
-    public void onBackStackChanged() {
-        /*
-        // Cache the official backStack entry count
-        int officialBackStackEntryCount = getFragmentManager().getBackStackEntryCount();
-
-        // If the personal count is greater than the official, then have to restore settings
-        if(backStackSize > officialBackStackEntryCount) {
-            // Pop off a BackStackSettings item from the list
-            BackStackSettings backStackSettings = mBackStackList.get(mBackStackList.size()-1 );
-            mBackStackList.remove(mBackStackList.size()-1);
-
-            // Restore the settings
-            changeSettingsMode(backStackSettings.getPreviousSettings());
-        }
-
-        // Save the new size of the backStack, to compare to later
-        backStackSize = officialBackStackEntryCount;
-        */
     }
 
     @Override
@@ -694,12 +678,11 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         if(mSlidingMenuLeft.isMenuShowing()) mSlidingMenuLeft.toggle();
         else if(mSlidingMenuRight.isMenuShowing()) mSlidingMenuRight.toggle();
 
-        // If there are no tracked backstack changed to track, then simply let Android handle the press
-        // TODO: First time adding the central frag adds to backstack. Don't do that
-        else if(mBackStackList.size() < 2) {
+        // If there are no tracked/wanted backstack changes, then simply let Android handle the press
+        else if(mBackStackList.size() == 0) {
             super.onBackPressed();
         }
-        
+
         // Otherwise, handle the back button as user expects and switch back to the previous fragment
         else {
             // Pop off a BackStackSettings item from the list
@@ -707,7 +690,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             mBackStackList.remove(mBackStackList.size()-1);
 
             // Restore the settings
-            changeSettingsMode(backStackSettings.getPreviousSettings());
+                // TODO: Either remove saving the backstack settings type or use it somehow
+            changeFrag(backStackSettings.getPreviousFragPosition(), false);
         }
     }
 
