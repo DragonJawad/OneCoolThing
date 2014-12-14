@@ -112,14 +112,24 @@ public class ParseCoolThings {
             try {
                 jsonArray = new JSONArray(jsonStr);
             } catch (JSONException e) {
-                Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
-                        .show();
                 Log.e("MD/JSONParser", e.getMessage());
                 e.printStackTrace();
                 cancel(true);
             }
+            catch (NullPointerException e) {
+                Log.e("MD/JSONParser", "NullPointerExpection found while trying to get jsonArray");
+                cancel(true);
+            }
 
             return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
+                    .show();
+
+            super.onCancelled();
         }
 
         @Override
