@@ -28,7 +28,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -64,7 +63,15 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     public enum SettingsType {
         ONECOOLFEED, // Settings for the One Cool Feed
         WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
-        ABOUT        // Settings for the About page
+        ABOUT,       // Settings for the About page
+        MEMDETAILED  // Settings for the MEM Detailed item page
+    }
+
+    // Enums for ActionBar setting configurations
+    public enum ActionBarType {
+        TRANSPARENT,// ActionBar that has a transparent background
+        SOLIDBG,    // ActionBar that has a solid white bg
+        BACKONLY    // For ActionBar that only contains the back button [+solid white bg]
     }
 
     // The view that holds all the fragments
@@ -101,6 +108,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     // Actionbar Views
     View mViewActionBarTransparent;
     View mViewActionBarSolidBg;
+    View mViewActionBarBackOnly;
     TextView mActionTransBgTitle;
     TextView mActionSolidBgTitle;
 
@@ -210,7 +218,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         mViewActionBarSolidBg = inflater.inflate(R.layout.actionbar_withsolidbg, null);
 
         // Set the imageButton from the view with title to toggle the slidingMenu
-        ((ImageButton) mViewActionBarSolidBg.findViewById(R.id.navButton))
+        mViewActionBarSolidBg.findViewById(R.id.navButton)
                 .setOnClickListener(this);
 
         // Get the title textView from the transparent bg view so the title can be set later
@@ -219,13 +227,18 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // Get the title textView from the solid bg view so the title can be set later
         mActionSolidBgTitle = (TextView) mViewActionBarSolidBg.findViewById(R.id.textTitle);
 
+        // Inflate the ActionBar which only contains the back button
+        mViewActionBarBackOnly = inflater.inflate(R.layout.actionbar_withbackbutton, null);
+
         // Add the actionBars to the respective container
         RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.actionbar_container);
         viewGroup.addView(mViewActionBarTransparent);
         viewGroup.addView(mViewActionBarSolidBg);
+        viewGroup.addView(mViewActionBarBackOnly);
 
-        // Hide the actionBar with the title- the simple actionBar is the one to use at the moment
+        // Only show the transparent ActionBar, by default
         mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
+        mViewActionBarBackOnly.setVisibility(View.INVISIBLE);
     }
 
     private void initBackStackSystem() {
@@ -675,7 +688,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     @Override
     public void onBackPressed() {
         // If either sliding menu is showing, close 'em
-        if(mSlidingMenuLeft.isMenuShowing()) mSlidingMenuLeft.toggle();
+        if(mSlidingMenuLeft.isMenuShowing()) toggleLeftSlidingMenu();
         else if(mSlidingMenuRight.isMenuShowing()) mSlidingMenuRight.toggle();
 
         // If there are no tracked/wanted backstack changes, then simply let Android handle the press
@@ -713,8 +726,11 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // Add in the fragment
         fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
 
-        // TODO Add the transaction to the backStack then commit it
-    //    fragmentTransaction.addToBackStack(null);
+        // Create a new Backstack settings item to restore to the MichEngMag
+        BackStackSettings backStackSettings = new BackStackSettings();
+        backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
+        backStackSettings.setPreviousFragPosition(4);
+
         fragmentTransaction.commit();
     }
 
@@ -825,35 +841,31 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
      * @param mode - A specific SettingsType mode that states which group of settings to use
      */
     private void changeSettingsMode(SettingsType mode) {
-        // First, decide on whether or not to enable the right slider
-        if(mode == SettingsType.ONECOOLFEED) {
-            // Enable the right sliding menu ONLY if this is the One Cool Feed
-            enableRightSlider(true);
-        }
-        else {
-            // Otherwise, all other modes currently don't use the right sliding menu
-            enableRightSlider(false);
-        }
+        // First, enable/disable the left sliding menu as necessary
+            // Only disable the left slider if using the MEMDetailed view
+        enableLeftSlider(!(mode == SettingsType.MEMDETAILED));
+
+        // Decide on whether or not to enable the right slider
+            // Only OneCoolFeed uses the right slider
+        enableRightSlider(mode == SettingsType.ONECOOLFEED);
 
         // Then toggle the landscape mode as necessary
-        if(mode == SettingsType.ONECOOLFEED)
-            toggleLandscapeMode(false);
-        else // All other modes use landscape
-            toggleLandscapeMode(true);
+            // Only OneCoolFeed doesn't use Landscape mode
+        toggleLandscapeMode(!(mode == SettingsType.ONECOOLFEED));
 
         // Finally, change the ActionBar as necessary
         if(mode == SettingsType.ONECOOLFEED) {
             // If so, then set the transparent ActionBar up without a title
-            toggleTransparentActionBar(true);
+            toggleActionBars(ActionBarType.TRANSPARENT);
             mActionTransBgTitle.setText("");
         }
         else if(mode == SettingsType.WEBVIEW) {
             // If so, show the ActionBar with a solid white bg
-            toggleTransparentActionBar(false);
+            toggleActionBars(ActionBarType.SOLIDBG);
         }
         else if(mode == SettingsType.ABOUT) {
             // If so, then set the transparent ActionBar up with its specific title
-            toggleTransparentActionBar(true);
+            toggleActionBars(ActionBarType.TRANSPARENT);
             mActionTransBgTitle.setText(mFragTags[8]); // Index for About is currently 8
         }
     }
@@ -877,6 +889,20 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     }
 
     /**
+     * Enables/disables the left sliding menu entirely
+     * @param enable - True if now allowing the left slider to be used
+     */
+    private void enableLeftSlider(boolean enable) {
+        // If disabling the left sliding menu and it's open, close it
+        if(!enable && mSlidingMenuLeft.isMenuShowing()) {
+            toggleLeftSlidingMenu();
+        }
+
+        // Enable/disable the left sliding menu as necessary
+        mSlidingMenuLeft.setSlidingEnabled(enable);
+    }
+
+    /**
      * Enables/disables landscape orientation entirely
      * @param enable - True if now allowing landscape mode now, false if disabling landscape mode
      */
@@ -892,30 +918,22 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     }
 
     /**
-     * Switches the ActionBar out
-     * @param enable - True if to show the transparent actionBar, false if using one with solid bg
+     * Switches the correct ActionBar into view
+     * @param mode - Defines which ActionBar should be visible
      */
-    private void toggleTransparentActionBar(boolean enable) {
-        if(enable) {
-            // If the simple, transparent actionbar is NOT visible, then must switch it out
-            if(mViewActionBarTransparent.getVisibility() != View.VISIBLE) {
-                // Make the title actionbar invisible
-                mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
+    private void toggleActionBars(ActionBarType mode) {
+        // Hide all ActionBars by default, first
+        mViewActionBarTransparent.setVisibility(View.INVISIBLE);
+        mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
+        mViewActionBarBackOnly.setVisibility(View.INVISIBLE);
 
-                // Make the simple actionbar visible
-                mViewActionBarTransparent.setVisibility(View.VISIBLE);
-            }
-        }
-        else {
-            // If the title actionbar is NOT visible, then must switch it out
-            if(mViewActionBarSolidBg.getVisibility() != View.VISIBLE) {
-                // Make the simple actionbar invisible
-                mViewActionBarTransparent.setVisibility(View.INVISIBLE);
-
-                // Make the title actionbar visible
-                mViewActionBarSolidBg.setVisibility(View.VISIBLE);
-            }
-        }
+        // Show the correct actionBar
+        if(mode == ActionBarType.TRANSPARENT)
+            mViewActionBarTransparent.setVisibility(View.VISIBLE);
+        else if(mode == ActionBarType.SOLIDBG)
+            mViewActionBarSolidBg.setVisibility(View.VISIBLE);
+        else if(mode == ActionBarType.BACKONLY)
+            mViewActionBarBackOnly.setVisibility(View.VISIBLE);
     }
 
     /**
