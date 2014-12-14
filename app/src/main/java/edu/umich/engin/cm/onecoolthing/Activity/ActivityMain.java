@@ -64,6 +64,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         ONECOOLFEED, // Settings for the One Cool Feed
         WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
         ABOUT,       // Settings for the About page
+        MICHENGMAG,  // Settings for the MichEngMag page
         MEMDETAILED  // Settings for the MEM Detailed item page
     }
 
@@ -190,6 +191,10 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         else {
             // Otherwise, get the "current" page index to use
             int newFragIndex = savedInstanceState.getInt(KEY_STATE_CURINDEX, 0);
+
+            // If the new frag index is 9 - ie the detailed frag - simply use the MEM frag index
+            newFragIndex = 3;
+
             changeFrag(newFragIndex, false);
         }
     }
@@ -637,8 +642,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Put the title on the actionBar that will be used
             mActionSolidBgTitle.setText(this_title);
 
-            // Set settings for this view- same as a Webview
-            changeSettingsMode(SettingsType.WEBVIEW);
+            // Set settings for this page
+            changeSettingsMode(SettingsType.MICHENGMAG);
 
             // Create and setup the fragment to use
             MichEngMagFrag frag = new MichEngMagFrag();
@@ -738,8 +743,12 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         // Create a new Backstack settings item to restore to the MichEngMag
         BackStackSettings backStackSettings = new BackStackSettings();
-        backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
-        backStackSettings.setPreviousFragPosition(4);
+        backStackSettings.setPreviousSettings(SettingsType.MICHENGMAG);
+        backStackSettings.setPreviousFragPosition(3);
+        mBackStackList.add(backStackSettings);
+
+        // Change the current settings for this detailed view
+        changeSettingsMode(SettingsType.MEMDETAILED);
 
         fragmentTransaction.commit();
     }
@@ -860,8 +869,11 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         enableRightSlider(mode == SettingsType.ONECOOLFEED);
 
         // Then toggle the landscape mode as necessary
-            // Only OneCoolFeed doesn't use Landscape mode
-        toggleLandscapeMode(!(mode == SettingsType.ONECOOLFEED));
+        if(mode == SettingsType.ONECOOLFEED || mode == SettingsType.MICHENGMAG ||
+                mode == SettingsType.MEMDETAILED)
+            toggleLandscapeMode(false);
+        else
+            toggleLandscapeMode(true); // Everything else uses landscape mode
 
         // Finally, change the ActionBar as necessary
         if(mode == SettingsType.ONECOOLFEED) {
@@ -869,7 +881,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             toggleActionBars(ActionBarType.TRANSPARENT);
             mActionTransBgTitle.setText("");
         }
-        else if(mode == SettingsType.WEBVIEW) {
+        else if(mode == SettingsType.WEBVIEW || mode == SettingsType.MICHENGMAG) {
             // If so, show the ActionBar with a solid white bg
             toggleActionBars(ActionBarType.SOLIDBG);
         }
@@ -877,6 +889,10 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // If so, then set the transparent ActionBar up with its specific title
             toggleActionBars(ActionBarType.TRANSPARENT);
             mActionTransBgTitle.setText(mFragTags[8]); // Index for About is currently 8
+        }
+        else if(mode == SettingsType.MEMDETAILED) {
+            // Simply show the backOnly ActionBar
+            toggleActionBars(ActionBarType.BACKONLY);
         }
     }
 
