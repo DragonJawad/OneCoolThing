@@ -230,6 +230,16 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // Inflate the ActionBar which only contains the back button
         mViewActionBarBackOnly = inflater.inflate(R.layout.actionbar_withbackbutton, null);
 
+        // Make the back button on this ActionBar actually register as a back click
+        mViewActionBarBackOnly.findViewById(R.id.back_button)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Simply act as if the actual back button was pressed
+                        onBackPressed();
+                    }
+                });
+
         // Add the actionBars to the respective container
         RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.actionbar_container);
         viewGroup.addView(mViewActionBarTransparent);
