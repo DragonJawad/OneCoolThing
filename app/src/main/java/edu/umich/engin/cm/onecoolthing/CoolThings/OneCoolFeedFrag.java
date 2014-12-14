@@ -1,9 +1,9 @@
 package edu.umich.engin.cm.onecoolthing.CoolThings;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +61,7 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
             // ie, when restarting activity/frag, pagerAdapter already exists
         if(pagerAdapter == null) {
             // Set up the pagerAdapter to handle the different "pages"/fragments
-            pagerAdapter = new CoolThingsPagerAdapter(getFragmentManager());
+            pagerAdapter = new CoolThingsPagerAdapter(getChildFragmentManager());
             pagerAdapter.initAdapter(context, this);
 
             // Set the pageAdapter to the ViewPager

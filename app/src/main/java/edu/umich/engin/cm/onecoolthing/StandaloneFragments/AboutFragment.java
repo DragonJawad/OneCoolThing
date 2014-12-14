@@ -1,7 +1,6 @@
 package edu.umich.engin.cm.onecoolthing.StandaloneFragments;
 
 import android.app.Dialog;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 02/12/14.
  */
-public class AboutFragment extends Fragment {
+public class AboutFragment extends android.support.v4.app.Fragment {
     // The TextViews which act as "buttons" of sorts
     TextView textViewTutorial;
     TextView textViewPrivacyPolicy;

@@ -1,10 +1,8 @@
 package edu.umich.engin.cm.onecoolthing.CoolThings;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -19,7 +17,7 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
  *
  * Displays FragmentCoolThings in PagerAdapter
  */
-public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements ParseCoolThings.JSONUser,
+public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.JSONUser,
         ImageLoaderNoCache.LoaderManager{
     private static final String TAG = "MD/CoolThingsPagerAdapter";
 
@@ -37,9 +35,8 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
 
     // Simply save a reference to the frag that calls this pager, to give it the url of its bg
     OneCoolFeedFrag mFragCaller;
-        // TODO: Make an interface... again?
 
-    public CoolThingsPagerAdapter(FragmentManager fm) {
+    public CoolThingsPagerAdapter(android.support.v4.app.FragmentManager fm) {
         super(fm);
     }
 
@@ -184,7 +181,7 @@ public class CoolThingsPagerAdapter extends FragmentStatePagerAdapter implements
     public String getTweetText(int i) { return mListOfCoolThings.get(i).getTweetText(); }
 
     @Override
-    public Fragment getItem(int i) {
+    public android.support.v4.app.Fragment getItem(int i) {
         // Get the fragment
         CoolThingFrag frag = mListOfFragCoolThings.get(i);
 

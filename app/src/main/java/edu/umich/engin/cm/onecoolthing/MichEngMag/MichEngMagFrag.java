@@ -1,6 +1,5 @@
 package edu.umich.engin.cm.onecoolthing.MichEngMag;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 20/11/14.
  */
-public class MichEngMagFrag extends Fragment {
+public class MichEngMagFrag extends android.support.v4.app.Fragment {
     ListView mListView;
     MichEngMagListAdapter mAdapter;
     MichEngMagListAdapter.MagazineViewer magazineViewer;

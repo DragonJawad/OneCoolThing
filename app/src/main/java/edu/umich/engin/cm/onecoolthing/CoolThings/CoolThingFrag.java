@@ -1,6 +1,5 @@
 package edu.umich.engin.cm.onecoolthing.CoolThings;
 
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +18,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  *
  * Displays a single "CoolThing" object, with only title and background
  */
-public class CoolThingFrag extends Fragment implements ImageLoaderNoCache.LoaderManager {
+public class CoolThingFrag extends android.support.v4.app.Fragment implements ImageLoaderNoCache.LoaderManager {
     // View elements
     private ImageView background;
     private TextView titleView;

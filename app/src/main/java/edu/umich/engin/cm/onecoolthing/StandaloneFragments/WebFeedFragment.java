@@ -1,6 +1,5 @@
 package edu.umich.engin.cm.onecoolthing.StandaloneFragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  *
  * A Fragment that shows a feed via a WebView
  */
-public class WebFeedFragment extends Fragment {
+public class WebFeedFragment extends android.support.v4.app.Fragment {
     private String mUrl; // URL of this Tumblr feed
     private String mTitle; // Title of this Tumblr feed
 

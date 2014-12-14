@@ -2,11 +2,7 @@ package edu.umich.engin.cm.onecoolthing.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +12,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -56,7 +55,7 @@ import edu.umich.engin.cm.onecoolthing.Util.ShareIntent;
 /**
  * Created by jawad on 12/10/14.
  */
-public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerCommunicator,
+public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.VertPagerCommunicator,
     View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer, FragmentManager.OnBackStackChangedListener {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
@@ -72,7 +71,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
     FrameLayout mFragContainer;
 
     // The single One Cool Feed fragment to use
-    private OneCoolFeedFrag mFragOneCoolFeed;
+ //   private OneCoolFeedFrag mFragOneCoolFeed;
 
     // Tags for all fragments
     private String[] mFragTags;
@@ -183,26 +182,13 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
 
         // If the bundle is null, then using the One Cool Feed by default
         if(savedInstanceState == null) {
-            // Initialize the one cool feed [which also adds it to the center as well]
-            initOneCoolFeedFrag();
-
-            // Show the tutorial, if necessary
-            showTutorialIfNecessary();
+            changeFrag(0);
         }
         else {
             // Otherwise, get the "current" page index to use
             int newFragIndex = savedInstanceState.getInt(KEY_STATE_CURINDEX, 0);
 
-            // If the index is still 0, show the tutorial if necessary
-            if(newFragIndex == 0) {
-                // Initialize the one cool feed [which also adds it to the center as well]
-                initOneCoolFeedFrag();
-
-                // Show the tutorial, if necessary
-                showTutorialIfNecessary();
-            }
-            // Otherwise, switch to the appropriate fragment
-            else changeFrag(newFragIndex);
+            changeFrag(newFragIndex);
         }
     }
 
@@ -253,9 +239,10 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         mBackStackList = new ArrayList<BackStackSettings>();
 
         // Add this Activity as a listener for backstack changes
-        getFragmentManager().addOnBackStackChangedListener(this);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
+    /*
     private void initOneCoolFeedFrag() {
         // If the fragment has already been initialized, than why da heck is this function running?
         if(mFragOneCoolFeed != null) {
@@ -280,6 +267,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
         currentFragmentIndex = 0;
     }
+    */
 
     private void showTutorialIfNecessary() {
         // TODO: Insert check for if tutorial is necessary or not
@@ -466,26 +454,28 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
                         view.getDrawable().setColorFilter(0x66000000, PorterDuff.Mode.SRC_ATOP);
                         view.invalidate();
 
+                        OneCoolFeedFrag oneCoolFeedFrag = (OneCoolFeedFrag) getSupportFragmentManager().findFragmentByTag(mFragTags[0]);
+
                         // React depending on which button was tapped
                         if(v == shareFacebook) {
                             // Unfortunately, can only share the url to FB, Get that data first from the feed
-                            String shareUrl = mFragOneCoolFeed.getShareUrl();
+                            String shareUrl = oneCoolFeedFrag.getShareUrl();
 
                             // Then, use the Util to share it to Facebook
                             ShareIntent.shareToFacebook(ActivityMain.this, shareUrl);
                         }
                         else if(v == shareTwitter) {
                             // Get the text to share to Twitter
-                            String tweetText = mFragOneCoolFeed.getTweetText();
-                            String shareUrl = mFragOneCoolFeed.getShareUrl();
+                            String tweetText = oneCoolFeedFrag.getTweetText();
+                            String shareUrl = oneCoolFeedFrag.getShareUrl();
 
                             // Then, use the Util to share to Twitter
                             ShareIntent.shareToTwitter(ActivityMain.this, tweetText, shareUrl);
                         }
                         else if(v == shareGeneral) {
                             // Get the text for sharing
-                            String shareSubject = mFragOneCoolFeed.getSubjectForSharing();
-                            String shareUrl = mFragOneCoolFeed.getShareUrl();
+                            String shareSubject = oneCoolFeedFrag.getSubjectForSharing();
+                            String shareUrl = oneCoolFeedFrag.getShareUrl();
 
                             // Then, use the Util to share generally
                             ShareIntent.shareToGeneral(ActivityMain.this, shareSubject, shareUrl);
@@ -604,40 +594,24 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
                 (index == 8 && currentFragmentIndex == 7) ) return;
 
         // Begin the fragment transaction
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Create the BackStack instance that will keep track of the changes
         BackStackSettings backStackSettings = new BackStackSettings();
         backStackSettings.setPreviousFragPosition(index);
 
+        // First, clear out the main container, if necessary
         if(currentFragmentIndex < 0) {
             // In case just restarted the Activity and just changing the frag, clean up everything
-            mFragOneCoolFeed = null;
             mFragContainer.removeAllViews();
         }
-        // First, clear out the center container - if not the main frag, then simply remove middle
-        else if (currentFragmentIndex != 0) {
-            // Get the fragment to remove
-            Fragment fragment = fragmentManager.findFragmentByTag(mFragTags[currentFragmentIndex]);
-            fragmentTransaction.remove(fragment);
-
+        else {
             // Save the previous settings based off of the index
             if(index == 7 || index == 8) // DECODE-FIX
                 backStackSettings.setPreviousSettings(SettingsType.ABOUT);
             else
                 backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
-        }
-        // Otherwise, if this is the One Cool Feed, simply hide it- don't remove it
-        // in order to avoid fixing the lifecycle
-        else {
-            // If the OneCoolFeed frag is NOT null, hide it
-            if(mFragOneCoolFeed != null) {
-                fragmentTransaction.hide(mFragOneCoolFeed);
-
-                // Save that the previous settings were the OneCoolFeed settings
-                backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
-            }
         }
 
         // Then add in the chosen fragment and set the appropriate settings
@@ -645,16 +619,17 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             // Apply the settings for the OneCoolFeed
             changeSettingsMode(SettingsType.ONECOOLFEED);
 
-            // If the cached frag is null, then initialize it now
-            if(mFragOneCoolFeed == null) {
-                initOneCoolFeedFrag();
-                showTutorialIfNecessary();
-            }
-            // Otherwise, show the old cached fragment
-            else {
-                // Simply show the OneCoolFeed and set up the settings using its function
-                fragmentTransaction.show(mFragOneCoolFeed);
-            }
+            // Actually initialize the fragment
+            OneCoolFeedFrag frag = new OneCoolFeedFrag();
+
+            // Let the frag communicate with this activity
+            frag.setCommunicator(this);
+
+            // Add in the fragment to the place specified in the layout file
+            fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[0]);
+
+            // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
+            currentFragmentIndex = 0;
         }
         // If so, then add in the Michigan Engineer Magazine fragment
         else if(index == 3) {
@@ -671,7 +646,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             frag.setMagazineViewer(this);
 
             // Add the frag to the center view
-            fragmentTransaction.add(R.id.fragContainer, frag, this_title);;
+            fragmentTransaction.replace(R.id.fragContainer, frag, this_title);;
         }
         // Otherwise, if this index has an URL, open up a feed
         else if(!mFragUrls[index].equals("")) {
@@ -689,7 +664,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             WebFeedFragment frag = WebFeedFragment.newInstance(this_url, this_title);
 
             // Add the webview to the center view
-            fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[index]);
+            fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[index]);
         }
         // If so, then add in the About fragment
         else if(index == 8 || index == 7) { // DECODE-FIX
@@ -707,7 +682,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
             frag.setTutorialEnforcer(this);
 
             // Add the frag to the center view
-            fragmentTransaction.add(R.id.fragContainer, frag, this_title);
+            fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
 
         // Add the transaction to the backstack then finally commit it
@@ -744,7 +719,7 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
     // Open up the MEM Detailed frag
     public void openMagazineItem(MEMDetailedData data) {
         // Begin the fragment transaction
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Create the fragment to add in
@@ -752,22 +727,11 @@ public class ActivityMain extends Activity implements OneCoolFeedFrag.VertPagerC
         // Give the frag the data
         frag.setData(data);
 
-        // Double check that the current frag isn't the One Cool Feed
-        if(currentFragmentIndex != 0) {
-            // Get the fragment to remove
-            Fragment fragment = fragmentManager.findFragmentByTag(mFragTags[currentFragmentIndex]);
-            fragmentTransaction.remove(fragment);
-        }
-        else {
-            // However, if it is, hide the One Cool Feed then add in the fragment
-            fragmentTransaction.hide(mFragOneCoolFeed);
-        }
-
         // Indicate that the current frag will be the MEMDetailedFrag
         currentFragmentIndex = 9;
 
         // Add in the fragment
-        fragmentTransaction.add(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
+        fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
 
         // Add the transaction to the backStack then commit it
     // TODO:    fragmentTransaction.addToBackStack(null);

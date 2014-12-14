@@ -1,6 +1,5 @@
 package edu.umich.engin.cm.onecoolthing.MichEngMag;
 
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +15,7 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 04/12/14.
  */
-public class MEMDetailedFrag extends Fragment {
+public class MEMDetailedFrag extends android.support.v4.app.Fragment {
     // All the views that need to be cached and set up
     ImageView mTopImage;
     TextView mTitleText;
