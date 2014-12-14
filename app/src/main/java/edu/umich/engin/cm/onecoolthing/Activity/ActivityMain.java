@@ -193,7 +193,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             int newFragIndex = savedInstanceState.getInt(KEY_STATE_CURINDEX, 0);
 
             // If the new frag index is 9 - ie the detailed frag - simply use the MEM frag index
-            newFragIndex = 3;
+            if(newFragIndex == 9) newFragIndex = 3;
 
             changeFrag(newFragIndex, false);
         }
@@ -696,6 +696,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         if(savePreviousSettings && backStackSettings.getPreviousFragPosition() > -1)
             mBackStackList.add(backStackSettings);
 
+        // Change the indicator on the menu
+        mNavAdapter.setVisibleIndicator(index);
+
         // Finally, change the index of the currently used fragment
         currentFragmentIndex = index;
     }
@@ -963,52 +966,18 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     }
 
     /**
-     * Toggle the left sliding menu
+     * Toggle the left sliding menu. Was used for testing functions to occur at same time
      */
     private void toggleLeftSlidingMenu() {
         // If not showing the left sliding menu, show it
         if(!mSlidingMenuLeft.isMenuShowing()) {
             // Simply toggle it to show it
             mSlidingMenuLeft.toggle();
-
-            // Then, set the highlighted nav item
-        //    setHighlightedNavRow();
         }
         // If showing, then hide it
         else {
             mSlidingMenuLeft.toggle();
         }
-    }
-
-    private void setHighlightedNavRow() {
-        // In case this is the first setup, then check that a mCurrentNav was already set
-    //    if(mCurrentNavView != null)
-    //        mCurrentNavView.setSelected(true);
-
-        Log.d(TAG, "Set the selected nav row with position " + currentFragmentIndex);
-
-        // TODO: Test
-        mListNav.invalidateViews();
-
-        /*
-        // If the current fragment index is not yet set, just use the first position
-        int selection = currentFragmentIndex;
-        if(currentFragmentIndex == -1) selection = 0;
-
-        // Get the selected row and set it as focused and selected
-        View view = mListNav.getChildAt(selection);
-        view.setSelected(true);
-
-        if(view == null) Log.d(TAG, "View was null!");
-        */
-    }
-
-    private void setHighlightedNavRow(int position) {
-        mListNav.setItemChecked(position, true);
-    }
-
-    private void setHighlightedNavRow(View navView) {
-        navView.setSelected(true);
     }
 
     // Override the menu key press so sliding menu can be open and closed by it
@@ -1062,12 +1031,58 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         Context mContext;
         String[] navText;
 
+        // Holds all the indicators, in order
+        ArrayList<View> mIndicatorViewList;
+
+        // Indicates the current visible indicator position
+        int mCurrentVisiblePos = -1;
+
         // Initialize the adapter
         public NavAdapter(Context context) {
             this.mContext = context;
 
+            // Init the indicator list
+            initIndicatorList();
+
             // Initialize the String array for the navigation
             navText = getResources().getStringArray(R.array.nav_items);
+        }
+
+        // Initializes the indicator view list, as necessary
+        private void initIndicatorList() {
+            final int SIZE = 8; // DECODE-FIX
+
+            // Actually initialize the indicator list
+            mIndicatorViewList = new ArrayList<View>(SIZE);
+
+            // Fill the list with dummy data
+            for(int i = 0; i < SIZE; ++i) {
+                // Add a new dummy view into the indicator list
+                mIndicatorViewList.add(null);
+            }
+        }
+
+        // Sets the indicator position to the new position
+        public void setVisibleIndicator(int newPos) {
+            // If the input is the same as the old position, nothing necessary to be done
+            if(newPos == mCurrentVisiblePos) return;
+
+            // If the mCurrentVisiblePos is still -1, then return- nothing has been set yet
+            if(mCurrentVisiblePos == -1) return;
+            // TODO: Have a better fix for this crashing bug that only occurs when app first starts up!
+
+            // First, make the old position invisible, if valid
+            if(mCurrentVisiblePos > -1) {
+                mIndicatorViewList.get(mCurrentVisiblePos).setVisibility(View.INVISIBLE);
+            }
+
+            // Then, set the new pos as visible
+                // DECODE-FIX
+            if(newPos == 8) newPos = 7;
+            mIndicatorViewList.get(newPos).setVisibility(View.VISIBLE);
+
+            // Cache the newPos as the current position
+            mCurrentVisiblePos = newPos;
         }
 
         @Override
@@ -1120,12 +1135,17 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Set the view's indicator as visible if this is the current one
             if(position == currentFragmentIndex || (position == 0 && currentFragmentIndex < 0) ){
                 holder.indicator.setVisibility(View.VISIBLE);
+
+                // Cache that this position is visible
+                mCurrentVisiblePos = position;
             }
             else {
                 // Otherwise, just hide it
                 holder.indicator.setVisibility(View.INVISIBLE);
             }
 
+            // Caches the indicator in its own special list, for enabling/disabling later
+            mIndicatorViewList.set(position, holder.indicator);
 
             return row;
         }
