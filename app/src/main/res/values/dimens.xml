@@ -30,6 +30,7 @@
     <!-- Margin Dimens -->
     <dimen name="margin_general">5dp</dimen>
     <dimen name="margin_actionbar_icon_left">0dp</dimen>
+    <dimen name="margin_actionbar_backicon_left">5dp</dimen>
     <dimen name="margin_coolthing_title_push_right">15dp</dimen>
     <dimen name="margin_coolthing_title_push_bottom">15dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
@@ -75,6 +76,9 @@
     <dimen name="share_specificicons_height">30dp</dimen>
         <!-- Height for the Share This Cool Thing "text" icon/button -->
     <dimen name="share_mainicon_height">40dp</dimen>
+        <!-- Height and width for the back imageButton on the appropriate actionBar -->
+    <dimen name="actionbar_backbutton_width">30dp</dimen>
+    <dimen name="actionbar_backbutton_height">40dp</dimen>
 
     <!-- Sliding Menu -->
     <dimen name="slidingmenu_shadow_width">5dp</dimen>
