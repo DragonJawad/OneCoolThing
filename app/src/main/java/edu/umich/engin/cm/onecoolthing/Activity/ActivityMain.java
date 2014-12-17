@@ -39,6 +39,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
+import edu.umich.engin.cm.onecoolthing.Decoder.DecoderFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
@@ -680,10 +681,13 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Set settings for this view- same as a Webview
             changeSettingsMode(SettingsType.ABOUT);
 
-            // Create a new AboutFragment to use
+/*            // Create a new AboutFragment to use
             AboutFragment frag = new AboutFragment();
             // Make sure to set the TutorialEnforcer if user decides to see tutorial again
-            frag.setTutorialEnforcer(this);
+            frag.setTutorialEnforcer(this);*/
+
+            // TODO: Uncomment above, below is just testing
+            DecoderFrag frag = new DecoderFrag();
 
             // Add the frag to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
