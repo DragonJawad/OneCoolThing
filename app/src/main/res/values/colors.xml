@@ -53,6 +53,9 @@
     <color name="ui_if_purple">#FFF</color>
     <color name="ui_if_other">#FFF</color>
 
+    <!-- Decoder Colors -->
+    <color name="light_gray">#D3D3D3</color>
+
     <!-- Right Sliding Menu Background Gradient Colors -->
         <!-- Red -->
     <color name="slidingright_red_upperleft">#A4161F</color>
