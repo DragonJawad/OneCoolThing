@@ -96,10 +96,11 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
 
     // Set the background of the ViewPager
     public void setBackground(String url) {
+/*      Note: Setting the background of the ViewPager has now been removed
         // Use the ImageLoader to get the background bitmap
         ImageLoaderNoCache imageLoader = new ImageLoaderNoCache();
         ImageLoaderNoCache.LoaderManager manager[] = {this};
-        imageLoader.GetImage(url, manager);
+        imageLoader.GetImage(url, manager);*/
 
         // Now the right sliding menu can be set up finally for the first time
         notifyCommunicator(0);
