@@ -40,6 +40,7 @@ import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
 import edu.umich.engin.cm.onecoolthing.Decoder.DecoderActivity;
+import edu.umich.engin.cm.onecoolthing.Decoder.DecoderIntroFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
@@ -66,7 +67,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
         ABOUT,       // Settings for the About page
         MICHENGMAG,  // Settings for the MichEngMag page
-        MEMDETAILED  // Settings for the MEM Detailed item page
+        MEMDETAILED, // Settings for the MEM Detailed item page
+        DECODER      // Settings for the Decoder intro fragment
     }
 
     // Enums for ActionBar setting configurations
@@ -134,8 +136,6 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
      * 7 - Decoder
      * 8 - About
      * 9 - MEMDetailed Frag
-     */
-    /* NOTE: Decoder removed for now from app! Search for "DECODE-FIX" to find code where it is specifically circumvented
      */
     int currentFragmentIndex = -1;
 
@@ -589,10 +589,6 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // First check if user clicked on the current fragment again
         if (index == currentFragmentIndex) return;
 
-        // DECODE-FIX
-        if( (index == 7 && currentFragmentIndex == 8) ||
-                (index == 8 && currentFragmentIndex == 7) ) return;
-
         // Begin the fragment transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -610,7 +606,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Save the previous settings based off of the index
             if(currentFragmentIndex == 0)
                 backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
-            else if(currentFragmentIndex == 7 || currentFragmentIndex == 8) // DECODE-FIX
+            else if(currentFragmentIndex == 7)
+                backStackSettings.setPreviousSettings(SettingsType.DECODER);
+            else if(currentFragmentIndex == 8)
                 backStackSettings.setPreviousSettings(SettingsType.ABOUT);
             else
                 backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
@@ -671,8 +669,23 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Add the webview to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[index]);
         }
+        else if(index == 7) {
+            // Get the title/tag separately, for ease of typing/reading
+            String this_title = mFragTags[index];
+            // Put the title on the actionBar that will be used
+            mActionSolidBgTitle.setText(this_title);
+
+            // Set settings for this view- same as a Webview
+            changeSettingsMode(SettingsType.DECODER);
+
+            // Create the DecoderIntro frag to use
+            DecoderIntroFrag frag = new DecoderIntroFrag();
+
+            // Add the frag to the center view
+            fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
+        }
         // If so, then add in the About fragment
-        else if(index == 8 || index == 7) { // DECODE-FIX
+        else if(index == 8) {
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
@@ -681,13 +694,10 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Set settings for this view- same as a Webview
             changeSettingsMode(SettingsType.ABOUT);
 
-/*            // Create a new AboutFragment to use
+            // Create a new AboutFragment to use
             AboutFragment frag = new AboutFragment();
             // Make sure to set the TutorialEnforcer if user decides to see tutorial again
-            frag.setTutorialEnforcer(this);*/
-
-            // TODO: Uncomment above, below is just testing
-            DecoderActivity frag = new DecoderActivity();
+            frag.setTutorialEnforcer(this);
 
             // Add the frag to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
@@ -888,7 +898,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             toggleActionBars(ActionBarType.TRANSPARENT);
             mActionTransBgTitle.setText("");
         }
-        else if(mode == SettingsType.WEBVIEW || mode == SettingsType.MICHENGMAG) {
+        else if(mode == SettingsType.WEBVIEW || mode == SettingsType.MICHENGMAG
+                || mode == SettingsType.DECODER) {
             // If so, show the ActionBar with a solid white bg
             toggleActionBars(ActionBarType.SOLIDBG);
         }
@@ -1054,7 +1065,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         // Initializes the indicator view list, as necessary
         private void initIndicatorList() {
-            final int SIZE = 8; // DECODE-FIX
+            final int SIZE = 9;
 
             // Actually initialize the indicator list
             mIndicatorViewList = new ArrayList<View>(SIZE);
@@ -1081,8 +1092,6 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             }
 
             // Then, set the new pos as visible
-                // DECODE-FIX
-            if(newPos == 8) newPos = 7;
             mIndicatorViewList.get(newPos).setVisibility(View.VISIBLE);
 
             // Cache the newPos as the current position
@@ -1091,8 +1100,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         @Override
         public int getCount() {
-            // DECODE-FIX
-            return navText.length-2;
+            return navText.length-1;
             //return navText.length;
         }
 
@@ -1132,9 +1140,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             }
 
             // Set the text for this item
-            if(position != 7 && position != 8) // DECODE-FIX
-                holder.navTitle.setText(navText[position]);
-            else holder.navTitle.setText(navText[8]);
+            holder.navTitle.setText(navText[position]);
 
             // Set the view's indicator as visible if this is the current one
             if(position == currentFragmentIndex || (position == 0 && currentFragmentIndex < 0) ){

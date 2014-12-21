@@ -17,6 +17,7 @@
     <dimen name="text_rightmenu_title">26sp</dimen>
     <dimen name="text_about_main">15sp</dimen> <!-- Size of the primary text in the About page -->
     <dimen name="text_about_clicks">18sp</dimen>
+    <dimen name="text_decoder_intro">18sp</dimen>
         <!-- Text sizes for the Michigan Engineer Magazine magazine items -->
     <dimen name="text_michengmag_level1_title">25sp</dimen>
     <dimen name="text_michengmag_level2_title">15sp</dimen>
@@ -34,6 +35,8 @@
     <dimen name="margin_coolthing_title_push_right">15dp</dimen>
     <dimen name="margin_coolthing_title_push_bottom">15dp</dimen>
     <dimen name="margin_drawer_top">10dp</dimen>
+    <dimen name="margin_decoderintro_text_sides">20dp</dimen>
+    <dimen name="margin_decoderintro_text_top">10dp</dimen>
         <!-- Margins between each left sliding menu item -->
     <dimen name="margin_nav_item">18dp</dimen>
         <!-- Margin between the left edge of the right menu, which includes the shadow -->

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?android:actionBarSize">
+
+    <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_decoderintro_text_top"
+        android:layout_marginLeft="@dimen/margin_decoderintro_text_sides"
+        android:layout_marginRight="@dimen/margin_decoderintro_text_sides"
+        android:text="@string/decoder_intro_text"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_decoder_intro"
+        onecoolthing:fontName="@string/customfont_light"/>
+
+    <!-- Space filler, so button goes to the bottom -->
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+    />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/decoder_intro_buttontext"/>
+
+</LinearLayout>
