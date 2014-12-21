@@ -40,6 +40,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile project(':SlidingMenu')
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
-    compile files('libs/armeabi.jar')
-    compile files('libs/Vuforia.jar')
+    compile files('src/main/assets/libs/armeabi.jar')
+    compile files('src/main/assets/libs/Vuforia.jar')
 }
