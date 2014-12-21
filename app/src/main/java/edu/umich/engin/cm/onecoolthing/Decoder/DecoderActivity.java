@@ -1,12 +1,12 @@
 package edu.umich.engin.cm.onecoolthing.Decoder;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +34,9 @@ import edu.umich.engin.cm.onecoolthing.R;
 /**
  * Created by jawad on 16/12/14.
  */
-public class DecoderFrag extends Fragment implements DecoderApplicationControl,
+public class DecoderActivity extends Activity implements DecoderApplicationControl,
             DecoderAppMenuInterface {
-    private static final String LOG = "MD/DecoderFrag";
+    private static final String LOG = "MD/DecoderActivity";
 
     // Camera status constants
     final public static int CMD_BACK = -1;
@@ -80,18 +80,13 @@ public class DecoderFrag extends Fragment implements DecoderApplicationControl,
     private ArrayList<String> mDatasetStrings = new ArrayList<String>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mLayoutContainer = (RelativeLayout) inflater.inflate(R.layout.fragment_decoder, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_decoder);
 
         // Cache the necessary views to setup later
-        mUIContainer = (RelativeLayout) mLayoutContainer.findViewById(R.id.camera_overlay_layout);
-
-        return mLayoutContainer;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        mLayoutContainer = (RelativeLayout) findViewById(R.id.container);
+        mUIContainer = (RelativeLayout) findViewById(R.id.camera_overlay_layout);
 
         // Create a loading animation while the vuforia loads
         startLoadingAnimation();
@@ -106,7 +101,7 @@ public class DecoderFrag extends Fragment implements DecoderApplicationControl,
         mUIContainer.setVisibility(View.VISIBLE);
         mUIContainer.setBackgroundColor(Color.BLACK);
 
-        loadingDialogHandler = new LoadingDialogHandler(getActivity());
+        loadingDialogHandler = new LoadingDialogHandler(this);
 
         // Gets a reference to the loading dialog
         loadingDialogHandler.mLoadingDialogContainer = mUIContainer
@@ -126,11 +121,11 @@ public class DecoderFrag extends Fragment implements DecoderApplicationControl,
         mTextures = new Vector<Texture>();
 
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",
-                getActivity().getAssets()));
+                getAssets()));
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
-                getActivity().getAssets()));
+                getAssets()));
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
-                getActivity().getAssets()));
+                getAssets()));
     }
 
     private void initVuforiaSession() {
@@ -142,7 +137,7 @@ public class DecoderFrag extends Fragment implements DecoderApplicationControl,
 
         // Create the new session and start it up
         mDecoderSession = new DecoderApplicationSession(this);
-        mDecoderSession.initAR(getActivity(), ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        mDecoderSession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     private void addData() {
@@ -157,7 +152,7 @@ public class DecoderFrag extends Fragment implements DecoderApplicationControl,
         int stencilSize = 0;
         boolean translucent = Vuforia.requiresAlpha();
 
-        mGlView = new DecoderApplicationGLView(getActivity());
+        mGlView = new DecoderApplicationGLView(this);
         mGlView.init(translucent, depthSize, stencilSize);
 
         mRenderer = new ImageTargetRenderer(this, mDecoderSession);
@@ -331,7 +326,7 @@ public class DecoderFrag extends Fragment implements DecoderApplicationControl,
             else
                 Log.e(LOG, "Unable to enable continuous autofocus");
 
-            mAppMenu = new DecoderAppMenu(this, getActivity(), "Image Targets",
+            mAppMenu = new DecoderAppMenu(this, this, "Image Targets",
                     mGlView, mUIContainer, null);
             setSampleAppMenuSettings();
 
@@ -561,6 +556,6 @@ public class DecoderFrag extends Fragment implements DecoderApplicationControl,
 
     private void showToast(String text)
     {
-        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }

@@ -39,7 +39,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
-import edu.umich.engin.cm.onecoolthing.Decoder.DecoderFrag;
+import edu.umich.engin.cm.onecoolthing.Decoder.DecoderActivity;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
@@ -687,7 +687,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             frag.setTutorialEnforcer(this);*/
 
             // TODO: Uncomment above, below is just testing
-            DecoderFrag frag = new DecoderFrag();
+            DecoderActivity frag = new DecoderActivity();
 
             // Add the frag to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);

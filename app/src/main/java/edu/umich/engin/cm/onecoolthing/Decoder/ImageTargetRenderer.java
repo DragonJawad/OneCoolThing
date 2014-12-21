@@ -29,7 +29,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     private static final String LOGTAG = "ImageTargetRenderer";
 
     private DecoderApplicationSession vuforiaAppSession;
-    private DecoderFrag mFrag;
+    private DecoderActivity mFrag;
 
     private Vector<Texture> mTextures;
 
@@ -57,7 +57,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     private static final float OBJECT_SCALE_FLOAT = 3.0f;
 
 
-    public ImageTargetRenderer(DecoderFrag frag,
+    public ImageTargetRenderer(DecoderActivity frag,
                                DecoderApplicationSession session)
     {
         mFrag = frag;
