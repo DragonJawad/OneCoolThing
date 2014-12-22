@@ -7,9 +7,7 @@ import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -439,7 +437,8 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         } else
         {
             Log.e(LOG, exception.getString());
-            // TODO: Do something if there's an exception! finish()
+            // End the Activity, unexpectedly
+            endDecoder(true);
         }
     }
 
@@ -449,15 +448,15 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         DecoderAppMenuGroup group;
 
         group = mAppMenu.addGroup("", false);
-        group.addTextItem(getString(R.string.menu_back), -1);
+        group.addTextItem(getString(R.string.decoder_menu_back), -1);
 
         group = mAppMenu.addGroup("", true);
-        group.addSelectionItem(getString(R.string.menu_extended_tracking),
+        group.addSelectionItem(getString(R.string.decoder_menu_extended_tracking),
                 CMD_EXTENDED_TRACKING, false);
-        group.addSelectionItem(getString(R.string.menu_contAutofocus),
+        group.addSelectionItem(getString(R.string.decoder_menu_contAutofocus),
                 CMD_AUTOFOCUS, mContAutofocus);
         mFlashOptionView = group.addSelectionItem(
-                getString(R.string.menu_flash), CMD_FLASH, false);
+                getString(R.string.decoder_menu_flash), CMD_FLASH, false);
 
         Camera.CameraInfo ci = new Camera.CameraInfo();
         boolean deviceHasFrontCamera = false;
@@ -473,16 +472,16 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
 
         if (deviceHasBackCamera && deviceHasFrontCamera)
         {
-            group = mAppMenu.addGroup(getString(R.string.menu_camera),
+            group = mAppMenu.addGroup(getString(R.string.decoder_menu_camera),
                     true);
-            group.addRadioItem(getString(R.string.menu_camera_front),
+            group.addRadioItem(getString(R.string.decoder_menu_camera_front),
                     CMD_CAMERA_FRONT, false);
-            group.addRadioItem(getString(R.string.menu_camera_back),
+            group.addRadioItem(getString(R.string.decoder_menu_camera_back),
                     CMD_CAMERA_REAR, true);
         }
 
         group = mAppMenu
-                .addGroup(getString(R.string.menu_datasets), true);
+                .addGroup(getString(R.string.decoder_menu_datasets), true);
         mStartDatasetsIndex = CMD_DATASET_START_INDEX;
         mDatasetsNumber = mDatasetStrings.size();
 
@@ -524,7 +523,7 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         switch (command)
         {
             case CMD_BACK:
-                // TODO: finish();
+                endDecoder(false); // Finish off the Activity
                 break;
 
             case CMD_FLASH:
@@ -535,11 +534,11 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
                     mFlash = !mFlash;
                 } else
                 {
-                    showToast(getString(mFlash ? R.string.menu_flash_error_off
-                            : R.string.menu_flash_error_on));
+                    showToast(getString(mFlash ? R.string.decoder_menu_flash_error_off
+                            : R.string.decoder_menu_flash_error_on));
                     Log.e(LOG,
-                            getString(mFlash ? R.string.menu_flash_error_off
-                                    : R.string.menu_flash_error_on));
+                            getString(mFlash ? R.string.decoder_menu_flash_error_off
+                                    : R.string.decoder_menu_flash_error_on));
                 }
                 break;
 
@@ -555,9 +554,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
                         mContAutofocus = false;
                     } else
                     {
-                        showToast(getString(R.string.menu_contAutofocus_error_off));
+                        showToast(getString(R.string.decoder_menu_contAutofocus_error_off));
                         Log.e(LOG,
-                                getString(R.string.menu_contAutofocus_error_off));
+                                getString(R.string.decoder_menu_contAutofocus_error_off));
                     }
                 } else
                 {
@@ -569,9 +568,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
                         mContAutofocus = true;
                     } else
                     {
-                        showToast(getString(R.string.menu_contAutofocus_error_on));
+                        showToast(getString(R.string.decoder_menu_contAutofocus_error_on));
                         Log.e(LOG,
-                                getString(R.string.menu_contAutofocus_error_on));
+                                getString(R.string.decoder_menu_contAutofocus_error_on));
                     }
                 }
 
@@ -663,5 +662,19 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     private void showToast(String text)
     {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Ends the Activity
+     * @param isUnexpectedEnd - If true, this is an unexpected ending for the user
+     */
+    private void endDecoder(boolean isUnexpectedEnd) {
+        // If this is an unexpected ending, give a message for the user
+        if(isUnexpectedEnd) {
+            showToast(getResources().getString(R.string.decoder_failed_toast));
+        }
+
+        // End the Activity
+        finish();
     }
 }
