@@ -21,18 +21,34 @@ public class IntentStarter {
     }
 
     // Open an url to send an email
-    public static void sendEmail(Context context, String emailTo, String emailSubject) {
-        // Create and set up the intent so it targets email-related activities
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setData(Uri.parse("mailto:"));
-        intent.setType("text/plain");
+    public static void sendEmail(Context context, String toEmail, String subject) {
+        // Originally from: http://stackoverflow.com/questions/8284706/send-email-via-gmail
 
-        // Insert the data into the intent
-        intent.putExtra(Intent.EXTRA_EMAIL, emailTo);
-        intent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
+        Intent sendTo = new Intent(Intent.ACTION_SENDTO);
+        String uriText = "mailto:" + Uri.encode(toEmail) +
+                "?subject=" + Uri.encode(subject);
+        Uri uri = Uri.parse(uriText);
+        sendTo.setData(uri);
 
-        // Send the intent
-        context.startActivity(Intent.createChooser(intent, "Send Email"));
+        List<ResolveInfo> resolveInfos =
+                context.getPackageManager().queryIntentActivities(sendTo, 0);
+
+        // Emulators may not like this check...
+        if (!resolveInfos.isEmpty())
+        {
+            context.startActivity(sendTo);
+            return;
+        }
+
+        // Nothing resolves send to, so fallback to send...
+        Intent send = new Intent(Intent.ACTION_SEND);
+
+        send.setType("text/plain");
+        send.putExtra(Intent.EXTRA_EMAIL,
+                new String[] { toEmail });
+        send.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+        context.startActivity(Intent.createChooser(send, "Send Email"));
     }
 
     // Share an url to Facebook. Note: FB doesn't allow setting default text anymore
