@@ -2,13 +2,10 @@ package edu.umich.engin.cm.onecoolthing.Decoder;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.util.Log;
 
-import com.qualcomm.vuforia.Matrix44F;
 import com.qualcomm.vuforia.Renderer;
 import com.qualcomm.vuforia.State;
-import com.qualcomm.vuforia.Tool;
 import com.qualcomm.vuforia.Trackable;
 import com.qualcomm.vuforia.TrackableResult;
 import com.qualcomm.vuforia.VIDEO_BACKGROUND_REFLECTION;
@@ -29,7 +26,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     private static final String LOGTAG = "ImageTargetRenderer";
 
     private DecoderApplicationSession vuforiaAppSession;
-    private DecoderActivity mFrag;
+    private DecoderActivity mDecoderActivity;
 
     private Vector<Texture> mTextures;
 
@@ -60,7 +57,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     public ImageTargetRenderer(DecoderActivity frag,
                                DecoderApplicationSession session)
     {
-        mFrag = frag;
+        mDecoderActivity = frag;
         vuforiaAppSession = session;
     }
 
@@ -143,7 +140,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         try
         {
             mBuildingsModel = new DecoderApplication3DModel();
-            mBuildingsModel.loadModel(mFrag.getResources().getAssets(),
+            mBuildingsModel.loadModel(mDecoderActivity.getResources().getAssets(),
                     "ImageTargets/Buildings.txt");
         } catch (IOException e)
         {
@@ -151,7 +148,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         }
 
         // Hide the Loading Dialog
-        mFrag.loadingDialogHandler
+        mDecoderActivity.loadingDialogHandler
                 .sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
 
     }
@@ -181,8 +178,12 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         {
             TrackableResult result = state.getTrackableResult(tIdx);
             Trackable trackable = result.getTrackable();
-            printUserData(trackable);
-            /*
+        //    printUserData(trackable);
+
+            // Tell the DecoderActivity that a match has been found
+            mDecoderActivity.foundImageTarget((String) trackable.getUserData());
+
+            /* // TODO/Note: Deprecated code from sample app
             Matrix44F modelViewMatrix_Vuforia = Tool
                     .convertPose2GLMatrix(result.getPose());
             float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
@@ -195,7 +196,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             // deal with the modelview and projection matrices
             float[] modelViewProjection = new float[16];
 
-            if (!mFrag.isExtendedTrackingActive())
+            if (!mDecoderActivity.isExtendedTrackingActive())
             {
                 Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f,
                         OBJECT_SCALE_FLOAT);
@@ -214,7 +215,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             // activate the shader program and bind the vertex/normal/tex coords
             GLES20.glUseProgram(shaderProgramID);
 
-            if (!mFrag.isExtendedTrackingActive())
+            if (!mDecoderActivity.isExtendedTrackingActive())
             {
                 GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
                         false, 0, mTeapot.getVertices());
@@ -281,13 +282,12 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         mRenderer.end();
     }
 
-
+    // Prints the data from a trackable - deprecated but nice to keep around for example
     private void printUserData(Trackable trackable)
     {
         String userData = (String) trackable.getUserData();
         Log.d(LOGTAG, "UserData:Retreived User Data	\"" + userData + "\"");
     }
-
 
     public void setTextures(Vector<Texture> textures)
     {

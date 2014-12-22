@@ -39,20 +39,18 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
-import edu.umich.engin.cm.onecoolthing.Decoder.DecoderActivity;
 import edu.umich.engin.cm.onecoolthing.Decoder.DecoderIntroFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagListAdapter;
-import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
 import edu.umich.engin.cm.onecoolthing.Util.BackStackSettings;
+import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
 import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
 import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
-import edu.umich.engin.cm.onecoolthing.Util.ShareIntent;
 
 /**
  * Created by jawad on 12/10/14.
@@ -454,7 +452,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
                             String shareUrl = oneCoolFeedFrag.getShareUrl();
 
                             // Then, use the Util to share it to Facebook
-                            ShareIntent.shareToFacebook(ActivityMain.this, shareUrl);
+                            IntentStarter.shareToFacebook(ActivityMain.this, shareUrl);
                         }
                         else if(v == shareTwitter) {
                             // Get the text to share to Twitter
@@ -462,7 +460,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
                             String shareUrl = oneCoolFeedFrag.getShareUrl();
 
                             // Then, use the Util to share to Twitter
-                            ShareIntent.shareToTwitter(ActivityMain.this, tweetText, shareUrl);
+                            IntentStarter.shareToTwitter(ActivityMain.this, tweetText, shareUrl);
                         }
                         else if(v == shareGeneral) {
                             // Get the text for sharing
@@ -470,7 +468,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
                             String shareUrl = oneCoolFeedFrag.getShareUrl();
 
                             // Then, use the Util to share generally
-                            ShareIntent.shareToGeneral(ActivityMain.this, shareSubject, shareUrl);
+                            IntentStarter.shareToGeneral(ActivityMain.this, shareSubject, shareUrl);
                         }
                         else {
                             Log.e(TAG, "From share touch listener: Couldn't find matching view!");

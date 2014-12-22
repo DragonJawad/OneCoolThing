@@ -8,6 +8,7 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -25,10 +26,16 @@ import com.qualcomm.vuforia.Tracker;
 import com.qualcomm.vuforia.TrackerManager;
 import com.qualcomm.vuforia.Vuforia;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import edu.umich.engin.cm.onecoolthing.R;
+import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
 
 /**
  * Created by jawad on 16/12/14.
@@ -36,6 +43,17 @@ import edu.umich.engin.cm.onecoolthing.R;
 public class DecoderActivity extends Activity implements DecoderApplicationControl,
             DecoderAppMenuInterface {
     private static final String LOG = "MD/DecoderActivity";
+
+    // Path to the file that contains all the image targets
+    private static final String PATH_IMAGETARGET_ITEMS = "ImageTargets/Marlo.xml";
+    private static final String PATH_IMAGETARGET_MATCHES = "ImageTargets/marloMatches.xml";
+
+    // Tags/Keys to the matching imagetarget files for parsing
+    private static final String TAG_IMAGETARGET_ITEM = "ImageTarget";
+    private static final String TAG_NAME = "name";
+    private static final String TAG_URL = "url";
+    private static final String TAG_EMAILTO = "emailTo";
+    private static final String TAG_EMAILSUBJET = "emailSubject";
 
     // Camera status constants
     final public static int CMD_BACK = -1;
@@ -45,6 +63,12 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     final public static int CMD_CAMERA_FRONT = 4;
     final public static int CMD_CAMERA_REAR = 5;
     final public static int CMD_DATASET_START_INDEX = 6;
+
+    // List that holds all the image target match data
+    ArrayList<ImageTarget> mImageTargetList;
+
+    // Holds a reference to the last matched image target name
+    String lastMatchedTarget;
 
     // Decoder session that handles all the gritty work
     DecoderApplicationSession mDecoderSession;
@@ -147,7 +171,60 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         // TODO/NOTE: Figure out why only the first dataset is loaded, no matter what [low priority bug]
     //    mDatasetStrings.add("ImageTargets/StonesAndChips.xml");
     //    mDatasetStrings.add("ImageTargets/Tarmac.xml");
-        mDatasetStrings.add("ImageTargets/Marlo.xml");
+        mDatasetStrings.add(PATH_IMAGETARGET_ITEMS);
+
+        // TODO: Put all this parsing somewhere cleaner, preferably in its own class?
+        // Parse and cache the xml file that defines what all the matches do
+        XmlPullParser parser = Xml.newPullParser();
+
+        // Initialize the list of image targets
+        mImageTargetList = new ArrayList<ImageTarget>();
+
+        try {
+            // Create the input stream as the file from assets
+            InputStream inputStream = getAssets().open(PATH_IMAGETARGET_MATCHES);
+            // Open the file up inside the parser
+            parser.setInput(inputStream, null);
+
+            // Now loop through and parse the entire file
+            int eventType = parser.getEventType();
+            while(eventType != XmlPullParser.END_DOCUMENT) {
+                if(eventType == XmlPullParser.START_TAG) {
+                    // Get the name of this tag
+                    String tagName = parser.getName();
+
+                    // If the tag name is the one we want, then get all the data
+                    if(tagName.equals(TAG_IMAGETARGET_ITEM)) {
+                        String name, url;
+                        String emailTo = "";
+                        String emailSubject = "";
+
+                        name = parser.getAttributeValue(null, TAG_NAME);
+                        url = parser.getAttributeValue(null, TAG_URL);
+
+                        // If the url is null, get the emailTo and emailSubject which SHOULD be there
+                        if(url.equals("")) {
+                            emailTo = parser.getAttributeValue(null, TAG_EMAILTO);
+                            emailSubject = parser.getAttributeValue(null, TAG_EMAILSUBJET);
+                        }
+
+                        // Create a new ImageTarget and add it to the current list of image target match data
+                        ImageTarget imageTarget = new ImageTarget(name, url, emailTo, emailSubject);
+                        mImageTargetList.add(imageTarget);
+                    }
+                }
+                eventType = parser.next();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(LOG, "Failed to parse the matches file, IOException");
+            endDecoder(true);
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+            Log.e(LOG, "Failed to parse the matches file, XmlPullParserException");
+            endDecoder(true);
+        }
+
     }
 
     // Initializes AR application components.
@@ -166,12 +243,60 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
 
     }
 
+    // Called for when an image target has been found
+    public void foundImageTarget(String targetName) {
+        Log.d(LOG, "Received targetName: " + targetName);
+
+        // If this target has already been found, then don't launch it again
+        if(targetName.equals(lastMatchedTarget)) return;
+        // Otherwise, set this target as the last matched target
+        else
+            lastMatchedTarget = targetName;
+        // TODO: Think of a better alternative to prevent multiple successive matches
+
+        // Holds [supposedly] the matching ImageTarget
+        ImageTarget targetMatch = null;
+
+        // Get the matching ImageTarget from the cached list of targets
+        for(int i = 0; i < mImageTargetList.size(); ++i) {
+            // Get the current imageTarget to check against
+            ImageTarget curImageTarget = mImageTargetList.get(i);
+
+            // If the names match, then this is the one!
+            if(curImageTarget.getTargetName().equals(targetName)) {
+                targetMatch = curImageTarget;
+                break;
+            }
+        }
+
+        // If the match is still null, do nothing and play it cool
+        if(targetMatch == null) {
+            Log.e(LOG, "Found no ImageTarget match!");
+            return;
+        }
+
+        // If a url is valid, open it up
+        String targetUrl = targetMatch.getTargetUrl();
+        if(!targetUrl.equals("")) {
+            IntentStarter.openUrl(this, targetUrl);
+        }
+        else {
+            // Otherwise try to send an email
+            String targetEmailTo = targetMatch.getTargetEmailTo();
+            String targetEmailSubject = targetMatch.getTargetEmailSubject();
+            IntentStarter.sendEmail(this, targetEmailTo, targetEmailSubject);
+        }
+    }
+
     // Called when the activity will start interacting with the user.
     @Override
     protected void onResume()
     {
         Log.d(LOG, "onResume");
         super.onResume();
+
+        // Clear the last matched target's cached name
+        lastMatchedTarget = "";
 
         // This is needed for some Droid devices to force portrait
         if (mIsDroidDevice)
