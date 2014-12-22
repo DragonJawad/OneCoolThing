@@ -1,8 +1,14 @@
 package edu.umich.engin.cm.onecoolthing.NetworkUtils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
+
+import edu.umich.engin.cm.onecoolthing.R;
 
 /**
  * Created by jawad on 18/10/14.
@@ -25,5 +31,39 @@ public class CheckNetworkConnection {
             }
         }
         return false;
+    }
+
+    // Shows a dialog telling the user failed to connect to Internet and to check settings
+    public static void showNoConnectionDialog(Context context) {
+        // Need to declare final context in order to start the Activity on positive button click
+        final Context ctx = context;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setCancelable(true);
+        builder.setMessage(R.string.noconnection_dialog_message);
+        builder.setTitle(R.string.noconnection_dialog_title);
+        builder.setPositiveButton(R.string.noconnection_dialog_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                ctx.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
+
+        builder.setNegativeButton(R.string.noconnection_dialog_no, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                return;
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            public void onCancel(DialogInterface dialog) {
+                return;
+            }
+        });
+
+        builder.show();
     }
 }
