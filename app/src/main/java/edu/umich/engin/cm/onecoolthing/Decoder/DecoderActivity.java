@@ -2,6 +2,7 @@ package edu.umich.engin.cm.onecoolthing.Decoder;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
@@ -78,6 +79,7 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     private int mStartDatasetsIndex = 0;
     private int mDatasetsNumber = 0;
     private ArrayList<String> mDatasetStrings = new ArrayList<String>();
+    boolean mIsDroidDevice = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
 
         // Initialize the actual Vuforia session
         initVuforiaSession();
+
+        mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
+                "droid");
     }
 
     // Initializes the loading animation
@@ -159,6 +164,107 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
 
+    }
+
+    // Called when the activity will start interacting with the user.
+    @Override
+    protected void onResume()
+    {
+        Log.d(LOG, "onResume");
+        super.onResume();
+
+        // This is needed for some Droid devices to force portrait
+        if (mIsDroidDevice)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+        try
+        {
+            mDecoderSession.resumeAR();
+        } catch (DecoderApplicationException e)
+        {
+            Log.e(LOG, e.getString());
+        }
+
+        // Resume the GL view:
+        if (mGlView != null)
+        {
+            mGlView.setVisibility(View.VISIBLE);
+            mGlView.onResume();
+        }
+
+    }
+
+
+    // Callback for configuration changes the activity handles itself
+    @Override
+    public void onConfigurationChanged(Configuration config)
+    {
+        Log.d(LOG, "onConfigurationChanged");
+        super.onConfigurationChanged(config);
+
+        mDecoderSession.onConfigurationChanged();
+    }
+
+
+    // Called when the system is about to start resuming a previous activity.
+    @Override
+    protected void onPause()
+    {
+        Log.d(LOG, "onPause");
+        super.onPause();
+
+        if (mGlView != null)
+        {
+            mGlView.setVisibility(View.INVISIBLE);
+            mGlView.onPause();
+        }
+
+        // Turn off the flash
+        if (mFlashOptionView != null && mFlash)
+        {
+            // OnCheckedChangeListener is called upon changing the checked state
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            {
+                ((Switch) mFlashOptionView).setChecked(false);
+            } else
+            {
+                ((CheckBox) mFlashOptionView).setChecked(false);
+            }
+        }
+
+        try
+        {
+            mDecoderSession.pauseAR();
+        } catch (DecoderApplicationException e)
+        {
+            Log.e(LOG, e.getString());
+        }
+    }
+
+
+    // The final call you receive before your activity is destroyed.
+    @Override
+    protected void onDestroy()
+    {
+        Log.d(LOG, "onDestroy");
+        super.onDestroy();
+
+        try
+        {
+            mDecoderSession.stopAR();
+        } catch (DecoderApplicationException e)
+        {
+            Log.e(LOG, e.getString());
+        }
+
+        // Unload texture:
+        mTextures.clear();
+        mTextures = null;
+
+        System.gc();
     }
 
     @Override
