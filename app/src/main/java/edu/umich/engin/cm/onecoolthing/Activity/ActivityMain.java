@@ -45,6 +45,7 @@ import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagListAdapter;
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;

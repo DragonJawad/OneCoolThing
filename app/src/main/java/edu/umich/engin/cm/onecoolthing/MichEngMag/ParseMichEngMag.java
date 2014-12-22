@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
 
 /**
@@ -122,14 +123,22 @@ public class ParseMichEngMag {
                     magazineList.add(magazineItem);
                 }
             } catch (JSONException e) {
-                Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
-                        .show();
                 Log.e(TAG, e.getMessage());
-                e.printStackTrace();
+                cancel(true);
+            } catch (NullPointerException e) {
+                Log.e(TAG, "NullPointerExpection found while trying to get jsonArray");
                 cancel(true);
             }
 
             return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            // Show dialog to state there were issues accessing the Internet
+            CheckNetworkConnection.showNoConnectionDialog(mContext);
+
+            super.onCancelled();
         }
 
         @Override
@@ -192,14 +201,22 @@ public class ParseMichEngMag {
                 mData.setmWebHTMLData(htmlData);
 
             } catch (JSONException e) {
-                Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
-                        .show();
                 Log.e(TAG, e.getMessage());
-                e.printStackTrace();
+                cancel(true);
+            } catch (NullPointerException e) {
+                Log.e(TAG, "NullPointerExpection found while trying to get jsonArray");
                 cancel(true);
             }
 
             return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            // Show dialog to state there were issues accessing the Internet
+            CheckNetworkConnection.showNoConnectionDialog(mContext);
+
+            super.onCancelled();
         }
 
         @Override

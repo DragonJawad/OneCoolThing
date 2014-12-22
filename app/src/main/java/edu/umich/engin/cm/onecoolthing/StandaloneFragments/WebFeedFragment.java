@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -24,6 +25,9 @@ public class WebFeedFragment extends android.support.v4.app.Fragment {
     static private final String KEY_TITLE = "KEY_TITLE";
 
     private WebView mWebView;
+
+    // States whether or not the activity has been created/attached already
+    private boolean activityCreated = false; // TODO: Determine if necessary or not
 
     // Creates a new instance- note, non-default constructors should not be used with a fragment
     public static WebFeedFragment newInstance(String url, String title) {
@@ -56,24 +60,39 @@ public class WebFeedFragment extends android.support.v4.app.Fragment {
         // Get and cache the webview from the layout
         mWebView = (WebView) view.findViewById(R.id.webview);
 
-        // Set up the webview
-        initWebView();
+        // If Activity has already been attached, initialize the webview
+        if(activityCreated) initWebView();
 
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // Set up the webview, if the views have already been cached
+        if(mWebView != null) initWebView();
+    }
+
     private void initWebView() {
-        // First, enable JavaScript
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        // If the internet can be connected to, load the WebView
+        if(CheckNetworkConnection.isConnectionAvailable(getActivity())) {
+            // First, enable JavaScript
+            WebSettings webSettings = mWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
             // TODO: Should javascript really be enabled? XSS vulnerabilities, potentialy!
 
-        // Force links and redirects to open in the WebView instead of in a browser
-        TumblrWebViewClient webViewClient = new TumblrWebViewClient();
-        mWebView.setWebViewClient(webViewClient);
+            // Force links and redirects to open in the WebView instead of in a browser
+            TumblrWebViewClient webViewClient = new TumblrWebViewClient();
+            mWebView.setWebViewClient(webViewClient);
 
-        // Finally, load the URL
-        mWebView.loadUrl(mUrl);
+            // Finally, load the URL
+            mWebView.loadUrl(mUrl);
+        }
+        // Otherwise, show a dialog that failed to connect to the internet
+        else {
+            CheckNetworkConnection.showNoConnectionDialog(getActivity());
+        }
     }
 
     /**

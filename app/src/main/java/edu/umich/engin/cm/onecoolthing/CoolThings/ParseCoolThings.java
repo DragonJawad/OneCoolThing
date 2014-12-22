@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
 
 /**
@@ -126,8 +127,8 @@ public class ParseCoolThings {
 
         @Override
         protected void onCancelled() {
-            Toast.makeText(mContext, "Failed to get data from internet", Toast.LENGTH_LONG)
-                    .show();
+            // Show dialog to state there were issues accessing the Internet
+            CheckNetworkConnection.showNoConnectionDialog(mContext);
 
             super.onCancelled();
         }
