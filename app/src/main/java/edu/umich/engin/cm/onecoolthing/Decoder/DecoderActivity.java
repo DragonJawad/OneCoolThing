@@ -123,11 +123,11 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     {
         mTextures = new Vector<Texture>();
 
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",
+        mTextures.add(Texture.loadTextureFromApk("ImageTargets/TextureTeapotBrass.png",
                 getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
+        mTextures.add(Texture.loadTextureFromApk("ImageTargets/TextureTeapotBlue.png",
                 getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
+        mTextures.add(Texture.loadTextureFromApk("ImageTargets/TextureTeapotRed.png",
                 getAssets()));
     }
 
@@ -144,8 +144,10 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     }
 
     private void addData() {
-        mDatasetStrings.add("StonesAndChips.xml");
-        mDatasetStrings.add("Tarmac.xml");
+        // TODO/NOTE: Figure out why only the first dataset is loaded, no matter what [low priority bug]
+    //    mDatasetStrings.add("ImageTargets/StonesAndChips.xml");
+    //    mDatasetStrings.add("ImageTargets/Tarmac.xml");
+        mDatasetStrings.add("ImageTargets/Marlo.xml");
     }
 
     // Initializes AR application components.
@@ -319,7 +321,7 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
                 trackable.startExtendedTracking();
             }
 
-            String name = "Current Dataset : " + trackable.getName();
+            String name = trackable.getName();
             trackable.setUserData(name);
             Log.d(LOG, "UserData:Set the following user data "
                     + (String) trackable.getUserData());

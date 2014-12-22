@@ -1,0 +1,5 @@
+--Notes on last time Decoder was updated--
+
+-> Update: 12/22/14
+<> Files: "Marlo.dat", "Marlo.xml"
+<> Other Changes: Initial additions of all links and data

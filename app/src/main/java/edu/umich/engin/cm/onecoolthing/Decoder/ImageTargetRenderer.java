@@ -182,6 +182,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             TrackableResult result = state.getTrackableResult(tIdx);
             Trackable trackable = result.getTrackable();
             printUserData(trackable);
+            /*
             Matrix44F modelViewMatrix_Vuforia = Tool
                     .convertPose2GLMatrix(result.getPose());
             float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
@@ -272,7 +273,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             }
 
             DecoderUtils.checkGLError("Render Frame");
-
+            */
         }
 
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
