@@ -9,8 +9,32 @@ import java.util.List;
 
 /**
  * Created by jawad on 04/12/14.
+ *
+ * Creates and starts any basic intents necessary
  */
-public class ShareIntent {
+public class IntentStarter {
+    // Simply open a url
+    public static void openUrl(Context context, String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
+    // Open an url to send an email
+    public static void sendEmail(Context context, String emailTo, String emailSubject) {
+        // Create and set up the intent so it targets email-related activities
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setData(Uri.parse("mailto:"));
+        intent.setType("text/plain");
+
+        // Insert the data into the intent
+        intent.putExtra(Intent.EXTRA_EMAIL, emailTo);
+        intent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
+
+        // Send the intent
+        context.startActivity(Intent.createChooser(intent, "Send Email"));
+    }
+
     // Share an url to Facebook. Note: FB doesn't allow setting default text anymore
     public static void shareToFacebook(Context context, String urlToShare) {
         Intent intent = new Intent(Intent.ACTION_SEND);
