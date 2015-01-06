@@ -109,18 +109,20 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, Vuforia.requiresAlpha() ? 0.0f
                 : 1.0f);
 
-        for (Texture t : mTextures)
-        {
-            GLES20.glGenTextures(1, t.mTextureID, 0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, t.mTextureID[0]);
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
-                    t.mWidth, t.mHeight, 0, GLES20.GL_RGBA,
-                    GLES20.GL_UNSIGNED_BYTE, t.mData);
-        }
+        // If there are any textures, set them up
+        if(mTextures != null)
+            for (Texture t : mTextures)
+            {
+                GLES20.glGenTextures(1, t.mTextureID, 0);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, t.mTextureID[0]);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                        GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                        GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
+                        t.mWidth, t.mHeight, 0, GLES20.GL_RGBA,
+                        GLES20.GL_UNSIGNED_BYTE, t.mData);
+            }
 
         shaderProgramID = DecoderUtils.createProgramFromShaderSrc(
                 CubeShaders.CUBE_MESH_VERTEX_SHADER,

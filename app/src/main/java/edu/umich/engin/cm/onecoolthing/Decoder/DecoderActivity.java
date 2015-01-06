@@ -82,7 +82,7 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     private View mFlashOptionView;
 
     // The textures we will use for rendering:
-    private Vector<Texture> mTextures;
+ //   private Vector<Texture> mTextures;
 
     // Our OpenGL view:
     private DecoderApplicationGLView mGlView;
@@ -140,10 +140,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     }
 
     // Loads in the textures
-    // TODO: What are these for again? Are they necessary?
     // We want to load specific textures from the APK, which we will later use
     // for rendering.
-    private void loadTextures()
+    /*private void loadTextures()
     {
         mTextures = new Vector<Texture>();
 
@@ -153,11 +152,11 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
                 getAssets()));
         mTextures.add(Texture.loadTextureFromApk("ImageTargets/TextureTeapotRed.png",
                 getAssets()));
-    }
+    }*/
 
     private void initVuforiaSession() {
         // Load in any necessary textures
-        loadTextures();
+    //    loadTextures();
 
         // Add data in
         addData();
@@ -238,7 +237,7 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         mGlView.init(translucent, depthSize, stencilSize);
 
         mRenderer = new ImageTargetRenderer(this, mDecoderSession);
-        mRenderer.setTextures(mTextures);
+//        mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
 
     }
@@ -385,9 +384,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
             Log.e(LOG, e.getString());
         }
 
-        // Unload texture:
-        mTextures.clear();
-        mTextures = null;
+//        // Unload texture:
+//        mTextures.clear();
+//        mTextures = null;
 
         System.gc();
     }
