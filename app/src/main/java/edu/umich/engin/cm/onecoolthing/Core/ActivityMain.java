@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.Activity;
+package edu.umich.engin.cm.onecoolthing.Core;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;

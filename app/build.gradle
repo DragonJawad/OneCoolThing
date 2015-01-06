@@ -42,4 +42,5 @@ dependencies {
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
     compile files('src/main/assets/libs/armeabi.jar')
     compile files('src/main/assets/libs/Vuforia.jar')
+    compile 'com.google.android.gms:play-services:6.5.87'
 }

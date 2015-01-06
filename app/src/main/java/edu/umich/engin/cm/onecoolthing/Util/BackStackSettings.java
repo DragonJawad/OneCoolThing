@@ -1,6 +1,6 @@
 package edu.umich.engin.cm.onecoolthing.Util;
 
-import edu.umich.engin.cm.onecoolthing.Activity.ActivityMain;
+import edu.umich.engin.cm.onecoolthing.Core.ActivityMain;
 
 /**
  * Created by jawad on 05/12/14.
