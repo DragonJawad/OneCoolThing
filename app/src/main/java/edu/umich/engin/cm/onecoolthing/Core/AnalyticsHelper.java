@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.HashMap;
@@ -35,6 +36,14 @@ public class AnalyticsHelper extends Application {
 
     // Get the primary tracker- try to only instantiate one!
     synchronized Tracker getTracker() {
+        // When dry run is set, hits will not be dispatched, but will still be logged as
+        // though they were dispatched.
+        GoogleAnalytics.getInstance(this).setDryRun(true);
+        // Set the log level to verbose.
+        GoogleAnalytics.getInstance(this).getLogger()
+                .setLogLevel(Logger.LogLevel.VERBOSE);
+
+
         // If there is no tracker, create it
         if (mTracker == null) {
             mTracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.app_tracker);
@@ -44,12 +53,12 @@ public class AnalyticsHelper extends Application {
     }
 
     // Easily send a tracker screenView using the simple TrackerScreen types- should NOT need additional screen data
-    synchronized void sendScreenView(TrackerScreen trackerType) {
+    public synchronized void sendScreenView(TrackerScreen trackerType) {
         // Simply call on the overloaded function
         sendScreenView(trackerType, null);
     }
 
-    synchronized void sendScreenView(TrackerScreen trackerType, String moreInfo) {
+    public synchronized void sendScreenView(TrackerScreen trackerType, String moreInfo) {
         // Represents the final screenName to send along
         String finalScreenName;
 
