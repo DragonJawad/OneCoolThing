@@ -109,9 +109,6 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decoder);
 
-        // Send some data that the Decoder has been opened
-        ((AnalyticsHelper) getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.CAMVIEW);
-
         // Cache the necessary views to setup later
         mLayoutContainer = (RelativeLayout) findViewById(R.id.container);
         mUIContainer = (RelativeLayout) findViewById(R.id.camera_overlay_layout);
@@ -279,6 +276,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     {
         Log.d(LOG, "onResume");
         super.onResume();
+
+        // Send some data that the Decoder has been opened
+        ((AnalyticsHelper) getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.CAMVIEW);
 
         // Clear the last matched target's cached name
         lastMatchedTarget = "";
