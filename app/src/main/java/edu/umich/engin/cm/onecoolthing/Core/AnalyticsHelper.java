@@ -36,12 +36,13 @@ public class AnalyticsHelper extends Application {
 
     // Get the primary tracker- try to only instantiate one!
     synchronized Tracker getTracker() {
-        // When dry run is set, hits will not be dispatched, but will still be logged as
+/*        // When dry run is set, hits will not be dispatched, but will still be logged as
         // though they were dispatched.
         GoogleAnalytics.getInstance(this).setDryRun(true);
+
         // Set the log level to verbose.
         GoogleAnalytics.getInstance(this).getLogger()
-                .setLogLevel(Logger.LogLevel.VERBOSE);
+                .setLogLevel(Logger.LogLevel.VERBOSE);*/
 
 
         // If there is no tracker, create it
