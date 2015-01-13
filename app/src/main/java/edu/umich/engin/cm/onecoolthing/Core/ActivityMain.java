@@ -152,15 +152,17 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Remove the actionBar in its evil entirety
-        getActionBar().hide();
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setHomeButtonEnabled(false);
+        if(actionBar != null) {
+            actionBar.hide();
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setHomeButtonEnabled(false);
+            actionBar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        }
 
-        actionBar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         View homeIcon = findViewById(android.R.id.home);
         // Hides the View (and so the icon)
         if (homeIcon != null)
