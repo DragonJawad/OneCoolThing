@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
 
@@ -108,6 +109,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decoder);
 
+        // Send some data that the Decoder has been opened
+        ((AnalyticsHelper) getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.CAMVIEW);
+
         // Cache the necessary views to setup later
         mLayoutContainer = (RelativeLayout) findViewById(R.id.container);
         mUIContainer = (RelativeLayout) findViewById(R.id.camera_overlay_layout);
@@ -139,25 +143,7 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
                 .sendEmptyMessage(LoadingDialogHandler.SHOW_LOADING_DIALOG);
     }
 
-    // Loads in the textures
-    // We want to load specific textures from the APK, which we will later use
-    // for rendering.
-    /*private void loadTextures()
-    {
-        mTextures = new Vector<Texture>();
-
-        mTextures.add(Texture.loadTextureFromApk("ImageTargets/TextureTeapotBrass.png",
-                getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("ImageTargets/TextureTeapotBlue.png",
-                getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("ImageTargets/TextureTeapotRed.png",
-                getAssets()));
-    }*/
-
     private void initVuforiaSession() {
-        // Load in any necessary textures
-    //    loadTextures();
-
         // Add data in
         addData();
 
@@ -167,9 +153,6 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
     }
 
     private void addData() {
-        // TODO/NOTE: Figure out why only the first dataset is loaded, no matter what [low priority bug]
-    //    mDatasetStrings.add("ImageTargets/StonesAndChips.xml");
-    //    mDatasetStrings.add("ImageTargets/Tarmac.xml");
         mDatasetStrings.add(PATH_IMAGETARGET_ITEMS);
 
         // TODO: Put all this parsing somewhere cleaner, preferably in its own class?
@@ -273,6 +256,9 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
             Log.e(LOG, "Found no ImageTarget match!");
             return;
         }
+
+        // If gotten to this point, then send some data that the Decoder has been used to find something
+        ((AnalyticsHelper) getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.ARWEB);
 
         // If a url is valid, open it up
         String targetUrl = targetMatch.getTargetUrl();

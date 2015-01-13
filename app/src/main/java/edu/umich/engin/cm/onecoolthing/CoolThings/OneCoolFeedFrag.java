@@ -3,6 +3,7 @@ package edu.umich.engin.cm.onecoolthing.CoolThings;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 import edu.umich.engin.cm.onecoolthing.R;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
@@ -35,6 +37,9 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     // Caches the current page selected
     int currentPageSelected = 0;
 
+    // States whether the Activity has been created yet or not
+    boolean activityYetCreated = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_coolfeed, container, false);
@@ -49,11 +54,29 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        activityYetCreated = true;
+
+        // Send data that the OneCoolFeed page has now been opened
+        ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.MAINVIEW);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
         // Initialize the viewpager with the activity's context
         initCoolViewPager(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // If the Activity has been linked, then send data that the OneCoolFeed center view has been returned to
+        if(activityYetCreated)
+            ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.MAINVIEW);
     }
 
     private void initCoolViewPager(Context context) {
@@ -85,13 +108,14 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         }
 
         // Get the data from the page to pass on
+        String title = pagerAdapter.getTitle(currentPageSelected);
         String subTitle = pagerAdapter.getSubTitle(position);
         String body = pagerAdapter.getBodyText(position);
         String paletteColor = pagerAdapter.getPaletteColor(position);
         String fullItemURL = pagerAdapter.getFullItemURL(position);
 
         // Send the information to the activity
-        communicator.changeRightSlide(subTitle, body, paletteColor, fullItemURL);
+        communicator.changeRightSlide(title, subTitle, body, paletteColor, fullItemURL);
     }
 
     // Set the background of the ViewPager
@@ -105,7 +129,6 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         // Now the right sliding menu can be set up finally for the first time
         notifyCommunicator(0);
     }
-
 
     // Sets the communicator so the fragment can notify the activity of changes in pager
     public void setCommunicator(VertPagerCommunicator comm) {
@@ -166,6 +189,6 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     // Currently, simply tells the ActivityTestCenter to change the right slider's color
     //      to the color that the center fragment is using
     public interface VertPagerCommunicator {
-      public void changeRightSlide(String subTitle, String body, String paletteColor, String fullItemURL);
+      public void changeRightSlide(String title, String subTitle, String body, String paletteColor, String fullItemURL);
     }
 }

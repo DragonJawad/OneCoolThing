@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -30,6 +31,9 @@ public class DecoderIntroFrag extends android.support.v4.app.Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // Send some data that the Decoder Intro has been opened
+        ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.ARVIEW);
 
         // Now set up the button
         startButton.setOnClickListener(this);

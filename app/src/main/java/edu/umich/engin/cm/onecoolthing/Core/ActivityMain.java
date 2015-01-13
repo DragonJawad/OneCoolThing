@@ -120,6 +120,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     // Key for getting tutorial seen boolean from sharedPreferences
     private static final String KEY_SEENTUTORIAL = "seenTutorialYet";
 
+    // Caches the currently seen title of the One Cool Feed
+    String mCurrentCoolThingTitle = null;
+
     /* Current center fragment index, for reference
      * Below is the master list - If the nav is changed, change the below and any
      *      code that uses the below system, ie
@@ -546,6 +549,18 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             }
         });
 
+        // TODO: Not sure, onOpen doesn't activate as expected. Consider changing all to onOpened/Closed
+        mSlidingMenuRight.setOnOpenedListener(new SlidingMenu.OnOpenedListener() {
+            @Override
+            public void onOpened() {
+                // If possible, send data of the current Cool Thing being viewed
+                if(mCurrentCoolThingTitle != null) {
+                    // Send some tracker data
+                    ((AnalyticsHelper) getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.DETAILVIEW, mCurrentCoolThingTitle);
+                }
+            }
+        });
+
         mSlidingMenuRight.setOnCloseListener(new SlidingMenu.OnCloseListener() {
             @Override
             public void onClose() {
@@ -613,6 +628,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
                 backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
         }
 
+        // Clean up any other necessary variables
+        mCurrentCoolThingTitle = null;
+
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
             // Apply the settings for the OneCoolFeed
@@ -648,7 +666,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             frag.setMagazineViewer(this);
 
             // Add the frag to the center view
-            fragmentTransaction.replace(R.id.fragContainer, frag, this_title);;
+            fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
         // Otherwise, if this index has an URL, open up a feed
         else if(!mFragUrls[index].equals("")) {
@@ -770,7 +788,10 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     }
 
     // Change the right slide to match the current CoolThing
-    public void changeRightSlide(String subTitle, String body, String paletteColor, final String fullItemURL) {
+    public void changeRightSlide(String title, String subTitle, String body, String paletteColor, final String fullItemURL) {
+        // Get and cache the current Cool Thing's title
+        mCurrentCoolThingTitle = title;
+
         // Change the body and subtitle texts
         mRightMenuTitleTextView.setText(subTitle);
         mRightMenuBodyTextView.setText(body);

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -26,6 +27,9 @@ public class AboutFragment extends android.support.v4.app.Fragment {
 
     // Instance of TutorialEnforcer to tell to show the tutorial
     TutorialEnforcer mTutorialEnforcer;
+
+    // States whether or not the Activity has been created yet
+    boolean activityYetCreated = false;
 
     // Interface the Activity should implement to show the tutorial
     public interface TutorialEnforcer {
@@ -51,6 +55,10 @@ public class AboutFragment extends android.support.v4.app.Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        activityYetCreated = true;
+
+        // Send data that the About page has now been opened
+        ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.ABOUT);
 
         // Create the dialog to show the Privacy Policy now
         dialogPrivacyPolicy = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -60,6 +68,9 @@ public class AboutFragment extends android.support.v4.app.Fragment {
         viewDialog.findViewById(R.id.button_dismiss).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Try to be a bit more accurate and send data that the About Screen is now open again
+                ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.ABOUT);
+
                 dialogPrivacyPolicy.dismiss();
             }
         });
@@ -78,10 +89,22 @@ public class AboutFragment extends android.support.v4.app.Fragment {
         textViewPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Send some tracker data that the Privacy Policy is opening
+                ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.PRIVACYPOL);
+
                 // Show the privacy policy dialog
                 dialogPrivacyPolicy.show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // If the Activity has been linked, then send data that the About page has been returned to
+        if(activityYetCreated)
+            ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.ABOUT);
     }
 
     // Set the TutorialEnforcer

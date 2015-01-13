@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -25,6 +26,10 @@ public class MEMDetailedFrag extends android.support.v4.app.Fragment {
 
     // Determines whether the data has been set yet or not
     boolean hasDataBeenSet = false;
+    // States whether the Activity has been linked yet or not
+    boolean activityYetCreated = false;
+    // States whether or not Analytics data has yet been sent
+    boolean analyticsDataSentYet = false;
 
     // Data to cache
     Bitmap mTopImageBitmap;
@@ -51,8 +56,27 @@ public class MEMDetailedFrag extends android.support.v4.app.Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        activityYetCreated = true;
+
+        // If data has been set and analytics data not yet sent, then send it
+        if(hasDataBeenSet && !analyticsDataSentYet && mWebView != null) {
+            analyticsDataSentYet = true;
+            ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.MAGSTORY, mTitle);
+        }
+    }
+
     // Finally sets up all the views
     private void setUpFrag() {
+        // If activity has been created and analytics data not yet sent, then send it
+        if(activityYetCreated && !analyticsDataSentYet) {
+            analyticsDataSentYet = true;
+            ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.MAGSTORY, mTitle);
+        }
+
         // Set the top image
         mTopImage.setImageBitmap(mTopImageBitmap);
 

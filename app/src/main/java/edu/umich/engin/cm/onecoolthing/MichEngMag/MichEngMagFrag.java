@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.R;
 
 /**
@@ -32,6 +33,9 @@ public class MichEngMagFrag extends android.support.v4.app.Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Send data that the MichEngMag has now been opened
+        ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.MICHENG);
+
         // Now start the initial setup process
         initSetup();
     }
@@ -49,7 +53,7 @@ public class MichEngMagFrag extends android.support.v4.app.Fragment {
 
         // If the magazineViewer is not null, then set it now
         if(magazineViewer != null) mAdapter.setMagazineViewer(magazineViewer);
-;;;
+
         // Set the adapter as the listView's adapter
         mListView.setAdapter(mAdapter);
     }

@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.CheckNetworkConnection;
 import edu.umich.engin.cm.onecoolthing.R;
 
@@ -18,8 +19,8 @@ import edu.umich.engin.cm.onecoolthing.R;
  * A Fragment that shows a feed via a WebView
  */
 public class WebFeedFragment extends android.support.v4.app.Fragment {
-    private String mUrl; // URL of this Tumblr feed
-    private String mTitle; // Title of this Tumblr feed
+    private String mUrl; // URL of this feed
+    private String mTitle; // Title of this feed
 
     static private final String KEY_URL = "KEY_URL";
     static private final String KEY_TITLE = "KEY_TITLE";
@@ -75,6 +76,9 @@ public class WebFeedFragment extends android.support.v4.app.Fragment {
     }
 
     private void initWebView() {
+        // Send some data that the web view was opened
+        ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.GENWEBVIEW, mUrl);
+
         // If the internet can be connected to, load the WebView
         if(CheckNetworkConnection.isConnectionAvailable(getActivity())) {
             // First, enable JavaScript
