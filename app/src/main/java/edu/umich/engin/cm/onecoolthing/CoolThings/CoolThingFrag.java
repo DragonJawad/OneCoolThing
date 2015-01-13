@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
@@ -36,7 +38,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
     private Bitmap placeholderBG;
 
     // Spinner to display until cool thing loads
-    private ProgressBar spinner;
+    private ImageView spinner;
 
     // Necessary to notify anything outside of frag that data has been set
     private ImageLoaderNoCache.LoaderManager mFragUserManager;
@@ -46,7 +48,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
         View view = inflater.inflate(R.layout.fragment_cool_things, container, false);
 
         // Get the spinner and set it visible
-        spinner = (ProgressBar) view.findViewById(R.id.progressBar1);
+        spinner = (ImageView) view.findViewById(R.id.loadingSpinner);
         spinner.setVisibility(View.VISIBLE);
 
         // Get the view elements
@@ -59,6 +61,12 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // Set the spinner to infinitely spin
+        spinner.startAnimation(
+                AnimationUtils.loadAnimation(getActivity(), R.anim.loadinganim_spin)
+        );
+
 
         // If an imageURL has been given AND bg hasn't been set up yet, set it up
         if(imageURL != null && assignedData) {
