@@ -159,6 +159,15 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         frag.setData(url, titleText, this);
     }
 
+    // Return the title of a CoolThing at the given position
+    public String getTitle(int i) {
+        // If the length of the list of cool things is allowable, then try to get the title
+        if(mListOfCoolThings.size()-1 >= i)
+            return mListOfCoolThings.get(i).getTitle();
+        else
+            return null;
+    }
+
     // Return the subTitle of a CoolThing at the given position
     public String getSubTitle(int i) {
         return mListOfCoolThings.get(i).getSubTitle();
