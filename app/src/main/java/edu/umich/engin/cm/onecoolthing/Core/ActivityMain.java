@@ -653,6 +653,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Show the tutorial if necessary
             showTutorialIfNecessary();
         }
+/*      Following is deprecated in favor of just using a webview instead
         // If so, then add in the Michigan Engineer Magazine fragment
         else if(index == 3) {
             // Get the title/tag separately, for ease of typing/reading
@@ -669,7 +670,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
             // Add the frag to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
-        }
+        }*/
         // Otherwise, if this index has an URL, open up a feed
         else if(!mFragUrls[index].equals("")) {
             // Get the url and title separately, for ease of typing/reading
