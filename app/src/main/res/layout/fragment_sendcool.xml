@@ -34,12 +34,17 @@
             onecoolthing:fontName="@string/customfont_light"
             />
 
+        <!-- Extra spacing view -->
+        <View
+          android:layout_width="1dp"
+          android:layout_height="30dp"
+          />
+
         <LinearLayout
           android:id="@+id/sendbutton"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
-          android:layout_marginTop="@dimen/about_text_vertical_separation"
           >
 
           <ImageView
