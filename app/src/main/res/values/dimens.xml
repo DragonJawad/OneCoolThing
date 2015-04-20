@@ -17,6 +17,7 @@
     <dimen name="text_rightmenu_title">26sp</dimen>
     <dimen name="text_about_main">15sp</dimen> <!-- Size of the primary text in the About page -->
     <dimen name="text_about_clicks">18sp</dimen>
+    <dimen name="text_sendcool">16sp</dimen>
     <dimen name="text_decoder_intro">18sp</dimen>
         <!-- Text sizes for the Michigan Engineer Magazine magazine items -->
     <dimen name="text_michengmag_level1_title">25sp</dimen>
@@ -38,10 +39,10 @@
     <dimen name="margin_decoderintro_text_sides">20dp</dimen>
     <dimen name="margin_decoderintro_text_top">10dp</dimen>
         <!-- Margins between each left sliding menu item -->
-    <dimen name="margin_nav_item">18dp</dimen>
+    <dimen name="margin_nav_item">16dp</dimen>
         <!-- Margin between the left edge of the right menu, which includes the shadow -->
     <dimen name="margin_rightmenu_leftpush">20dp</dimen>
-        <!-- Margin between right sliding menu's title and body scrollview -->
+        <!-- Margin b6tween right sliding menu's title and body scrollview -->
     <dimen name="margin_rightmenu_betweenbodytitle">15dp</dimen>
         <!-- Top offset margin for the one cool feed share icons -->
     <dimen name="shareicon_top_offset">20dp</dimen>

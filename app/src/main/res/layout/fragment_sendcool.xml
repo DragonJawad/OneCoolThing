@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/about_background"
+        android:scaleType="fitXY"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:actionBarSize"
+        android:layout_marginLeft="@dimen/about_text_left_offset"
+        android:layout_marginRight="@dimen/about_text_right_offset"
+        >
+
+        <!-- Extra spacing view -->
+        <View
+          android:layout_width="1dp"
+          android:layout_height="30dp"
+          />
+
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sendcool_description"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sendcool"
+            onecoolthing:fontName="@string/customfont_light"
+            />
+
+        <LinearLayout
+          android:id="@+id/sendbutton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginTop="@dimen/about_text_vertical_separation"
+          >
+
+          <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/share_email_icon"
+            />
+
+          <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/sendcool_sendbutton"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sendcool"
+            onecoolthing:fontName="@string/customfont_normal"
+            />
+
+          </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

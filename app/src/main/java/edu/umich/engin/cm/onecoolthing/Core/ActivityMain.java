@@ -42,10 +42,10 @@ import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
 import edu.umich.engin.cm.onecoolthing.Decoder.DecoderIntroFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
-import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagListAdapter;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SendCoolFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
 import edu.umich.engin.cm.onecoolthing.Util.BackStackSettings;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
@@ -137,7 +137,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
      * 6 - MichEpedia
      * 7 - Decoder
      * 8 - About
-     * 9 - MEMDetailed Frag
+     * 9 - Send Us Cool Things
      */
     int currentFragmentIndex = -1;
 
@@ -196,9 +196,6 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         else {
             // Otherwise, get the "current" page index to use
             int newFragIndex = savedInstanceState.getInt(KEY_STATE_CURINDEX, 0);
-
-            // If the new frag index is 9 - ie the detailed frag - simply use the MEM frag index
-            if(newFragIndex == 9) newFragIndex = 3;
 
             changeFrag(newFragIndex, false);
         }
@@ -711,7 +708,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Put the title on the actionBar that will be used
             mActionTransBgTitle.setText(this_title);
 
-            // Set settings for this view- same as a Webview
+            // Set settings for this view
             changeSettingsMode(SettingsType.ABOUT);
 
             // Create a new AboutFragment to use
@@ -721,6 +718,22 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
             // Add the frag to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
+        }
+        // If so, then add in the Send Us Cool Things fragment
+        else if(index == 9) {
+          // Get the title/tag separately, for ease of typing/reading
+          String this_title = mFragTags[index];
+          // Put the title on the actionBar that will be used
+          mActionTransBgTitle.setText(this_title);
+
+          // Set settings for this view- same as About page
+          changeSettingsMode(SettingsType.ABOUT);
+
+          // Create a new SendCool fragment to use
+          SendCoolFragment frag = new SendCoolFragment();
+
+          // Add the frag to the center view
+          fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
 
         fragmentTransaction.commit();
@@ -909,8 +922,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         enableRightSlider(mode == SettingsType.ONECOOLFEED);
 
         // Then toggle the landscape mode as necessary
-        if(mode == SettingsType.ONECOOLFEED || mode == SettingsType.MICHENGMAG ||
-                mode == SettingsType.MEMDETAILED)
+        if(mode == SettingsType.ONECOOLFEED)
             toggleLandscapeMode(false);
         else
             toggleLandscapeMode(true); // Everything else uses landscape mode
@@ -927,9 +939,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             toggleActionBars(ActionBarType.SOLIDBG);
         }
         else if(mode == SettingsType.ABOUT) {
-            // If so, then set the transparent ActionBar up with its specific title
+            // If so, then show the particular transparent ActionBar
             toggleActionBars(ActionBarType.TRANSPARENT);
-            mActionTransBgTitle.setText(mFragTags[8]); // Index for About is currently 8
         }
         else if(mode == SettingsType.MEMDETAILED) {
             // Simply show the backOnly ActionBar
@@ -1088,7 +1099,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         // Initializes the indicator view list, as necessary
         private void initIndicatorList() {
-            final int SIZE = 9;
+          // TODO: Change this so doesn't manually need to be set in order to increase/decrease
+          //          size of menu
+          final int SIZE = 10;
 
             // Actually initialize the indicator list
             mIndicatorViewList = new ArrayList<View>(SIZE);
@@ -1123,7 +1136,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         @Override
         public int getCount() {
-            return navText.length-1;
+            return navText.length;
             //return navText.length;
         }
 
