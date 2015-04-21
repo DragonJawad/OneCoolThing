@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
-    <ImageTarget name="pawblack" size="1000.000000 1000.000000" />
-    <ImageTarget name="labcrop" size="1000.000000 773.401123" />
-    <ImageTarget name="siliconvalley" size="1000.000000 1210.155640" />
-    <ImageTarget name="BusStopTight" size="1000.000000 1243.243286" />
-    <ImageTarget name="sewer" size="1000.000000 1000.000000" />
-    <ImageTarget name="inourimage" size="1000.000000 1206.807251" />
-    <ImageTarget name="BlockM" size="1000.000000 1333.333374" />
-    <ImageTarget name="sewer2" size="1000.000000 999.511719" />
-    <ImageTarget name="theroom" size="1000.000000 1210.155640" />
-    <ImageTarget name="Wolverine" size="100.000000 173.913040" />
-    <ImageTarget name="towercrop" size="1000.000000 1000.000000" />
-    <ImageTarget name="tower" size="1000.000000 1333.333374" />
-    <ImageTarget name="m4" size="1000.000000 899.643005" />
-    <ImageTarget name="m3" size="1000.000000 834.006592" />
+    <ImageTarget name="xplore_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="truebelievers_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="social_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="peecycling_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="newsbriefs_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="mars_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="jakarta_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="impact_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="aviators_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="ai_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="alumnotes_spring2015" size="1000.000000 1208.333374" />
+    <ImageTarget name="oct" size="300.000000 199.305557" />
     <ImageTarget name="alumnotes" size="1000.000000 1207.036987" />
-    <ImageTarget name="m2" size="1000.000000 562.273254" />
-    <ImageTarget name="fxb" size="1000.000000 1333.333374" />
-    <ImageTarget name="m5" size="1000.000000 562.127808" />
-    <ImageTarget name="mcrop1" size="1000.000000 528.042358" />
-    <ImageTarget name="goblue" size="1000.000000 235.294113" />
-    <ImageTarget name="mcrop2" size="1000.000000 744.791687" />
-    <ImageTarget name="randaccess" size="1000.000000 1219.755859" />
-    <ImageTarget name="m1" size="1000.000000 556.638245" />
-    <ImageTarget name="wolvcrop" size="1000.000000 1011.764709" />
-    <ImageTarget name="BusStopWide" size="1000.000000 1333.676636" />
-    <ImageTarget name="Marlo" size="1800.000000 2175.000000" />
-    <ImageTarget name="comtweet" size="1000.000000 1208.425781" />
-    <ImageTarget name="Fountain" size="1000.000000 1333.333374" />
-    <ImageTarget name="BlockMDiag" size="1000.000000 1333.333374" />
+    <ImageTarget name="theroom" size="1000.000000 1210.155640" />
     <ImageTarget name="lynnconway" size="1000.000000 1209.647461" />
+    <ImageTarget name="siliconvalley" size="1000.000000 1210.155640" />
+    <ImageTarget name="inourimage" size="1000.000000 1206.807251" />
+    <ImageTarget name="randaccess" size="1000.000000 1219.755859" />
+    <ImageTarget name="comtweet" size="1000.000000 1208.425781" />
+    <ImageTarget name="pawblack" size="1000.000000 1000.000000" />
     <ImageTarget name="paw" size="1000.000000 1000.000000" />
+    <ImageTarget name="fxb" size="1000.000000 1333.333374" />
+    <ImageTarget name="goblue" size="1000.000000 235.294113" />
+    <ImageTarget name="tower" size="1000.000000 1333.333374" />
+    <ImageTarget name="towercrop" size="1000.000000 1000.000000" />
+    <ImageTarget name="wolvcrop" size="1000.000000 1011.764709" />
+    <ImageTarget name="sewer" size="1000.000000 1000.000000" />
+    <ImageTarget name="labcrop" size="1000.000000 773.401123" />
+    <ImageTarget name="Fountain" size="1000.000000 1333.333374" />
+    <ImageTarget name="BusStopTight" size="1000.000000 1243.243286" />
+    <ImageTarget name="BusStopWide" size="1000.000000 1333.676636" />
+    <ImageTarget name="Wolverine" size="100.000000 173.913040" />
+    <ImageTarget name="Marlo" size="1800.000000 2175.000000" />
   </Tracking>
 </QCARConfig>

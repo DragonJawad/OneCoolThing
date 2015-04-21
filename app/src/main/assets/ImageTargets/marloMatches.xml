@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tracking xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <ImageTarget name="pawblack" url="http://engcomm.engin.umich.edu/wolverine.html" />
-    <ImageTarget name="labcrop" url="http://engcomm.engin.umich.edu/kick.html" />
-    <ImageTarget name="siliconvalley" url="http://engcomm.engin.umich.edu/redirectsiliconvalley.php" />
-    <ImageTarget name="BusStopTight" url="http://engcomm.engin.umich.edu/redirect.php" />
-    <ImageTarget name="sewer" url="http://engcomm.engin.umich.edu/kick.html" />
-    <ImageTarget name="inourimage" url="http://youtu.be/c6J7kfG9JrY?list=PLFe0SMV3hBCDPEEhG0iLEvXVpfQsq_NdS" />
-    <ImageTarget name="BlockM" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="sewer2" url="http://engcomm.engin.umich.edu/redirect2.php" />
+    <ImageTarget name="xplore_spring2015" url="https://www.youtube.com/watch?v=8agHJnNpSu0&feature=youtu.be" />
+    <ImageTarget name="truebelievers_spring2015" url="https://www.youtube.com/watch?v=gtFVvCS1Qvc" />
+    <ImageTarget name="social_spring2015" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Comments for The Michigan Engineer" />
+    <ImageTarget name="peecycling_spring2015" url="https://www.youtube.com/watch?v=dCV3kWhjfI4" />
+    <ImageTarget name="newsbriefs_spring2015" url="https://www.youtube.com/watch?v=VjLRNkNgJGU" />
+    <ImageTarget name="mars_spring2015" url="https://www.youtube.com/watch?v=9y7Ga4E6gms" />
+    <ImageTarget name="jakarta_spring2015" url="http://youtu.be/M5N0NMpKp3A"/>
+    <ImageTarget name="impact_spring2015" url="https://leadersandbest.umich.edu/find/#!/scu/eng/annual" />
+    <ImageTarget name="aviators_spring2015" url="https://www.youtube.com/watch?v=ZEu3JTeQESk" />
+    <ImageTarget name="ai_spring2015" />
+    <ImageTarget name="alumnotes_spring2015" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Alumni Notes for The Michigan Engineer" />
+    <ImageTarget name="oct" />
+    <ImageTarget name="alumnotes" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Alumni Notes for The Michigan Engineer" />
     <ImageTarget name="theroom" url="http://youtu.be/Hsdcy7b4E4Y" />
-    <ImageTarget name="Wolverine" url="http://engcomm.engin.umich.edu/wolverine.html" />
-    <ImageTarget name="towercrop" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="tower" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="m4" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="m3" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="alumnotes" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Alumni Notes for The Michigan Engineer"/>
-    <ImageTarget name="m2" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="fxb" url="http://youtu.be/Au2Ew6t3Acg" />
-    <ImageTarget name="m5" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="mcrop1" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="goblue" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="mcrop2" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="randaccess" url="http://youtu.be/l4bE326tlNA" />
-    <ImageTarget name="m1" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
-    <ImageTarget name="wolvcrop" url="http://engcomm.engin.umich.edu/wolverine.html" />
-    <ImageTarget name="BusStopWide" url="http://engcomm.engin.umich.edu/redirect.php" />
-    <ImageTarget name="Marlo" url="http://youtu.be/c6J7kfG9JrY?list=PLFe0SMV3hBCDPEEhG0iLEvXVpfQsq_NdS" />
-    <ImageTarget name="comtweet" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Comments for The Michigan Engineer" />
-    <ImageTarget name="Fountain" url="http://www.cityoffountainsbuilders.com/176.jpg" />
-    <ImageTarget name="BlockMDiag" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
     <ImageTarget name="lynnconway" url="http://engcomm.engin.umich.edu/redirectlynnconway.php" />
+    <ImageTarget name="siliconvalley" url="http://engcomm.engin.umich.edu/redirectsiliconvalley.php" />
+    <ImageTarget name="inourimage" url="http://youtu.be/c6J7kfG9JrY?list=PLFe0SMV3hBCDPEEhG0iLEvXVpfQsq_NdS" />
+    <ImageTarget name="randaccess" url="http://youtu.be/l4bE326tlNA" />
+    <ImageTarget name="comtweet" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Comments for The Michigan Engineer" />
+    <ImageTarget name="pawblack" url="http://engcomm.engin.umich.edu/wolverine.html" />
     <ImageTarget name="paw" url="http://engcomm.engin.umich.edu/wolverine.html" />
+    <ImageTarget name="fxb" url="http://youtu.be/Au2Ew6t3Acg" />
+    <ImageTarget name="goblue" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
+    <ImageTarget name="tower" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
+    <ImageTarget name="towercrop" url="https://www.youtube.com/watch?v=56U7Bn0sVFE" />
+    <ImageTarget name="wolvcrop" url="http://engcomm.engin.umich.edu/wolverine.html" />
+    <ImageTarget name="sewer" url="http://engcomm.engin.umich.edu/kick.html" />
+    <ImageTarget name="labcrop" url="http://engcomm.engin.umich.edu/kick.html" />
+    <ImageTarget name="Fountain" url="http://www.cityoffountainsbuilders.com/176.jpg" />
+    <ImageTarget name="BusStopTight" url="http://engcomm.engin.umich.edu/redirect.php" />
+    <ImageTarget name="BusStopWide" url="http://engcomm.engin.umich.edu/redirect.php" />
+    <ImageTarget name="Wolverine" url="http://engcomm.engin.umich.edu/wolverine.html" />
+    <ImageTarget name="Marlo" url="http://youtu.be/c6J7kfG9JrY?list=PLFe0SMV3hBCDPEEhG0iLEvXVpfQsq_NdS" />
 </Tracking>
