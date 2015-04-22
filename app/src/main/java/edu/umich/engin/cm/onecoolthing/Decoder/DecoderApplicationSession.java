@@ -36,7 +36,7 @@ import com.qualcomm.vuforia.Vuforia.UpdateCallbackInterface;
 public class DecoderApplicationSession implements UpdateCallbackInterface
 {
 
-    private static final String LOGTAG = "MD/Vuforia_Sample_Applications";
+    private static final String LOGTAG = "MD/Vuforia_Sample_Apps";
 
     // Reference to the current activity
     private Activity mActivity;
@@ -58,7 +58,7 @@ public class DecoderApplicationSession implements UpdateCallbackInterface
     // and the Android onDestroy() life cycle event. If the application is
     // destroyed while a data set is still being loaded, then we wait for the
     // loading operation to finish before shutting down Vuforia:
-    private Object mShutdownLock = new Object();
+    private final Object mShutdownLock = new Object();
 
     // Vuforia initialization flags:
     private int mVuforiaFlags = 0;

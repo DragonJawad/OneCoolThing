@@ -354,12 +354,11 @@ public class DecoderActivity extends Activity implements DecoderApplicationContr
         }
     }
 
-
     // The final call you receive before your activity is destroyed.
     @Override
-    protected void onDestroy()
+    protected void onStop()
     {
-        Log.d(LOG, "onDestroy");
+        Log.d(LOG, "onStop");
         super.onDestroy();
 
         try
