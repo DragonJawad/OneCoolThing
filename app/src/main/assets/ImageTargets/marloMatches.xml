@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tracking xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <ImageTarget name="xplore_spring2015" url="https://www.youtube.com/watch?v=8agHJnNpSu0&feature=youtu.be" />
+    <ImageTarget name="xplore_spring2015" url="https://www.youtube.com/watch?v=8agHJnNpSu0" />
     <ImageTarget name="truebelievers_spring2015" url="https://www.youtube.com/watch?v=gtFVvCS1Qvc" />
     <ImageTarget name="social_spring2015" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Comments for The Michigan Engineer" />
     <ImageTarget name="peecycling_spring2015" url="https://www.youtube.com/watch?v=dCV3kWhjfI4" />
@@ -9,9 +9,9 @@
     <ImageTarget name="jakarta_spring2015" url="http://youtu.be/M5N0NMpKp3A"/>
     <ImageTarget name="impact_spring2015" url="https://leadersandbest.umich.edu/find/#!/scu/eng/annual" />
     <ImageTarget name="aviators_spring2015" url="https://www.youtube.com/watch?v=ZEu3JTeQESk" />
-    <ImageTarget name="ai_spring2015" />
+    <ImageTarget name="ai_spring2015" url="https://dme.engin.umich.edu/redirectai.php" />
     <ImageTarget name="alumnotes_spring2015" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Alumni Notes for The Michigan Engineer" />
-    <ImageTarget name="oct" />
+    <ImageTarget name="oct" url="https://dme.engin.umich.edu/redirectai.php" />
     <ImageTarget name="alumnotes" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Alumni Notes for The Michigan Engineer" />
     <ImageTarget name="theroom" url="http://youtu.be/Hsdcy7b4E4Y" />
     <ImageTarget name="lynnconway" url="http://engcomm.engin.umich.edu/redirectlynnconway.php" />
