@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -33,8 +34,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.squareup.seismic.ShakeDetector;
 
 import java.util.ArrayList;
 
@@ -56,7 +59,8 @@ import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
  * Created by jawad on 12/10/14.
  */
 public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.VertPagerCommunicator,
-    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer {
+    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer,
+    ShakeDetector.Listener {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
@@ -82,7 +86,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
     // Tags for all fragments
     private String[] mFragTags;
-    // URLs for all feeds- same indexes as currentFragmentIndex and null == no webview
+    // URLs for all feeds- same indexes as mCurrentFragmentIndex and null == no webview
     private String[] mFragUrls;
 
     // Sliding Menu test objects
@@ -128,6 +132,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
      *      code that uses the below system, ie
      *          strings.xml -> nav_items array
      *          this -> changeFrag()
+     * TODO/NOTE: In hindsight, this was stupid. Need to redo this as enums
      * 0 - One Cool Feed [main One Cool Thing feed]
      * 1 - LabLog
      * 2 - Visual Adventures
@@ -139,10 +144,15 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
      * 8 - About
      * 9 - Send Us Cool Things
      */
-    int currentFragmentIndex = -1;
+    int mCurrentFragmentIndex = -1;
 
     // List of backstack settings to restore
     ArrayList<BackStackSettings> mBackStackList;
+
+    // Time since last time user shook the phone
+    private long mLastShakeTime;
+    // Timeout until subsequent shakes will be registered
+    private static final long SHAKE_TIMOEUT = 2000; // 2 seconds, in milliseconds
 
     // Tags for saving and getting restorable state data
     private static final String KEY_STATE_CURINDEX = "Key_CurrentFragmentIndex";
@@ -189,6 +199,13 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // Initialize the backStack listening system
         initBackStackSystem();
 
+        // Register the shake system
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        ShakeDetector sd = new ShakeDetector(this);
+        sd.start(sensorManager);
+        // Safety check- there shouldn't have been a last shake time registered yet
+        mLastShakeTime = 0;
+
         // If the bundle is null, then using the One Cool Feed by default
         if(savedInstanceState == null) {
             changeFrag(0, false);
@@ -207,7 +224,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         super.onSaveInstanceState(outState);
 
         // Save the current fragment's index, to pinpoint which page the Activity should restart into
-        outState.putInt(KEY_STATE_CURINDEX, currentFragmentIndex);
+        outState.putInt(KEY_STATE_CURINDEX, mCurrentFragmentIndex);
     }
 
     private void initCustomActionBar() {
@@ -600,7 +617,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
      */
     private void changeFrag(int index, boolean savePreviousSettings) {
         // First check if user clicked on the current fragment again
-        if (index == currentFragmentIndex) return;
+        if (index == mCurrentFragmentIndex) return;
 
         // Begin the fragment transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -608,20 +625,20 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
         // Create the BackStack instance that will keep track of the changes
         BackStackSettings backStackSettings = new BackStackSettings();
-        backStackSettings.setPreviousFragPosition(currentFragmentIndex);
+        backStackSettings.setPreviousFragPosition(mCurrentFragmentIndex);
 
         // First, clear out the main container, if necessary
-        if(currentFragmentIndex < 0) {
+        if(mCurrentFragmentIndex < 0) {
             // In case just restarted the Activity and just changing the frag, clean up everything
             mFragContainer.removeAllViews();
         }
         else {
             // Save the previous settings based off of the index
-            if(currentFragmentIndex == 0)
+            if(mCurrentFragmentIndex == 0)
                 backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
-            else if(currentFragmentIndex == 7)
+            else if(mCurrentFragmentIndex == 7)
                 backStackSettings.setPreviousSettings(SettingsType.DECODER);
-            else if(currentFragmentIndex == 8)
+            else if(mCurrentFragmentIndex == 8)
                 backStackSettings.setPreviousSettings(SettingsType.ABOUT);
             else
                 backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
@@ -644,8 +661,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Add in the fragment to the place specified in the layout file
             fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[0]);
 
-            // Set the index of the currentFragmentIndex to 0, to show that the OneCoolFeed was added
-            currentFragmentIndex = 0;
+            // Set the index of the mCurrentFragmentIndex to 0, to show that the OneCoolFeed was added
+            mCurrentFragmentIndex = 0;
 
             // Show the tutorial if necessary
             showTutorialIfNecessary();
@@ -747,7 +764,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         mNavAdapter.setVisibleIndicator(index);
 
         // Finally, change the index of the currently used fragment
-        currentFragmentIndex = index;
+        mCurrentFragmentIndex = index;
     }
 
     @Override
@@ -786,10 +803,10 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         frag.setData(data);
 
         // Indicate that the current frag will be the MEMDetailedFrag
-        currentFragmentIndex = 9;
+        mCurrentFragmentIndex = 9;
 
         // Add in the fragment
-        fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[currentFragmentIndex]);
+        fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[mCurrentFragmentIndex]);
 
         // Create a new Backstack settings item to restore to the MichEngMag
         BackStackSettings backStackSettings = new BackStackSettings();
@@ -1075,6 +1092,25 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         toggleLeftSlidingMenu();
     }
 
+    @Override
+    public void hearShake() {
+        // If the current displayed item doesn't do anything for shakes, then do nothing
+            // Only enabled for Cool Feeds
+        if(mCurrentFragmentIndex != 0) {
+            return;
+        }
+
+        // If there was a previous shake and it wasn't too soon, then handle the shake
+        if(mLastShakeTime == 0 || (System.currentTimeMillis() - mLastShakeTime) > SHAKE_TIMOEUT) {
+            // Register the current time as the last time when a shake occurred
+            mLastShakeTime = System.currentTimeMillis();
+
+            // TODO: BUNCH OF STUFF
+
+            Toast.makeText(this, "Don't shake me, bro!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     // Adapter for the left sliding menu's nav listView
     class NavAdapter extends BaseAdapter {
         Context mContext;
@@ -1179,7 +1215,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             holder.navTitle.setText(navText[position]);
 
             // Set the view's indicator as visible if this is the current one
-            if(position == currentFragmentIndex || (position == 0 && currentFragmentIndex < 0) ){
+            if(position == mCurrentFragmentIndex || (position == 0 && mCurrentFragmentIndex < 0) ){
                 holder.indicator.setVisibility(View.VISIBLE);
 
                 // Cache that this position is visible
