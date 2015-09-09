@@ -11,17 +11,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 import edu.umich.engin.cm.onecoolthing.R;
+import edu.umich.engin.cm.onecoolthing.Util.ShakeListener;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 /**
  * Created by jawad on 14/10/14.
  */
 public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeListener,
-        ImageLoaderNoCache.LoaderManager {
+        ImageLoaderNoCache.LoaderManager, ShakeListener {
     private final String TAG = "MD/OneCoolFeed"; // Tag for logging from this class
 
     // The background behind the viewPager
@@ -183,6 +185,13 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
     @Override
     public void onPageScrollStateChanged(int i) {
 
+    }
+
+    @Override
+    public void onShake() {
+        Log.d(TAG, "onShake() - Not implemented yet!!!");
+        Toast.makeText(getActivity(), "Got a shake in the OneCoolFeedFrag!", Toast.LENGTH_SHORT)
+            .show();
     }
 
     // TODO: Change this to work better with final design, including names and actual usage

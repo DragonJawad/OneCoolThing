@@ -24,15 +24,19 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
     // View elements
     private ImageView background;
     private TextView titleView;
+    private TextView currentPosView;
+    private TextView totalCountView;
 
     // Determines if the layout is ready to be modified or not
     private boolean viewReady = false;
     // Makes sure that the necessary data has been added
     private boolean assignedData = false;
 
-    // Holds the data to display for this image
+    // Holds the data to display for this cool thing
     private String titleText;
     private String imageURL;
+    private int currentPosition = -1;
+    private int totalCoolThings = -1;
 
     // Placeholder background, until image loads
     private Bitmap placeholderBG;
@@ -54,6 +58,14 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
         // Get the view elements
         background = (ImageView) view.findViewById(R.id.background);
         titleView = (TextView) view.findViewById(R.id.title);
+        currentPosView = (TextView) view.findViewById(R.id.currentPosition);
+        totalCountView = (TextView) view.findViewById(R.id.totalCount);
+
+        // If the counter variables have already been set up, display the counter straight away
+        if(currentPosition != -1 && totalCoolThings != -1) {
+            currentPosView.setText(""+currentPosition);
+            totalCountView.setText(""+totalCoolThings);
+        }
 
         return view;
     }
@@ -66,7 +78,6 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
         spinner.startAnimation(
                 AnimationUtils.loadAnimation(getActivity(), R.anim.loadinganim_spin)
         );
-
 
         // If an imageURL has been given AND bg hasn't been set up yet, set it up
         if(imageURL != null && assignedData) {
@@ -97,13 +108,14 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
     }
 
     // Set the background image's URL and title text at the same time, to avoid any potential errors
-    public void setData(String url, String title, ImageLoaderNoCache.LoaderManager manager) {
+    public void setData(String url, String title, int currentPosition, int totalCount, ImageLoaderNoCache.LoaderManager manager) {
         // Double check that data isn't being set twice
         if(assignedData) Log.e("MD/CoolThingFrag", "Data was already assigned for this frag! Title: "+title);
 
         // Set the data
         setBackgroundURL(url);
         setTitleText(title);
+        setCounter(currentPosition, totalCount);
         this.mFragUserManager = manager;
 
         // State that the data was assigned
@@ -127,6 +139,18 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Im
 
        // State that the data was assigned
        assignedData = true;
+    }
+
+    public void setCounter(int curPos, int totalCount) {
+        // Store the counter values
+        this.currentPosition = curPos;
+        this.totalCoolThings = totalCount;
+
+        // If the views are already ready, set the values straight away
+        if(currentPosView != null && totalCountView != null) {
+            currentPosView.setText(""+currentPosition);
+            totalCountView.setText(""+totalCoolThings);
+        }
     }
 
     // Set a placeholder background image to use

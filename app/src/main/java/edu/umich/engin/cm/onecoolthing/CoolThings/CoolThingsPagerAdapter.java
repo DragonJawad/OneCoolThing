@@ -90,7 +90,7 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
         // Give the data to the fragment
         CoolThingFrag frag = mListOfFragCoolThings.get(0);
-        frag.setData(coolThing.getImageURL(), coolThing.getTitle(), this);
+        frag.setData(coolThing.getImageURL(), coolThing.getTitle(), 1, mListOfCoolThings.size(), this);
 
         // Notify the frag to use this coolThing's url for its background
         mFragCaller.setBackground(coolThing.getImageURL());
@@ -156,7 +156,7 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         String url = coolThing.getImageURL();
         String titleText = coolThing.getTitle();
 
-        frag.setData(url, titleText, this);
+        frag.setData(url, titleText, index+1, mListOfCoolThings.size(), this);
     }
 
     // Return the title of a CoolThing at the given position

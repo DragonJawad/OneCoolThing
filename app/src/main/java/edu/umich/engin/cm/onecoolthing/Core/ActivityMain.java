@@ -54,6 +54,7 @@ import edu.umich.engin.cm.onecoolthing.Util.BackStackSettings;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
 import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
 import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
+import edu.umich.engin.cm.onecoolthing.Util.ShakeListener;
 
 /**
  * Created by jawad on 12/10/14.
@@ -153,6 +154,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     private long mLastShakeTime;
     // Timeout until subsequent shakes will be registered
     private static final long SHAKE_TIMOEUT = 2000; // 2 seconds, in milliseconds
+    // Listener to be called when a shake event occurs
+    private ShakeListener mShakeListener; // Only changed in changeFrag
 
     // Tags for saving and getting restorable state data
     private static final String KEY_STATE_CURINDEX = "Key_CurrentFragmentIndex";
@@ -280,6 +283,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         mBackStackList = new ArrayList<BackStackSettings>();
     }
 
+    //region -->Tutorial Code<--
     private void showTutorialIfNecessary() {
         // Get from sharedPreferences whether or not the tutorial has been seen yet or not
         seenTutorialAlready = getSeenTutorial();
@@ -343,6 +347,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // Finally, actually show the tutorial
         displayTutorial();
     }
+    //endregion
+
     // Set up the right and left sliding menus
     private void initBothSlidingMenus() {
         // Get the LayoutInflater to inflate the views for the left sliding menu
@@ -619,6 +625,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
         // First check if user clicked on the current fragment again
         if (index == mCurrentFragmentIndex) return;
 
+        // If there was a shake listener before, it's now obselete as the current frag is changing
+        if(mShakeListener != null) mShakeListener = null;
+
         // Begin the fragment transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -663,6 +672,9 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
 
             // Set the index of the mCurrentFragmentIndex to 0, to show that the OneCoolFeed was added
             mCurrentFragmentIndex = 0;
+
+            // Register this fragment to handle shake events
+            mShakeListener = frag;
 
             // Show the tutorial if necessary
             showTutorialIfNecessary();
@@ -1095,8 +1107,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
     @Override
     public void hearShake() {
         // If the current displayed item doesn't do anything for shakes, then do nothing
-            // Only enabled for Cool Feeds
-        if(mCurrentFragmentIndex != 0) {
+        if(mShakeListener == null) {
             return;
         }
 
@@ -1105,9 +1116,8 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             // Register the current time as the last time when a shake occurred
             mLastShakeTime = System.currentTimeMillis();
 
-            // TODO: BUNCH OF STUFF
-
-            Toast.makeText(this, "Don't shake me, bro!", Toast.LENGTH_SHORT).show();
+            // Let the shake listener handle the shake as necessary
+            mShakeListener.onShake();
         }
     }
 
