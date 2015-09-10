@@ -5,7 +5,6 @@ package edu.umich.engin.cm.onecoolthing.CoolThings;
  */
 public class CoolThingData {
     private String id;
-    private boolean includeInApp;
 
     private String title;
     private String subTitle;
@@ -25,14 +24,6 @@ public class CoolThingData {
 
         public void setId(String id) {
             this.id = id;
-        }
-
-        public boolean isIncludeInApp() {
-            return includeInApp;
-        }
-
-        public void setIncludeInApp(boolean includeInApp) {
-            this.includeInApp = includeInApp;
         }
 
         public String getTitle() {
@@ -92,6 +83,8 @@ public class CoolThingData {
         }
 
     // end of getter/setter methods
+
+    public CoolThingData() {}
 
     public CoolThingData(String id, String title, String bodyText){
         setId(id);

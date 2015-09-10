@@ -17,7 +17,7 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
  *
  * Displays FragmentCoolThings in PagerAdapter
  */
-public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.JSONUser,
+public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.CoolJSONUser,
         ImageLoaderNoCache.LoaderManager{
     private static final String TAG = "MD/CoolThingsPagerAdapter";
 
@@ -26,9 +26,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     // Array of all coolThings
     ArrayList<CoolThingData> mListOfCoolThings;
-
-    // Contains all the cool things in raw JSON form
-    JSONArray mJsonArray;
 
     // Counts how many CoolThings necessary to skip from current index to get next CoolThing
     int skipCounter = 0;
@@ -55,16 +52,27 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
         // Call an Async in the parser to get the JSON and call on this object once its done
         ParseCoolThings parser = new ParseCoolThings();
-        parser.getJSON(context, this);
+        parser.getCoolThings(context, this);
     }
 
     // Be notified once the JSON data is retrieved
     @Override
-    public void gotJSON(JSONArray jsonArray) {
-        // Cache the JSON for later use
-        this.mJsonArray = jsonArray;
+    public void gotCoolThings(ArrayList<CoolThingData> allCoolThings) {
+        // Save a reference to all the cool things locally
+        mListOfCoolThings = allCoolThings;
 
-        // Create a new cool thing, for easy data retrieval now and later
+        // Grab the first cool thing data so it can be displayed
+        CoolThingData firstCoolThingData = mListOfCoolThings.get(0);
+
+        // Give the data to the first fragment that's been waiting
+        CoolThingFrag frag = mListOfFragCoolThings.get(0);
+        frag.setData(firstCoolThingData.getImageURL(), firstCoolThingData.getTitle(), 1,
+            mListOfCoolThings.size(), this);
+
+        // Notify the frag to use this coolThing's url for its background
+        mFragCaller.setBackground(firstCoolThingData.getImageURL());
+
+/*        // Create a new cool thing, for easy data retrieval now and later
         CoolThingData coolThing = new CoolThingData("N/A", "N/A", "N/A");
         try {
             int FIRST_INDEX = 0; // Index of the very first cool thing
@@ -93,7 +101,7 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         frag.setData(coolThing.getImageURL(), coolThing.getTitle(), 1, mListOfCoolThings.size(), this);
 
         // Notify the frag to use this coolThing's url for its background
-        mFragCaller.setBackground(coolThing.getImageURL());
+        mFragCaller.setBackground(coolThing.getImageURL());*/
     }
 
     // Be notified once a fragment's data has finally loaded
@@ -112,15 +120,11 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
     // Add the next placeholder, loading fragment
     private void addNextFragment() {
         // Check!: If added all data, then no need to add another fragment
-        if(mListOfFragCoolThings.size() >= mJsonArray.length()) return;
+        if(mListOfFragCoolThings.size() >= mListOfCoolThings.size()) return;
 
         // Create a placeholder fragment and add it to the list of fragments
         CoolThingFrag frag = new CoolThingFrag();
         mListOfFragCoolThings.add(frag);
-
-        // Create a placeholder cool thing and add it to the list of cool things
-        CoolThingData coolThing = new CoolThingData("N/A", "N/A", "N/A");
-        mListOfCoolThings.add(coolThing);
 
         // Notify adapter that the data set has been changed
         notifyDataSetChanged();
@@ -131,32 +135,12 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         // Get the frag to set up
         CoolThingFrag frag = mListOfFragCoolThings.get(index);
 
-        // Get the cool thing that represents this fragment and fill it with data
+        // Get the cool thing that has all the data
         CoolThingData coolThing = mListOfCoolThings.get(index);
-        try {
-            // Get the first CoolThing to check
-            ParseCoolThings.JSONToCoolThing(mJsonArray.getJSONObject(index+skipCounter),
-                    coolThing);
-
-            // If not using this Cool Thing, get and check the next one
-            while(!coolThing.isIncludeInApp()) {
-                // Indicate to skip another CoolThing
-                ++skipCounter;
-
-                // Get the next CoolThing to check
-                ParseCoolThings.JSONToCoolThing(mJsonArray.getJSONObject(index+skipCounter),
-                        coolThing);
-            }
-        } catch (JSONException e) {
-            Log.e("MD/PagerAdapter", e.getMessage());
-            e.printStackTrace();
-        }
 
         // Apply the data to the frag
-        String url = coolThing.getImageURL();
-        String titleText = coolThing.getTitle();
-
-        frag.setData(url, titleText, index+1, mListOfCoolThings.size(), this);
+        frag.setData(coolThing.getImageURL(), coolThing.getTitle(), index+1,
+            mListOfCoolThings.size(), this);
     }
 
     // Return the title of a CoolThing at the given position
