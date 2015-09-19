@@ -19,7 +19,7 @@ import edu.umich.engin.cm.onecoolthing.Util.BitmapReceiver;
 public class CoolImageLoader {
     private static String LOGTAG = "MD/CoolImageLoader";
 
-    private AsyncTask mCurrentTask;
+    private GetBitmap mCurrentTask;
     private BitmapReceiver mCallback;
 
     public void GetImage(String imageUrl, BitmapReceiver callback) {
@@ -28,8 +28,9 @@ public class CoolImageLoader {
             throw new RuntimeException("Task already in progress! New url: " + imageUrl);
         }
 
-        mCurrentTask = new GetBitmap(imageUrl);
         mCallback = callback;
+        mCurrentTask = new GetBitmap(imageUrl);
+        mCurrentTask.execute();
     }
 
     public void CancelTaskIfAny() {
