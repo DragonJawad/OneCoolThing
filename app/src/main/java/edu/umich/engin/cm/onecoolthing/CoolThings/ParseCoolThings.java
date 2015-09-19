@@ -17,13 +17,8 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ServiceHandler;
  * Created by jawad on 18/10/14.
  *
  * Handles getting all Cool Thing objects and setting appropriate data
- * TODO: Save or at least cache some of data - JSON string and/or cool things
- * TODO: Optimize loading contacts- not all need to be saved/used at once
  */
 public class ParseCoolThings {
-    // Exact URL to get CoolThings from
-    private static final String URL = "http://www.engin.umich.edu/college/about/news/news/coolthingindexjson";
-
     // JSON Tags
     private static final String TAG_ID = "ID";
     private static final String TAG_INCLUDEINAPP = "Include in App";
@@ -104,9 +99,9 @@ public class ParseCoolThings {
      * @param context
      * @param coolJsonUser - Necessary to communicate finished json string back
      */
-    public void getCoolThings(Context context, CoolJSONUser coolJsonUser) {
+    public void getCoolThings(Context context, CoolJSONUser coolJsonUser, String sourceUrl) {
         // Create a new Async to get the JSON data then notify the jsonUser
-        GetCoolJSON jsonAsync = new GetCoolJSON(context, coolJsonUser);
+        GetCoolJSON jsonAsync = new GetCoolJSON(context, coolJsonUser, sourceUrl);
         jsonAsync.execute();
     }
 
@@ -118,10 +113,12 @@ public class ParseCoolThings {
         Context mContext;
         CoolJSONUser coolJsonUser; // Necessary for telling client of finished J
         ArrayList<CoolThingData> mAllCoolThings = new ArrayList<CoolThingData>();
+        String sourceUrl;
 
-        public GetCoolJSON(Context context, CoolJSONUser coolJsonUser) {
+        public GetCoolJSON(Context context, CoolJSONUser coolJsonUser, String sourceUrl) {
             this.mContext = context;
             this.coolJsonUser = coolJsonUser;
+            this.sourceUrl = sourceUrl;
         }
 
         @Override
@@ -130,7 +127,7 @@ public class ParseCoolThings {
             ServiceHandler sh = new ServiceHandler();
 
             // Make a request to url and get response
-            String jsonStr = sh.makeServiceCall(URL, ServiceHandler.GET);
+            String jsonStr = sh.makeServiceCall(sourceUrl, ServiceHandler.GET);
 
             // Change the jsonStr into a mJsonArray- save a simple step
             try {

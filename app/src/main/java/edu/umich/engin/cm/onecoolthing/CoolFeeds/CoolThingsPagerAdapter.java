@@ -49,6 +49,11 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
     }
 
     // Return the subTitle of a CoolThing at the given position
+    public String getTitle(int i) {
+        return mListOfCoolThings.get(i).getTitle();
+    }
+
+    // Return the subTitle of a CoolThing at the given position
     public String getSubTitle(int i) {
         return mListOfCoolThings.get(i).getSubTitle();
     }
