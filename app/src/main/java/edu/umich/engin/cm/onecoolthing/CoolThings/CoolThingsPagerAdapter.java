@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 
@@ -26,9 +27,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     // Array of all coolThings
     ArrayList<CoolThingData> mListOfCoolThings;
-
-    // Counts how many CoolThings necessary to skip from current index to get next CoolThing
-    int skipCounter = 0;
 
     // Simply save a reference to the frag that calls this pager, to give it the url of its bg
     OneCoolFeedFrag mFragCaller;
@@ -67,48 +65,25 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
         // Give the data to the first fragment that's been waiting
         CoolThingFrag frag = mListOfFragCoolThings.get(0);
         frag.setData(firstCoolThingData.getImageURL(), firstCoolThingData.getTitle(), 1,
-            mListOfCoolThings.size(), this);
+                mListOfCoolThings.size(), this);
 
         // Notify the frag to use this coolThing's url for its background
         mFragCaller.setBackground(firstCoolThingData.getImageURL());
 
-/*        // Create a new cool thing, for easy data retrieval now and later
-        CoolThingData coolThing = new CoolThingData("N/A", "N/A", "N/A");
-        try {
-            int FIRST_INDEX = 0; // Index of the very first cool thing
-            ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(FIRST_INDEX),
-                    coolThing);
-
-            // While not including this CoolThing, get the next CoolThing to check
-            while(!coolThing.isIncludeInApp()) {
-                // Increment the skipCounter
-                ++skipCounter;
-
-                // Get the next Cool Thing to check
-                ParseCoolThings.JSONToCoolThing(jsonArray.getJSONObject(FIRST_INDEX + skipCounter),
-                        coolThing);
-            }
-        } catch (JSONException e) {
-            Log.e("MD/PagerAdapter", e.getMessage());
-            e.printStackTrace();
+        // Add in all the necessary filler fragments into the ViewPager
+        for (int i = 1; i < mListOfCoolThings.size(); ++i) {
+            mListOfFragCoolThings.add(new CoolThingFrag());
         }
 
-        // Add the coolThing to current list of cool things
-        mListOfCoolThings.add(coolThing);
-
-        // Give the data to the fragment
-        CoolThingFrag frag = mListOfFragCoolThings.get(0);
-        frag.setData(coolThing.getImageURL(), coolThing.getTitle(), 1, mListOfCoolThings.size(), this);
-
-        // Notify the frag to use this coolThing's url for its background
-        mFragCaller.setBackground(coolThing.getImageURL());*/
+        // Notify adapter that the data set has been changed
+        notifyDataSetChanged();
     }
 
     // Be notified once a fragment's data has finally loaded
     @Override
     public void notifyDataLoaded() {
         // Simply add the next fragment and notify that the data set has been changed
-        addNextFragment();
+//        addNextFragment();
     }
 
     // No need for this, just here to fulfill implementation of ImageLoaderNoCache LoaderManager interface
@@ -190,6 +165,6 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     @Override
     public int getCount() {
-        return mListOfFragCoolThings.size();
+        return mListOfCoolThings.size();
     }
 }
