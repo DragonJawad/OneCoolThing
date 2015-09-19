@@ -64,6 +64,13 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     }
 
     public void LoadNewCoolThing(CoolThingData newData, int currentPosition, int totalCount) {
+        // Cancel any ongoing previous image loading tasks as appropriate
+        mImageLoader.CancelTaskIfAny();
+
+        // Reset the views, if views have already been created
+        if(mBackground != null)
+            ResetViews();
+
         // Simply store the basic data
         mTitleText = newData.getTitle();
         mImageURL = newData.getImageURL();
