@@ -2,8 +2,10 @@ package edu.umich.engin.cm.onecoolthing.Core;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -34,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.squareup.seismic.ShakeDetector;
@@ -1131,11 +1132,82 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Register the current time as the last time when a shake occurred
             mLastShakeTime = System.currentTimeMillis();
 
-            // TODO: Show the dialog about the shake, if preferences are correct
-
-            // Let the shake listener handle the shake as necessary
-            mShakeListener.onShake();
+            // If the user hasn't seen the shake dialog yet, show it
+            if(!getIfSeenShakeDialog()) {
+                // Show the first time shake dialog and let it handle it all
+                showShakeDialog();
+            }
+            // Otherwise, if shake is allowed, let the shake listener handle the shake as necessary
+            else if(isShakeEnabled()) {
+                mShakeListener.onShake();
+            }
         }
+    }
+
+    private boolean getIfSeenShakeDialog() {
+        // Get and return the value from the preferences
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        return sharedPreferences.getBoolean(Constants.KEY_SEENSHAKEDIALOG, false);
+    }
+
+    // Sets sharedPreferences boolean of whether or not tutorial has been seen yet
+    private void setSeenShakeDialog(boolean isDialogSeen) {
+        // Get the shared preferences' editor
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Set the saved bool to whatever the argument is
+        editor.putBoolean(Constants.KEY_SEENSHAKEDIALOG, isDialogSeen);
+
+        // Commit the changes
+        editor.apply();
+    }
+
+    private void showShakeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.shake_dialog_message)
+                .setTitle(R.string.shake_dialog_title);
+        builder.setPositiveButton(R.string.shake_dialog_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Remember that the user has seen the dialog and wants shake enabled in the future
+                setSeenShakeDialog(true);
+                setShakeEnabled(true);
+
+                // Let the shake listener handle the shake as necessary
+                mShakeListener.onShake();
+            }
+        });
+        builder.setNegativeButton(R.string.shake_dialog_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Remember that the user has seen the dialog
+                setSeenShakeDialog(true);
+
+                // Remember that the user wants to disable shake for random
+                setShakeEnabled(false);
+            }
+        });
+
+        AlertDialog shakeDialog = builder.create();
+        shakeDialog.show();
+    }
+
+    private boolean isShakeEnabled() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        return sharedPreferences.getBoolean(Constants.KEY_ENABLESHAKE, true);
+    }
+
+    private void setShakeEnabled(boolean isShakeEnabled) {
+        // Get the shared preferences' editor
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Set the saved bool to whatever the argument is
+        editor.putBoolean(Constants.KEY_ENABLESHAKE, isShakeEnabled);
+
+        // Commit the changes
+        editor.apply();
     }
 
     // Adapter for the left sliding menu's nav listView

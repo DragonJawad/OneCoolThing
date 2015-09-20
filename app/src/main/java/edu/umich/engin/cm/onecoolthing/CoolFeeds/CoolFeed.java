@@ -9,14 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
-import edu.umich.engin.cm.onecoolthing.Util.VertPagerCommunicator;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.ShakeListener;
+import edu.umich.engin.cm.onecoolthing.Util.VertPagerCommunicator;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 /**
@@ -175,12 +174,7 @@ public abstract class CoolFeed extends Fragment implements ViewPager.OnPageChang
 
     @Override
     public void onShake() {
-        Log.d(LOGTAG, "onShake() - Not implemented yet!!!");
-        Toast.makeText(getActivity(), "Got a shake in the OneCoolFeedFrag!", Toast.LENGTH_SHORT)
-                .show();
-
         // Navigate to a random CoolThing
-//        mViewPager.removeAllViews();
         mViewPager.setCurrentItem(mPagerAdapter.getRandomCoolThingIndex(), true);
     }
 }

@@ -102,6 +102,12 @@
     <string name="decoder_menu_button_yellow">Yellow</string>
     <string name="decoder_menu_button_green">Green</string>
 
+    <!-- Dialog -->
+    <string name="shake_dialog_title">Shake for Random</string>
+    <string name="shake_dialog_message">Enable shake for random?</string>
+    <string name="shake_dialog_yes">Yes</string>
+    <string name="shake_dialog_no">No</string>
+
     <!-- Parameters -->
     <string name="customfont_normal">Nunito-Regular.ttf</string>
     <string name="customfont_bold">Nunito-Bold.ttf</string>

@@ -8,6 +8,7 @@ public class Constants {
     public static final String KEY_STATE_CURINDEX = "Key_CurrentFragmentIndex";
     // Key for getting tutorial seen boolean from sharedPreferences
     public static final String KEY_SEENTUTORIAL = "seenTutorialYet";
+    public static final String KEY_SEENSHAKEDIALOG = "Key_SeenShakeDialog";
 
     public static final String KEY_ENABLESHAKE = "Key_EnableShake";
     public static final String KEY_ENABLEDAILYDOSE = "Key_DailyDoseNotif";
