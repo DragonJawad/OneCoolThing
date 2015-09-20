@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/about_background"
+        android:scaleType="fitXY"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:actionBarSize"
+        android:layout_marginLeft="@dimen/about_text_left_offset"
+        android:layout_marginRight="@dimen/about_text_right_offset"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/settings_click_shakeforrandom"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_about_clicks"
+                android:layout_centerVertical="true"
+                onecoolthing:fontName="@string/customfont_normal"/>
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/toggleShake"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/black"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/settings_dailyDoseOfCool"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_about_clicks"
+                android:layout_centerVertical="true"
+                onecoolthing:fontName="@string/customfont_normal"/>
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/toggleDailyDose"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/black"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp">
+
+            <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/settings_notiftime"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_about_clicks"
+                android:layout_centerVertical="true"
+                onecoolthing:fontName="@string/customfont_normal"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingLeft="@dimen/padding_general"
+                android:paddingRight="@dimen/padding_general"
+                android:id="@+id/button"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="#ACBAD4"
+                android:text="8:00 AM"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_about_clicks"
+                />
+
+        </RelativeLayout>
+
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+            android:id="@+id/text_reenable_tutorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/about_text_vertical_separation"
+            android:text="@string/settings_click_tutorial"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_about_clicks"
+            onecoolthing:fontName="@string/customfont_normal"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

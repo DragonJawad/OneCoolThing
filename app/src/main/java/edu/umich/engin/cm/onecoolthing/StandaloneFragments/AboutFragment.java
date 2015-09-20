@@ -15,8 +15,7 @@ import edu.umich.engin.cm.onecoolthing.R;
  * Created by jawad on 02/12/14.
  */
 public class AboutFragment extends android.support.v4.app.Fragment {
-    // The TextViews which act as "buttons" of sorts
-    TextView textViewTutorial;
+    // The TextView which act as "button" of sorts
     TextView textViewPrivacyPolicy;
 
     // Full screen dialog which will show the privacy policy
@@ -25,17 +24,8 @@ public class AboutFragment extends android.support.v4.app.Fragment {
     // View for the dialog
     View viewDialog;
 
-    // Instance of TutorialEnforcer to tell to show the tutorial
-    TutorialEnforcer mTutorialEnforcer;
-
     // States whether or not the Activity has been created yet
     boolean activityYetCreated = false;
-
-    // Interface the Activity should implement to show the tutorial
-    public interface TutorialEnforcer {
-        // Tells the interface to show the tutorial
-        public void showTutorialAgain();
-    }
 
     @Nullable
     @Override
@@ -45,8 +35,7 @@ public class AboutFragment extends android.support.v4.app.Fragment {
         // Inflate the view for the Privacy Policy dialog
         viewDialog = inflater.inflate(R.layout.dialog_privacypolicy, null);
 
-        // Cache the textViews to set listeners on them later
-        textViewTutorial = (TextView) view.findViewById(R.id.text_reenable_tutorial);
+        // Cache the textView to set listeners on them later
         textViewPrivacyPolicy = (TextView) view.findViewById(R.id.text_privacypolicy);
 
         return view;
@@ -75,17 +64,6 @@ public class AboutFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        // Add the listeners now to the textViews
-        textViewTutorial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Tell the enforcer to show the tutorial
-                mTutorialEnforcer.showTutorialAgain();
-
-               // Note: Chosen not to check if the tutorial enforcer is null or not
-            }
-        });
-
         textViewPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,10 +83,5 @@ public class AboutFragment extends android.support.v4.app.Fragment {
         // If the Activity has been linked, then send data that the About page has been returned to
         if(activityYetCreated)
             ((AnalyticsHelper) getActivity().getApplication()).sendScreenView(AnalyticsHelper.TrackerScreen.ABOUT);
-    }
-
-    // Set the TutorialEnforcer
-    public void setTutorialEnforcer(TutorialEnforcer enforcer) {
-        this.mTutorialEnforcer = enforcer;
     }
 }

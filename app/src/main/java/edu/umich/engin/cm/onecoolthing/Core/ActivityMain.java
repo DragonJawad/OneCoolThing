@@ -49,6 +49,7 @@ import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagListAdapter;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SendCoolFragment;
+import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SettingsFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
 import edu.umich.engin.cm.onecoolthing.Util.BackStackSettings;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
@@ -61,7 +62,7 @@ import edu.umich.engin.cm.onecoolthing.Util.VertPagerCommunicator;
  * Created by jawad on 12/10/14.
  */
 public class ActivityMain extends FragmentActivity implements VertPagerCommunicator,
-    View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer,
+    View.OnClickListener, SettingsFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer,
     ShakeDetector.Listener {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
@@ -145,6 +146,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
      * 7 - Decoder
      * 8 - About
      * 9 - Send Us Cool Things
+     * 10 - Settings
      */
     int mCurrentFragmentIndex = -1;
 
@@ -743,8 +745,6 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
             // Create a new AboutFragment to use
             AboutFragment frag = new AboutFragment();
-            // Make sure to set the TutorialEnforcer if user decides to see tutorial again
-            frag.setTutorialEnforcer(this);
 
             // Add the frag to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
@@ -764,6 +764,24 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
           // Add the frag to the center view
           fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
+        }
+        // If so, then add in the Settings fragment
+        else if(index == 10) {
+            // Get the title/tag separately, for ease of typing/reading
+            String this_title = mFragTags[index];
+            // Put the title on the actionBar that will be used
+            mActionTransBgTitle.setText(this_title);
+
+            // Set settings for this view
+            changeSettingsMode(SettingsType.ABOUT);
+
+            // Create a new Settings to use
+            SettingsFragment frag = new SettingsFragment();
+            // Make sure to set the TutorialEnforcer if user decides to see tutorial again
+            frag.setTutorialEnforcer(this);
+
+            // Add the frag to the center view
+            fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
 
         fragmentTransaction.commit();
@@ -1150,7 +1168,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         private void initIndicatorList() {
           // TODO: Change this so doesn't manually need to be set in order to increase/decrease
           //          size of menu
-          final int SIZE = 10;
+          final int SIZE = 11;
 
             // Actually initialize the indicator list
             mIndicatorViewList = new ArrayList<View>(SIZE);
