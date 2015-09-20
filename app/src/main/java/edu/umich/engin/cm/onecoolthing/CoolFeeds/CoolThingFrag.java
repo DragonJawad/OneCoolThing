@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,7 +47,6 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
 
         // Get the spinner and set it visible
         mSpinner = (ImageView) view.findViewById(R.id.loadingSpinner);
-        mSpinner.setVisibility(View.VISIBLE);
 
         // Get the view elements
         mBackground = (ImageView) view.findViewById(R.id.background);
@@ -66,6 +66,13 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         }
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        ShowSpinner();
     }
 
     public void LoadNewCoolThing(CoolThingData newData, int currentPosition, int totalCount) {
@@ -105,7 +112,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         mTitleView.setText("");
 
         // Show the loading spinner once again
-        mSpinner.setVisibility(View.VISIBLE);
+        ShowSpinner();
     }
 
     private void DisplayAllData() {
@@ -116,7 +123,21 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         mTitleView.setText(mTitleText);
 
         // Finally, stop the spinner
-        mSpinner.setVisibility(View.GONE);;
+        HideSpinner();
+    }
+
+    private void ShowSpinner() {
+        mSpinner.setVisibility(View.VISIBLE);
+        // Set the spinner to infinitely spin
+        if(getActivity() != null) {
+            mSpinner.startAnimation(
+                    AnimationUtils.loadAnimation(getActivity(), R.anim.loadinganim_spin)
+            );
+        }
+    }
+    private void HideSpinner() {
+        mSpinner.clearAnimation();
+        mSpinner.setVisibility(View.GONE);
     }
 
     /**
