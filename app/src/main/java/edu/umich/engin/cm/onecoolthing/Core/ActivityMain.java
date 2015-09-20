@@ -52,6 +52,7 @@ import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SendCoolFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SettingsFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.WebFeedFragment;
 import edu.umich.engin.cm.onecoolthing.Util.BackStackSettings;
+import edu.umich.engin.cm.onecoolthing.Util.Constants;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
 import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
 import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
@@ -124,8 +125,6 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
     // Keeps track if seen the tutorial or not already
     boolean seenTutorialAlready = false; // False if not seen tutorial yet
-    // Key for getting tutorial seen boolean from sharedPreferences
-    private static final String KEY_SEENTUTORIAL = "seenTutorialYet";
 
     // Caches the currently seen title of the One Cool Feed
     String mCurrentCoolThingTitle = null;
@@ -159,9 +158,6 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     private static final long SHAKE_TIMOEUT = 2000; // 2 seconds, in milliseconds
     // Listener to be called when a shake event occurs
     private ShakeListener mShakeListener; // Only changed in changeFrag
-
-    // Tags for saving and getting restorable state data
-    private static final String KEY_STATE_CURINDEX = "Key_CurrentFragmentIndex";
 
     @SuppressLint("InlinedApi")
     @Override
@@ -218,7 +214,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         }
         else {
             // Otherwise, get the "current" page index to use
-            int newFragIndex = savedInstanceState.getInt(KEY_STATE_CURINDEX, 0);
+            int newFragIndex = savedInstanceState.getInt(Constants.KEY_STATE_CURINDEX, 0);
 
             changeFrag(newFragIndex, false);
         }
@@ -230,7 +226,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         super.onSaveInstanceState(outState);
 
         // Save the current fragment's index, to pinpoint which page the Activity should restart into
-        outState.putInt(KEY_STATE_CURINDEX, mCurrentFragmentIndex);
+        outState.putInt(Constants.KEY_STATE_CURINDEX, mCurrentFragmentIndex);
     }
 
     private void initCustomActionBar() {
@@ -326,7 +322,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // Set the saved bool to whatever isTutorialSeen is
-        editor.putBoolean(KEY_SEENTUTORIAL, isTutorialSeen);
+        editor.putBoolean(Constants.KEY_SEENTUTORIAL, isTutorialSeen);
 
         // Commit the changes
         editor.commit();
@@ -335,7 +331,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     public boolean getSeenTutorial() {
         // Get and return the value from the preferences
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        return sharedPreferences.getBoolean(KEY_SEENTUTORIAL, false);
+        return sharedPreferences.getBoolean(Constants.KEY_SEENTUTORIAL, false);
     }
 
 

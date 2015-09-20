@@ -89,13 +89,10 @@
                 android:layout_height="40dp"
                 android:paddingLeft="@dimen/padding_general"
                 android:paddingRight="@dimen/padding_general"
-                android:id="@+id/button"
+                android:id="@+id/buttonChangeTime"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="#ACBAD4"
-                android:text="8:00 AM"
-                android:textColor="@color/black"
                 android:textSize="@dimen/text_about_clicks"
                 />
 
