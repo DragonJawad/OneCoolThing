@@ -1117,6 +1117,8 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Register the current time as the last time when a shake occurred
             mLastShakeTime = System.currentTimeMillis();
 
+            // TODO: Show the dialog about the shake, if preferences are correct
+
             // Let the shake listener handle the shake as necessary
             mShakeListener.onShake();
         }

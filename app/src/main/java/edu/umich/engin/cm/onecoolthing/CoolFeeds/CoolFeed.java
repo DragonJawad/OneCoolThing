@@ -178,5 +178,9 @@ public abstract class CoolFeed extends Fragment implements ViewPager.OnPageChang
         Log.d(LOGTAG, "onShake() - Not implemented yet!!!");
         Toast.makeText(getActivity(), "Got a shake in the OneCoolFeedFrag!", Toast.LENGTH_SHORT)
                 .show();
+
+        // Navigate to a random CoolThing
+//        mViewPager.removeAllViews();
+        mViewPager.setCurrentItem(mPagerAdapter.getRandomCoolThingIndex(), true);
     }
 }

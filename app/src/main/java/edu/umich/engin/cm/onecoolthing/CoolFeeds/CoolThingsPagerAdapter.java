@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by jawad on 19/09/15.
@@ -45,6 +46,13 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         resetAllFragments(0);
 
         notifyDataSetChanged();
+    }
+
+    public int getRandomCoolThingIndex() {
+        Random rand = new Random();
+
+        // Return a random index from [0, total number of cool things)
+        return rand.nextInt(mListOfCoolThings.size());
     }
 
     // Return the subTitle of a CoolThing at the given position
@@ -131,6 +139,10 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         int totalThings = mListOfCoolThings.size();
         // If new index is not adjacent, reset all fragments
         if(Math.abs(mCurIntendedIndex - position) > 1) {
+            mListOfFrags = new ArrayList<CoolThingFrag>(MAX_FRAGS);
+            for (int i = 0; i < MAX_FRAGS; ++i)
+                mListOfFrags.add(new CoolThingFrag());
+
             resetAllFragments(position);
         }
         // Otherwise if this is moving one frag forward, load a fragment for further ahead
@@ -203,6 +215,11 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         } else {
             fragment = getItem(position);
             if (DEBUG) Log.v(LOGTAG, "Adding item #" + itemId + ": f=" + fragment);
+
+            /*if(Math.abs(position-mCurIntendedIndex) > 1) {
+                mCurTransaction.remove(fragment);
+            }
+*/
             mCurTransaction.add(container.getId(), fragment,
                     makeFragmentName(container.getId(), itemId));
         }
