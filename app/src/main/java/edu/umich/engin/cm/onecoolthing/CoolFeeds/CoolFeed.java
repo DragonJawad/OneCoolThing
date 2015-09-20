@@ -98,8 +98,7 @@ public abstract class CoolFeed extends Fragment implements ViewPager.OnPageChang
             mViewPager.setOnPageChangeListener(this);
 
             // Set the pager to retain pretty much no frags itself in memory
-                // TODO: Double check it behaves as expected. May need to set to 0
-            mViewPager.setOffscreenPageLimit(1);
+            mViewPager.setOffscreenPageLimit(0);
 
             // Now the right sliding menu can be set up finally for the first time
             notifyCommunicator(0);

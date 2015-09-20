@@ -77,14 +77,14 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         // First, simply load the current position's appropriate fragment
         mListOfFrags.get(newPosition%5)
                 .LoadNewCoolThing(mListOfCoolThings.get(newPosition),
-                        newPosition,
+                        newPosition+1,
                         mListOfCoolThings.size());
 
         // Try to load the fragments two places behind, if applicable
         if(newPosition != 0 && newPosition != 1) {
             mListOfFrags.get((newPosition-2)%5)
                 .LoadNewCoolThing(mListOfCoolThings.get(newPosition-2),
-                        newPosition-2,
+                        newPosition-2+1,
                         mListOfCoolThings.size());
         }
 
@@ -92,7 +92,7 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         if(newPosition != 0) {
             mListOfFrags.get((newPosition-1)%5)
                     .LoadNewCoolThing(mListOfCoolThings.get(newPosition-1),
-                            newPosition-1,
+                            newPosition-1+1,
                             mListOfCoolThings.size());
         }
 
@@ -100,7 +100,7 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         if(newPosition != mListOfCoolThings.size()-1 && newPosition != mListOfCoolThings.size()-2) {
             mListOfFrags.get((newPosition+2)%5)
                     .LoadNewCoolThing(mListOfCoolThings.get(newPosition+2),
-                            newPosition+2,
+                            newPosition+2+1,
                             mListOfCoolThings.size());
         }
 
@@ -108,7 +108,7 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         if(newPosition != mListOfCoolThings.size()-1) {
             mListOfFrags.get((newPosition+1)%5)
                     .LoadNewCoolThing(mListOfCoolThings.get(newPosition+1),
-                            newPosition+1,
+                            newPosition+1+1,
                             mListOfCoolThings.size());
         }
     }
@@ -143,7 +143,7 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
             else {
                 mListOfFrags.get((position+2)%5)
                         .LoadNewCoolThing(mListOfCoolThings.get(position+2),
-                                position+2,
+                                position+2+1,
                                 mListOfCoolThings.size());
             }
         }
@@ -157,7 +157,7 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
                 // Get the frag three positions behind and set it for two positions ahead
                 mListOfFrags.get((position-2)%5)
                         .LoadNewCoolThing(mListOfCoolThings.get(position-2),
-                                position-2,
+                                position-2+1,
                                 mListOfCoolThings.size());
             }
         }
@@ -176,8 +176,6 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         else
             return mListOfCoolThings.size();
     }
-
-    private static final String TAG = "FragmentPagerAdapter";
     private static final boolean DEBUG = true;
 
     private final FragmentManager mFragmentManager;
@@ -200,11 +198,11 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         String name = makeFragmentName(container.getId(), itemId);
         Fragment fragment = mFragmentManager.findFragmentByTag(name);
         if (fragment != null) {
-            if (DEBUG) Log.v(TAG, "Attaching item #" + itemId + ": f=" + fragment);
+            if (DEBUG) Log.v(LOGTAG, "Attaching item #" + itemId + ": f=" + fragment);
             mCurTransaction.attach(fragment);
         } else {
             fragment = getItem(position);
-            if (DEBUG) Log.v(TAG, "Adding item #" + itemId + ": f=" + fragment);
+            if (DEBUG) Log.v(LOGTAG, "Adding item #" + itemId + ": f=" + fragment);
             mCurTransaction.add(container.getId(), fragment,
                     makeFragmentName(container.getId(), itemId));
         }
@@ -221,7 +219,7 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
         if (mCurTransaction == null) {
             mCurTransaction = mFragmentManager.beginTransaction();
         }
-        if (DEBUG) Log.v(TAG, "Detaching item #" + getItemId(position) + ": f=" + object
+        if (DEBUG) Log.v(LOGTAG, "Detaching item #" + getItemId(position) + ": f=" + object
                 + " v=" + ((Fragment)object).getView());
         mCurTransaction.remove((Fragment)object);
     }
