@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingData;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.CoolImageLoader;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.BitmapReceiver;
@@ -33,6 +32,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     private String mImageURL;
     private int mCurrentPosition;
     private int mTotalCoolThings;
+    private Bitmap mBackgroundImage;
 
     // True if data has been assigned at least once
         // Used only in onCreateView to update the counter (so if data is set before views created)
@@ -58,6 +58,11 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         if(mHasDataBeenAssigned) {
             mCurrentPosView.setText("" + mCurrentPosition);
             mTotalCountView.setText("" + mTotalCoolThings);
+        }
+
+        // If the image has already been loaded, then display it
+        if(mBackgroundImage != null) {
+            DisplayAllData();
         }
 
         return view;
@@ -94,6 +99,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     private void ResetViews() {
         // Clear out the background image
         mBackground.setImageResource(android.R.color.transparent);
+        mBackgroundImage = null;
 
         // Clear out any and all text
         mTitleView.setText("");
@@ -102,9 +108,9 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         mSpinner.setVisibility(View.VISIBLE);
     }
 
-    private void DisplayAllData(Bitmap backgroundImage) {
-        // Set the background image
-        mBackground.setImageBitmap(backgroundImage);
+    private void DisplayAllData() {
+        // Set the background image only if the views have already been created
+        mBackground.setImageBitmap(mBackgroundImage);
 
         // Set the title text
         mTitleView.setText(mTitleText);
@@ -119,7 +125,11 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
      */
     @Override
     public void GotImage(Bitmap results) {
-        DisplayAllData(results);
+        mBackgroundImage = results;
+
+        // Display all the data if the views have already been created
+        if(mBackground != null)
+            DisplayAllData();
     }
 
     /**

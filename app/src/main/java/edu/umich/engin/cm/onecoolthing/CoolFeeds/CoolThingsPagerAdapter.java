@@ -3,7 +3,6 @@ package edu.umich.engin.cm.onecoolthing.CoolFeeds;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -11,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-
-import edu.umich.engin.cm.onecoolthing.CoolThings.CoolThingData;
 
 /**
  * Created by jawad on 19/09/15.
@@ -38,6 +35,8 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
 
         // Initiate the list of cool thing frags
         mListOfFrags = new ArrayList<CoolThingFrag>(MAX_FRAGS);
+        for (int i = 0; i < MAX_FRAGS; ++i)
+            mListOfFrags.add(new CoolThingFrag());
     }
 
     public void LoadCoolThings(ArrayList<CoolThingData> allCoolThings) {

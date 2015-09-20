@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.NetworkUtils;
+package edu.umich.engin.cm.onecoolthing.Util;
 
 /**
  * Created by jawad on 19/09/15.

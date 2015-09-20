@@ -41,7 +41,7 @@ import com.squareup.seismic.ShakeDetector;
 
 import java.util.ArrayList;
 
-import edu.umich.engin.cm.onecoolthing.CoolThings.OneCoolFeedFrag;
+import edu.umich.engin.cm.onecoolthing.CoolFeeds.OneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.Decoder.DecoderIntroFrag;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
 import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
@@ -55,11 +55,12 @@ import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
 import edu.umich.engin.cm.onecoolthing.Util.ObservableScrollView;
 import edu.umich.engin.cm.onecoolthing.Util.ScrollViewListener;
 import edu.umich.engin.cm.onecoolthing.Util.ShakeListener;
+import edu.umich.engin.cm.onecoolthing.Util.VertPagerCommunicator;
 
 /**
  * Created by jawad on 12/10/14.
  */
-public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.VertPagerCommunicator,
+public class ActivityMain extends FragmentActivity implements VertPagerCommunicator,
     View.OnClickListener, AboutFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer,
     ShakeDetector.Listener {
     // Log tag for this class
@@ -469,7 +470,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
                         view.getDrawable().setColorFilter(0x66000000, PorterDuff.Mode.SRC_ATOP);
                         view.invalidate();
 
-                        OneCoolFeedFrag oneCoolFeedFrag = (OneCoolFeedFrag) getSupportFragmentManager().findFragmentByTag(mFragTags[0]);
+                        OneCoolFeed oneCoolFeedFrag = (OneCoolFeed) getSupportFragmentManager().findFragmentByTag(mFragTags[0]);
 
                         // React depending on which button was tapped
                         if(v == shareFacebook) {
@@ -662,7 +663,7 @@ public class ActivityMain extends FragmentActivity implements OneCoolFeedFrag.Ve
             changeSettingsMode(SettingsType.ONECOOLFEED);
 
             // Actually initialize the fragment
-            OneCoolFeedFrag frag = new OneCoolFeedFrag();
+            OneCoolFeed frag = new OneCoolFeed();
 
             // Let the frag communicate with this activity
             frag.setCommunicator(this);

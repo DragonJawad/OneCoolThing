@@ -13,9 +13,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import edu.umich.engin.cm.onecoolthing.CoolThings.*;
 import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
-import edu.umich.engin.cm.onecoolthing.NetworkUtils.VertPagerCommunicator;
+import edu.umich.engin.cm.onecoolthing.Util.VertPagerCommunicator;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.ShakeListener;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;

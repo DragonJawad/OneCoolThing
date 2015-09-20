@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
+import edu.umich.engin.cm.onecoolthing.Util.VertPagerCommunicator;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.ShakeListener;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
@@ -97,7 +98,7 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
 
             // Set the pager to retain 5 of the Cool Things at one time
             // Otherwise, only saves one Cool Thing at a time- so have to reload every one
-            mViewPager.setOffscreenPageLimit(5);
+            mViewPager.setOffscreenPageLimit(1);
         }
     }
 
@@ -192,12 +193,5 @@ public class OneCoolFeedFrag extends Fragment implements ViewPager.OnPageChangeL
         Log.d(TAG, "onShake() - Not implemented yet!!!");
         Toast.makeText(getActivity(), "Got a shake in the OneCoolFeedFrag!", Toast.LENGTH_SHORT)
             .show();
-    }
-
-    // TODO: Change this to work better with final design, including names and actual usage
-    // Currently, simply tells the ActivityTestCenter to change the right slider's color
-    //      to the color that the center fragment is using
-    public interface VertPagerCommunicator {
-      public void changeRightSlide(String title, String subTitle, String body, String paletteColor, String fullItemURL);
     }
 }

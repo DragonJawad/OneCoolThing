@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.CoolThings;
+package edu.umich.engin.cm.onecoolthing.CoolFeeds;
 
 /**
  * Created by jawad on 18/10/14.

@@ -1,4 +1,4 @@
-package edu.umich.engin.cm.onecoolthing.CoolThings;
+package edu.umich.engin.cm.onecoolthing.CoolFeeds;
 
 import android.content.Context;
 import android.os.AsyncTask;

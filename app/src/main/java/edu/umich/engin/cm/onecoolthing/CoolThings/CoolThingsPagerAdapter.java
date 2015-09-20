@@ -2,15 +2,12 @@ package edu.umich.engin.cm.onecoolthing.CoolThings;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
-import java.util.List;
 
+import edu.umich.engin.cm.onecoolthing.CoolFeeds.CoolThingData;
+import edu.umich.engin.cm.onecoolthing.CoolFeeds.ParseCoolThings;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
 
 /**
@@ -18,9 +15,9 @@ import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoaderNoCache;
  *
  * Displays FragmentCoolThings in PagerAdapter
  */
-public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements ParseCoolThings.CoolJSONUser,
+public class CoolThingsPagerAdapter extends FragmentPagerAdapterTest implements ParseCoolThings.CoolJSONUser,
         ImageLoaderNoCache.LoaderManager{
-    private static final String TAG = "MD/CoolThingsPagerAdapter";
+    private static final String TAG = "MD/CoolThingsPagerAdapt";
 
     // List of fragments to display
     ArrayList<CoolThingFrag> mListOfFragCoolThings;
@@ -50,7 +47,7 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
         // Call an Async in the parser to get the JSON and call on this object once its done
         ParseCoolThings parser = new ParseCoolThings();
-        parser.getCoolThings(context, this);
+//        parser.getCoolThings(context, this);
     }
 
     // Be notified once the JSON data is retrieved
@@ -150,6 +147,8 @@ public class CoolThingsPagerAdapter extends FragmentPagerAdapter implements Pars
 
     @Override
     public android.support.v4.app.Fragment getItem(int i) {
+        Log.d(TAG, "getItem() of " + i);
+
         // Get the fragment
         CoolThingFrag frag = mListOfFragCoolThings.get(i);
 

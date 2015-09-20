@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import edu.umich.engin.cm.onecoolthing.CoolFeeds.CoolThingData;
 import edu.umich.engin.cm.onecoolthing.NetworkUtils.ImageLoader;
 import edu.umich.engin.cm.onecoolthing.R;
 
