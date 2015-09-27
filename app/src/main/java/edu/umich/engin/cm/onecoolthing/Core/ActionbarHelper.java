@@ -15,22 +15,31 @@ public class ActionbarHelper {
     ActivityMain mActivityRef;
 
     // Actionbar views
+    View mViewCoolFeeds;
     View mViewActionBarTransparent;
     View mViewActionBarSolidBg;
     View mViewActionBarBackOnly;
     TextView mActionTransBgTitle;
     TextView mActionSolidBgTitle;
 
+    // Internal remembrance of what mode is currently active
+    ActionBarType mCurrentMode;
+
     // Enums for ActionBar setting configurations
     public enum ActionBarType {
-        TRANSPARENT,// ActionBar that has a transparent background
-        SOLIDBG,    // ActionBar that has a solid white bg
-        BACKONLY    // For ActionBar that only contains the back button [+solid white bg]
+        ONECOOLFEED ,   // CoolFeeds actionbar with the OCT part active
+        MEMCOOLFEEED,   // CoolFeeds actionbar with the Mich Eng Mag part active
+        TRANSPARENT,    // ActionBar that has a transparent background
+        SOLIDBG,        // ActionBar that has a solid white bg
+        BACKONLY        // For ActionBar that only contains the back button [+solid white bg]
     }
 
     public ActionbarHelper(ActivityMain activity, LayoutInflater inflater, ViewGroup actionbarContainer) {
         // Cache the activity reference for later use, both for Context ref and for calling methods
         mActivityRef = activity;
+
+        // Inflate the CoolFeeds ActionBar view
+        mViewCoolFeeds = inflater.inflate(R.layout.actionbar_coolfeeds, null);
 
         // Inflate the simple ActionBar view
         mViewActionBarTransparent = inflater.inflate(R.layout.actionbar_withtransbg, null);
@@ -66,17 +75,23 @@ public class ActionbarHelper {
             });
 
         // Add the actionBars to the respective container
+        actionbarContainer.addView(mViewCoolFeeds);
         actionbarContainer.addView(mViewActionBarTransparent);
         actionbarContainer.addView(mViewActionBarSolidBg);
         actionbarContainer.addView(mViewActionBarBackOnly);
 
-        // Only show the transparent ActionBar, by default
-        mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
-        mViewActionBarBackOnly.setVisibility(View.INVISIBLE);
+        // Show the transparent ActionBar by default
+        mCurrentMode = ActionBarType.BACKONLY; // Set so toggleActionBars() can reset it without issues
+        toggleActionBars(ActionBarType.TRANSPARENT);
     }
 
     public void toggleActionBars(ActionBarType mode) {
+        // If this is the same mode as before, nothing to do
+        if(mCurrentMode == mode)
+            return;
+
         // Hide all ActionBars by default, first
+        mViewCoolFeeds.setVisibility(View.INVISIBLE);
         mViewActionBarTransparent.setVisibility(View.INVISIBLE);
         mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
         mViewActionBarBackOnly.setVisibility(View.INVISIBLE);
@@ -88,6 +103,19 @@ public class ActionbarHelper {
             mViewActionBarSolidBg.setVisibility(View.VISIBLE);
         else if(mode == ActionBarType.BACKONLY)
             mViewActionBarBackOnly.setVisibility(View.VISIBLE);
+        else if(mode == ActionBarType.ONECOOLFEED) {
+            mViewCoolFeeds.setVisibility(View.VISIBLE);
+
+            switchCoolFeed(true);
+        }
+        else if(mode == ActionBarType.MEMCOOLFEEED) {
+            mViewCoolFeeds.setVisibility(View.VISIBLE);
+
+            switchCoolFeed(false);
+        }
+
+        // Now finally cache the new ActionBarType
+        mCurrentMode = mode;
     }
 
     public void setSolidActionbarTitle(CharSequence newTitle) {
@@ -96,5 +124,13 @@ public class ActionbarHelper {
 
     public void setTransActionbarTitle(CharSequence newTitle) {
         mActionTransBgTitle.setText(newTitle);
+    }
+
+    /**
+     * For the mViewCoolFeeds actionbar, switches the "active" part of the actionbar
+     * @param useOCT True if One Cool Thing should be the active item, False for MEM
+     */
+    private void switchCoolFeed(boolean useOCT) {
+        // TODO: Implement method
     }
 }

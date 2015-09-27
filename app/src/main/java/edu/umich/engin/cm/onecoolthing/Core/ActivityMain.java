@@ -68,11 +68,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
     // Enums for Activity setting configurations
     public enum SettingsType {
-        COOLFEED, // Settings for the One Cool Feed
+        ONECOOLFEED, // Settings for the One Cool Feed
+        MICHENGMAG,  // Settings for the MichEngMag feed
         WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
         ABOUT,       // Settings for the About page
-        MICHENGMAG,  // Settings for the MichEngMag page
-        MEMDETAILED, // Settings for the MEM Detailed item page
         DECODER      // Settings for the Decoder intro fragment
     }
 
@@ -591,7 +590,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         else {
             // Save the previous settings based off of the index
             if(mCurrentFragmentIndex == 0)
-                backStackSettings.setPreviousSettings(SettingsType.COOLFEED);
+                backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
+            else if(mCurrentFragmentIndex == 1) {
+                backStackSettings.setPreviousSettings(SettingsType.MICHENGMAG);
+            }
             else if(mCurrentFragmentIndex == 7)
                 backStackSettings.setPreviousSettings(SettingsType.DECODER);
             else if(mCurrentFragmentIndex == 8)
@@ -606,7 +608,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
             // Apply the settings for the OneCoolFeed
-            changeSettingsMode(SettingsType.COOLFEED);
+            changeSettingsMode(SettingsType.ONECOOLFEED);
 
             // Actually initialize the fragment
             OneCoolFeed frag = new OneCoolFeed();
@@ -627,8 +629,8 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             showTutorialIfNecessary();
         }
         else if(index == 1) {
-            // Apply the settings for the CoolFeed
-            changeSettingsMode(SettingsType.COOLFEED);
+            // Apply the settings for the Mich Eng Feed
+            changeSettingsMode(SettingsType.MICHENGMAG);
 
             // Actually initialize the fragment
             MichiganCoolFeed frag = new MichiganCoolFeed();
@@ -881,26 +883,29 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     private void changeSettingsMode(SettingsType mode) {
         // First, enable/disable the left sliding menu as necessary
             // Only disable the left slider if using the MEMDetailed view
-        enableLeftSlider(!(mode == SettingsType.MEMDETAILED));
+//        enableLeftSlider(!(mode == SettingsType.MEMDETAILED));
+        enableLeftSlider(true);
+
+        boolean usingCoolFeed = mode == SettingsType.ONECOOLFEED || mode == SettingsType.MICHENGMAG;
 
         // Decide on whether or not to enable the right slider
-            // Only OneCoolFeed uses the right slider
-        enableRightSlider(mode == SettingsType.COOLFEED);
+            // Only the CoolFeeds use the right slider
+        enableRightSlider(usingCoolFeed);
 
         // Then toggle the landscape mode as necessary
-        if(mode == SettingsType.COOLFEED)
+        if(usingCoolFeed)
             toggleLandscapeMode(false);
         else
             toggleLandscapeMode(true); // Everything else uses landscape mode
 
         // Finally, change the ActionBar as necessary
-        if(mode == SettingsType.COOLFEED) {
-            // If so, then set the transparent ActionBar up without a title
-            toggleActionBars(ActionbarHelper.ActionBarType.TRANSPARENT);
-            mActionbarHelper.setTransActionbarTitle("");
+        if(mode == SettingsType.ONECOOLFEED) {
+            toggleActionBars(ActionbarHelper.ActionBarType.ONECOOLFEED);
         }
-        else if(mode == SettingsType.WEBVIEW || mode == SettingsType.MICHENGMAG
-                || mode == SettingsType.DECODER) {
+        else if(mode == SettingsType.MICHENGMAG) {
+            toggleActionBars(ActionbarHelper.ActionBarType.MEMCOOLFEEED);
+        }
+        else if(mode == SettingsType.WEBVIEW || mode == SettingsType.DECODER) {
             // If so, show the ActionBar with a solid white bg
             toggleActionBars(ActionbarHelper.ActionBarType.SOLIDBG);
         }
@@ -908,10 +913,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // If so, then show the particular transparent ActionBar
             toggleActionBars(ActionbarHelper.ActionBarType.TRANSPARENT);
         }
-        else if(mode == SettingsType.MEMDETAILED) {
+        /*else if(mode == SettingsType.MEMDETAILED) {
             // Simply show the backOnly ActionBar
             toggleActionBars(ActionbarHelper.ActionBarType.BACKONLY);
-        }
+        }*/
     }
 
     /**
