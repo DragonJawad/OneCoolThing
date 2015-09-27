@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="?android:actionBarSize"
+    android:background="@color/actionbar_cool_mainbg"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+        >
+        <ImageButton
+            android:id="@+id/navButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_actionbar_icon"
+            android:paddingBottom="@dimen/padding_actionbar_icon"
+            android:paddingRight="@dimen/padding_actionbar_icon"
+            android:paddingEnd="@dimen/padding_actionbar_icon"
+            android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
+            android:layout_marginStart="@dimen/margin_actionbar_icon_left"
+            android:src="@drawable/ic_drawer_normal"
+            android:background="?android:attr/selectableItemBackground"
+            />
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <!-- OneCoolThing -->
+            <LinearLayout
+                android:id="@+id/OCTContainer"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@color/actionbar_cool_octbg">
+
+                <ImageView
+                    android:id="@+id/navButton_OCT"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
+                    android:layout_marginStart="@dimen/margin_actionbar_icon_left"
+                    android:src="@drawable/ic_launcher"
+                    android:background="?android:attr/selectableItemBackground"
+                    />
+
+                <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_general"
+                    android:layout_marginStart="@dimen/margin_general"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal"
+                    android:text="@string/actionbar_onecoolthing"
+                    onecoolthing:fontName="@string/customfont_normal"
+                    />
+
+            </LinearLayout>
+
+            <!-- Michigan Engineer Mag -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/OCTContainer"
+                android:layout_marginLeft="-45dp"
+                android:background="@color/actionbar_cool_mem">
+
+                <ImageView
+                    android:id="@+id/navButton_MEM"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
+                    android:layout_marginStart="@dimen/margin_actionbar_icon_left"
+                    android:src="@drawable/ic_drawer_normal"
+                    android:background="?android:attr/selectableItemBackground"
+                    />
+
+                <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_general"
+                    android:layout_marginStart="@dimen/margin_general"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal"
+                    android:text="@string/actionbar_micheng"
+                    onecoolthing:fontName="@string/customfont_normal"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>
