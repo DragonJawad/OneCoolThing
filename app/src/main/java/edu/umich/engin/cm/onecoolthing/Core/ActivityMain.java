@@ -554,6 +554,13 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
     }
 
+    public void changeFragIfNecessary(int index) {
+        if(index == mCurrentFragmentIndex)
+            return;
+        else
+            changeFrag(index, true);
+    }
+
     /**
      * Changes out the center fragment as necessary and save the previous settings as well
      * @param index - Index of fragment page to change to

@@ -35,7 +35,7 @@ public class CoolImageLoader {
 
         // If there's a current task, cancel it
         if(mCurrentTask != null) {
-            Log.d(LOGTAG, "Canceling task");
+//            Log.d(LOGTAG, "Canceling task");
 
             // Cancel the task itself
             mCurrentTask.cancel(true);
@@ -44,7 +44,7 @@ public class CoolImageLoader {
             mCurrentTask = null;
         }
         else {
-            Log.d(LOGTAG, "No task found to cancel");
+//            Log.d(LOGTAG, "No task found to cancel");
         }
     }
 

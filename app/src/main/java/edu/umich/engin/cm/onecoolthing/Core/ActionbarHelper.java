@@ -1,8 +1,11 @@
 package edu.umich.engin.cm.onecoolthing.Core;
 
+import android.animation.ObjectAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import edu.umich.engin.cm.onecoolthing.R;
@@ -11,8 +14,13 @@ import edu.umich.engin.cm.onecoolthing.R;
  * Created by jawad on 27/09/15.
  */
 public class ActionbarHelper {
+    private static final String LOGTAG = "MD/ActionbarHelper";
+
     // Reference to the Activity. TODO: Use an interface instead, simplify the communication
     ActivityMain mActivityRef;
+
+    // Internal remembrance of what mode is currently active
+    ActionBarType mCurrentMode;
 
     // Actionbar views
     View mViewCoolFeeds;
@@ -22,8 +30,13 @@ public class ActionbarHelper {
     TextView mActionTransBgTitle;
     TextView mActionSolidBgTitle;
 
-    // Internal remembrance of what mode is currently active
-    ActionBarType mCurrentMode;
+    // For remembering what's currently active in the CoolFeeds actionbar
+    private boolean mIsOCFActive;
+    // The container of the MEM portion in the CoolFeeds actionbar (for moving and animating)
+    View mCoolFeedsMEMContainer;
+    // Locations to and from where the MEM part of the CoolFeed actionbar should animate around
+    private int[] mClosedLoc = null;
+    private int[] mOpenLoc = null;
 
     // Enums for ActionBar setting configurations
     public enum ActionBarType {
@@ -43,27 +56,23 @@ public class ActionbarHelper {
 
         // Inflate the simple ActionBar view
         mViewActionBarTransparent = inflater.inflate(R.layout.actionbar_withtransbg, null);
-
         // Set the imageButton from the simple view to toggle the slidingMenu
         mViewActionBarTransparent.findViewById(R.id.navButton)
                 .setOnClickListener(mActivityRef);
 
         // Inflate the ActionBar with the title view and solid white background
         mViewActionBarSolidBg = inflater.inflate(R.layout.actionbar_withsolidbg, null);
-
         // Set the imageButton from the view with title to toggle the slidingMenu
         mViewActionBarSolidBg.findViewById(R.id.navButton)
                 .setOnClickListener(mActivityRef);
 
         // Get the title textView from the transparent bg view so the title can be set later
         mActionTransBgTitle = (TextView) mViewActionBarTransparent.findViewById(R.id.textTitle);
-
         // Get the title textView from the solid bg view so the title can be set later
         mActionSolidBgTitle = (TextView) mViewActionBarSolidBg.findViewById(R.id.textTitle);
 
         // Inflate the ActionBar which only contains the back button
         mViewActionBarBackOnly = inflater.inflate(R.layout.actionbar_withbackbutton, null);
-
         // Make the back button on this ActionBar actually register as a back click
         mViewActionBarBackOnly.findViewById(R.id.back_button)
             .setOnClickListener(new View.OnClickListener() {
@@ -83,6 +92,9 @@ public class ActionbarHelper {
         // Show the transparent ActionBar by default
         mCurrentMode = ActionBarType.BACKONLY; // Set so toggleActionBars() can reset it without issues
         toggleActionBars(ActionBarType.TRANSPARENT);
+
+        // Initialize the CoolFeed actionbar as necessary
+        initCoolFeed();
     }
 
     public void toggleActionBars(ActionBarType mode) {
@@ -106,12 +118,12 @@ public class ActionbarHelper {
         else if(mode == ActionBarType.ONECOOLFEED) {
             mViewCoolFeeds.setVisibility(View.VISIBLE);
 
-            switchCoolFeed(true);
+            switchCoolFeed(true, false);
         }
         else if(mode == ActionBarType.MEMCOOLFEEED) {
             mViewCoolFeeds.setVisibility(View.VISIBLE);
 
-            switchCoolFeed(false);
+            switchCoolFeed(false, false);
         }
 
         // Now finally cache the new ActionBarType
@@ -126,11 +138,79 @@ public class ActionbarHelper {
         mActionTransBgTitle.setText(newTitle);
     }
 
+    private void initCoolFeed() {
+        // First off, make the main menu button act as it should be- the drawer opening button
+        mViewCoolFeeds.findViewById(R.id.navButton_main)
+                .setOnClickListener(mActivityRef);
+
+        // Cache all the necessary parts of the CoolFeeds to setup the switching, sliding actions
+        mCoolFeedsMEMContainer = mViewCoolFeeds.findViewById(R.id.containerMEM);
+        ImageButton imageBtnOCF = (ImageButton) mViewCoolFeeds.findViewById(R.id.navButton_OCT);
+        ImageButton imageBtnMEM = (ImageButton) mViewCoolFeeds.findViewById(R.id.navButton_MEM);
+
+        // Set the image buttons to switch the current feed, as necessary
+        imageBtnOCF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchCoolFeed(true, true);
+            }
+        });
+        imageBtnMEM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchCoolFeed(false, true);
+            }
+        });
+
+        // Remember that, by default, One Cool Feed is NOT active
+        mIsOCFActive = false;
+    }
+
     /**
      * For the mViewCoolFeeds actionbar, switches the "active" part of the actionbar
-     * @param useOCT True if One Cool Thing should be the active item, False for MEM
+     * @param useOCF True if One Cool Feed should be the active item, False for MEM
+     * @param useAnimation True if the MEM part should slide in/out
      */
-    private void switchCoolFeed(boolean useOCT) {
-        // TODO: Implement method
+    private void switchCoolFeed(boolean useOCF, boolean useAnimation) {
+        // If the current active feed is the requested one, nothing to do
+        if(useOCF == mIsOCFActive)
+            return;
+
+        // If the locations haven't been cached yet, get them now
+        if(mClosedLoc == null || mOpenLoc[0] == 0) {
+            mClosedLoc = new int[2];
+            mOpenLoc = new int[2];
+
+            mCoolFeedsMEMContainer.getLocationOnScreen(mOpenLoc);
+            mViewCoolFeeds.findViewById(R.id.viewTargetPos)
+                    .getLocationOnScreen(mClosedLoc);
+
+            Log.d(LOGTAG, "mOpenLoc: " + mOpenLoc[0] + " " + mOpenLoc[1]);
+            Log.d(LOGTAG, "mClosedLoc: " + mClosedLoc[0] + " " + mClosedLoc[1]);
+        }
+
+        // Duration depends on actually "animating", in terms of what the user can see
+        long animDuration = useAnimation ? 400 : 0;
+
+        ObjectAnimator objectAnimator;
+        if(useOCF) {
+            // If so, then "closing" the MEM portion
+            objectAnimator = ObjectAnimator.ofFloat(mCoolFeedsMEMContainer, "translationX", 0f, mClosedLoc[0] - mOpenLoc[0]);
+        }
+        else {
+            // Otherwise, "opening" the MEM portio
+            objectAnimator = ObjectAnimator.ofFloat(mCoolFeedsMEMContainer, "translationX", mClosedLoc[0] - mOpenLoc[0], 0f);
+        }
+        objectAnimator.setDuration(animDuration);
+        objectAnimator.start();
+
+        // Finally remember what mode the CoolFeed is now in
+        mIsOCFActive = useOCF;
+
+        // TODO: Tell the Activity to switch the current fragment
+        if(useOCF)
+            mActivityRef.changeFragIfNecessary(0);
+        else
+            mActivityRef.changeFragIfNecessary(1);
     }
 }
