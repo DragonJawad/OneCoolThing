@@ -14,4 +14,6 @@ public class Constants {
     public static final String KEY_ENABLEDAILYDOSE = "Key_DailyDoseNotif";
     public static final String KEY_DAILYNOTIFTIME_HOUR = "Key_DailyNotifTime_Hour";
     public static final String KEY_DAILYNOTIFTIME_MINUTE = "Key_DailyNotifTime_Minute";
+
+    public static final String KEY_NOTIFSETYET = "Key_NotificationSetYet";
 }

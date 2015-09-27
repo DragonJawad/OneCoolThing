@@ -31,6 +31,10 @@
     <string name="noconnection_dialog_yes">Yes, open settings</string>
     <string name="noconnection_dialog_no">No, go back</string>
 
+    <!-- Notification strings -->
+    <string name="notification_title">One Cool Thing</string>
+    <string name="notification_subject">Notification for your new Cool Thing. Tap to check it out!</string>
+
     <!-- Nav/Fragments/Pages -->
         <!-- The names on the left drawer/nav menu -->
     <string-array name="nav_items">

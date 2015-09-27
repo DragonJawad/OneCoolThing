@@ -32,6 +32,10 @@
                 android:value=".Core.ActivityMain"
                 />
         </activity>
+
+        <receiver android:name="edu.umich.engin.cm.onecoolthing.Notifications.AlarmReceiver"  android:enabled="true"/>
+        <service android:name="edu.umich.engin.cm.onecoolthing.Notifications.AlarmService" />
+
     </application>
 
 </manifest>

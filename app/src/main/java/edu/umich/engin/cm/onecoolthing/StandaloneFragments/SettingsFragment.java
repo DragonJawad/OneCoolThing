@@ -3,7 +3,6 @@ package edu.umich.engin.cm.onecoolthing.StandaloneFragments;
 import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +11,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import edu.umich.engin.cm.onecoolthing.Notifications.AlarmNotificationManager;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.Constants;
 import edu.umich.engin.cm.onecoolthing.Util.TimePickerFragment;
@@ -103,6 +102,16 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
 
                 // Commit the changes
                 editor.apply();
+
+                // If the new value is turning off the notification, then make sure to actually cancel it
+                if (!b)
+                    AlarmNotificationManager.cancelNotificationAlarmIfNecessary(getActivity());
+                    // Otherwise, activate the notification
+                else {
+                    int hours = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR, 8);
+                    int minutes = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE, 0);
+                    AlarmNotificationManager.setNotificationAlarm(getActivity(), hours, minutes);
+                }
             }
         });
 
@@ -127,6 +136,11 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
 
         // Change the time button text display
         setTimeButtonText(hourOfDay, minute);
+
+        // If notifications are enabled, then set the new notification up
+        if(sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE, false)) {
+            AlarmNotificationManager.setNotificationAlarm(getActivity(), hourOfDay, minute);
+        }
     }
 
     private void setTimeButtonText(int hourOfDay, int minute) {
