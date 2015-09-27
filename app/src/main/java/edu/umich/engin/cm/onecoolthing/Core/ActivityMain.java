@@ -76,13 +76,6 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         DECODER      // Settings for the Decoder intro fragment
     }
 
-    // Enums for ActionBar setting configurations
-    public enum ActionBarType {
-        TRANSPARENT,// ActionBar that has a transparent background
-        SOLIDBG,    // ActionBar that has a solid white bg
-        BACKONLY    // For ActionBar that only contains the back button [+solid white bg]
-    }
-
     // The view that holds all the fragments
     FrameLayout mFragContainer;
 
@@ -114,12 +107,8 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     ImageView mShareMainImage;
     boolean isShareIconShowing = false; // States if the share icons are showing are not
 
-    // Actionbar Views
-    View mViewActionBarTransparent;
-    View mViewActionBarSolidBg;
-    View mViewActionBarBackOnly;
-    TextView mActionTransBgTitle;
-    TextView mActionSolidBgTitle;
+    // Object that encapsulates all the necessary actionbar work
+    ActionbarHelper mActionbarHelper;
 
     // Keeps track if seen the tutorial or not already
     boolean seenTutorialAlready = false; // False if not seen tutorial yet
@@ -228,51 +217,12 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     }
 
     private void initCustomActionBar() {
-        // Get the LayoutInflater to inflate the views
-        LayoutInflater inflater = getLayoutInflater();
-
-        // Inflate the simple ActionBar view
-        mViewActionBarTransparent = inflater.inflate(R.layout.actionbar_withtransbg, null);
-
-        // Set the imageButton from the simple view to toggle the slidingMenu
-        mViewActionBarTransparent.findViewById(R.id.navButton)
-                .setOnClickListener(this);
-
-        // Inflate the ActionBar with the title view and solid white background
-        mViewActionBarSolidBg = inflater.inflate(R.layout.actionbar_withsolidbg, null);
-
-        // Set the imageButton from the view with title to toggle the slidingMenu
-        mViewActionBarSolidBg.findViewById(R.id.navButton)
-                .setOnClickListener(this);
-
-        // Get the title textView from the transparent bg view so the title can be set later
-        mActionTransBgTitle = (TextView) mViewActionBarTransparent.findViewById(R.id.textTitle);
-
-        // Get the title textView from the solid bg view so the title can be set later
-        mActionSolidBgTitle = (TextView) mViewActionBarSolidBg.findViewById(R.id.textTitle);
-
-        // Inflate the ActionBar which only contains the back button
-        mViewActionBarBackOnly = inflater.inflate(R.layout.actionbar_withbackbutton, null);
-
-        // Make the back button on this ActionBar actually register as a back click
-        mViewActionBarBackOnly.findViewById(R.id.back_button)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Simply act as if the actual back button was pressed
-                        onBackPressed();
-                    }
-                });
-
-        // Add the actionBars to the respective container
-        RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.actionbar_container);
-        viewGroup.addView(mViewActionBarTransparent);
-        viewGroup.addView(mViewActionBarSolidBg);
-        viewGroup.addView(mViewActionBarBackOnly);
-
-        // Only show the transparent ActionBar, by default
-        mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
-        mViewActionBarBackOnly.setVisibility(View.INVISIBLE);
+        // Initialize the ActionbarHelper, which will encapsulate all the necessary work
+        mActionbarHelper = new ActionbarHelper(
+                this,
+                getLayoutInflater(),
+                (RelativeLayout) findViewById(R.id.actionbar_container)
+        );
     }
 
     private void initBackStackSystem() {
@@ -705,7 +655,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             String this_title = mFragTags[index];
 
             // Set the actionBar's title text (on the one that will be used)
-            mActionSolidBgTitle.setText(this_title);
+            mActionbarHelper.setSolidActionbarTitle(this_title);
 
             // Set settings for this web view
             changeSettingsMode(SettingsType.WEBVIEW);
@@ -720,7 +670,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
-            mActionSolidBgTitle.setText(this_title);
+            mActionbarHelper.setSolidActionbarTitle(this_title);
 
             // Set settings for this view- same as a Webview
             changeSettingsMode(SettingsType.DECODER);
@@ -736,7 +686,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
-            mActionTransBgTitle.setText(this_title);
+            mActionbarHelper.setSolidActionbarTitle(this_title);
 
             // Set settings for this view
             changeSettingsMode(SettingsType.ABOUT);
@@ -752,7 +702,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
           // Get the title/tag separately, for ease of typing/reading
           String this_title = mFragTags[index];
           // Put the title on the actionBar that will be used
-          mActionTransBgTitle.setText(this_title);
+          mActionbarHelper.setTransActionbarTitle(this_title);
 
           // Set settings for this view- same as About page
           changeSettingsMode(SettingsType.ABOUT);
@@ -768,7 +718,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
-            mActionTransBgTitle.setText(this_title);
+            mActionbarHelper.setTransActionbarTitle(this_title);
 
             // Set settings for this view
             changeSettingsMode(SettingsType.ABOUT);
@@ -946,21 +896,21 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Finally, change the ActionBar as necessary
         if(mode == SettingsType.COOLFEED) {
             // If so, then set the transparent ActionBar up without a title
-            toggleActionBars(ActionBarType.TRANSPARENT);
-            mActionTransBgTitle.setText("");
+            toggleActionBars(ActionbarHelper.ActionBarType.TRANSPARENT);
+            mActionbarHelper.setTransActionbarTitle("");
         }
         else if(mode == SettingsType.WEBVIEW || mode == SettingsType.MICHENGMAG
                 || mode == SettingsType.DECODER) {
             // If so, show the ActionBar with a solid white bg
-            toggleActionBars(ActionBarType.SOLIDBG);
+            toggleActionBars(ActionbarHelper.ActionBarType.SOLIDBG);
         }
         else if(mode == SettingsType.ABOUT) {
             // If so, then show the particular transparent ActionBar
-            toggleActionBars(ActionBarType.TRANSPARENT);
+            toggleActionBars(ActionbarHelper.ActionBarType.TRANSPARENT);
         }
         else if(mode == SettingsType.MEMDETAILED) {
             // Simply show the backOnly ActionBar
-            toggleActionBars(ActionBarType.BACKONLY);
+            toggleActionBars(ActionbarHelper.ActionBarType.BACKONLY);
         }
     }
 
@@ -1015,19 +965,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
      * Switches the correct ActionBar into view
      * @param mode - Defines which ActionBar should be visible
      */
-    private void toggleActionBars(ActionBarType mode) {
-        // Hide all ActionBars by default, first
-        mViewActionBarTransparent.setVisibility(View.INVISIBLE);
-        mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
-        mViewActionBarBackOnly.setVisibility(View.INVISIBLE);
-
-        // Show the correct actionBar
-        if(mode == ActionBarType.TRANSPARENT)
-            mViewActionBarTransparent.setVisibility(View.VISIBLE);
-        else if(mode == ActionBarType.SOLIDBG)
-            mViewActionBarSolidBg.setVisibility(View.VISIBLE);
-        else if(mode == ActionBarType.BACKONLY)
-            mViewActionBarBackOnly.setVisibility(View.VISIBLE);
+    // TODO: Method deprecated, simply call the ActionbarHelper instead of this method
+    private void toggleActionBars(ActionbarHelper.ActionBarType mode) {
+        // Simply let the ActionbarHelper switch modes
+        mActionbarHelper.toggleActionBars(mode);
     }
 
     /**
@@ -1091,6 +1032,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         toggleLeftSlidingMenu();
     }
 
+    //region -->Shake Code<--
     @Override
     public void hearShake() {
         // If the current displayed item doesn't do anything for shakes, then do nothing
@@ -1180,6 +1122,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Commit the changes
         editor.apply();
     }
+    //endregion
 
     // Adapter for the left sliding menu's nav listView
     class NavAdapter extends BaseAdapter {
