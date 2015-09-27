@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name="edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper"
@@ -33,9 +34,14 @@
                 />
         </activity>
 
+        <receiver android:name="edu.umich.engin.cm.onecoolthing.Notifications.BootReceiver"
+                  android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
         <receiver android:name="edu.umich.engin.cm.onecoolthing.Notifications.AlarmReceiver"  android:enabled="true"/>
         <service android:name="edu.umich.engin.cm.onecoolthing.Notifications.AlarmService" />
-
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -265,7 +266,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     // Sets sharedPreferences boolean of whether or not tutorial has been seen yet
     public void setSeenTutorial(boolean isTutorialSeen) {
         // Get the shared preferences' editor
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // Set the saved bool to whatever isTutorialSeen is
@@ -277,7 +278,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
     public boolean getSeenTutorial() {
         // Get and return the value from the preferences
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPreferences.getBoolean(Constants.KEY_SEENTUTORIAL, false);
     }
 
@@ -1071,14 +1072,14 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
     private boolean getIfSeenShakeDialog() {
         // Get and return the value from the preferences
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPreferences.getBoolean(Constants.KEY_SEENSHAKEDIALOG, false);
     }
 
     // Sets sharedPreferences boolean of whether or not tutorial has been seen yet
     private void setSeenShakeDialog(boolean isDialogSeen) {
         // Get the shared preferences' editor
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // Set the saved bool to whatever the argument is
@@ -1119,13 +1120,13 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     }
 
     private boolean isShakeEnabled() {
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPreferences.getBoolean(Constants.KEY_ENABLESHAKE, true);
     }
 
     private void setShakeEnabled(boolean isShakeEnabled) {
         // Get the shared preferences' editor
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // Set the saved bool to whatever the argument is

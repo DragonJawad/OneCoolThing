@@ -3,6 +3,7 @@ package edu.umich.engin.cm.onecoolthing.StandaloneFragments;
 import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
             }
         });
         // Get the shared preferences to load in the previous values for the different settings
-        SharedPreferences sharedPreferences = getActivity().getPreferences(getActivity().MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         mToggleBtnShake.setChecked(sharedPreferences.getBoolean(Constants.KEY_ENABLESHAKE, true));
         mToggleBtnDailyDose.setChecked(sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE, false));
@@ -79,7 +80,7 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 // Save the new value of the Shake for Random setting
-                SharedPreferences sharedPreferences = getActivity().getPreferences(getActivity().MODE_PRIVATE);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 // Set the saved bool to whatever isTutorialSeen is
@@ -94,7 +95,7 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 // Save the new value of the Shake for Random setting
-                SharedPreferences sharedPreferences = getActivity().getPreferences(getActivity().MODE_PRIVATE);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 // Set the saved bool to whatever isTutorialSeen is
@@ -128,7 +129,7 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
     @Override
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         // Store the new values
-        SharedPreferences sharedPreferences = getActivity().getPreferences(getActivity().MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(Constants.KEY_DAILYNOTIFTIME_HOUR, hourOfDay);
         editor.putInt(Constants.KEY_DAILYNOTIFTIME_MINUTE, minute);
