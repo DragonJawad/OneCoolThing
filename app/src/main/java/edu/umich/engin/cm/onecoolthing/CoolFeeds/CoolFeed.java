@@ -1,6 +1,5 @@
 package edu.umich.engin.cm.onecoolthing.CoolFeeds;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -63,9 +62,11 @@ public abstract class CoolFeed extends Fragment implements ViewPager.OnPageChang
     public void onStart() {
         super.onStart();
 
-        // Get all the cool things, if necessary
-        if(mPagerAdapter == null)
+        // Get all the cool things and set up the ViewPager, if necessary
+        if(mPagerAdapter == null) {
+            initCoolViewPager();
             getAllCoolThings();
+        }
     }
 
     @Override
@@ -82,13 +83,12 @@ public abstract class CoolFeed extends Fragment implements ViewPager.OnPageChang
         parser.getCoolThings(getActivity(), this, getBaseUrl());
     }
 
-    private void initCoolViewPager(Context context, ArrayList<CoolThingData> allCoolThings) {
+    private void initCoolViewPager() {
         // ONLY set the mPagerAdapter if necessary
         // ie, when restarting activity/frag, mPagerAdapter already exists
         if(mPagerAdapter == null) {
             // Set up the mPagerAdapter to handle the different "pages"/fragments
             mPagerAdapter = new CoolThingsPagerAdapter(getChildFragmentManager());
-            mPagerAdapter.LoadCoolThings(allCoolThings);
 
             // Set the pageAdapter to the ViewPager
             mViewPager.setAdapter(mPagerAdapter);
@@ -98,9 +98,6 @@ public abstract class CoolFeed extends Fragment implements ViewPager.OnPageChang
 
             // Set the pager to retain pretty much no frags itself in memory
             mViewPager.setOffscreenPageLimit(0);
-
-            // Now the right sliding menu can be set up finally for the first time
-            notifyCommunicator(0);
         }
     }
 
@@ -146,7 +143,11 @@ public abstract class CoolFeed extends Fragment implements ViewPager.OnPageChang
 
     @Override
     public void gotCoolThings(ArrayList<CoolThingData> allCoolThings) {
-        initCoolViewPager(getActivity(), allCoolThings);
+        // Give the adapter all the content
+        mPagerAdapter.LoadCoolThings(allCoolThings);
+
+        // Now the right sliding menu can be set up finally for the first time
+        notifyCommunicator(0);
     }
 
     @Override

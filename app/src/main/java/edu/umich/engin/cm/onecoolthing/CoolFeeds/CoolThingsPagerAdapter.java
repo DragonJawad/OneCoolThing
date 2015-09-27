@@ -57,29 +57,50 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
 
     // Return the subTitle of a CoolThing at the given position
     public String getTitle(int i) {
-        return mListOfCoolThings.get(i).getTitle();
+        if(mListOfCoolThings == null)
+            return "";
+        else
+            return mListOfCoolThings.get(i).getTitle();
     }
 
     // Return the subTitle of a CoolThing at the given position
     public String getSubTitle(int i) {
-        return mListOfCoolThings.get(i).getSubTitle();
+        if(mListOfCoolThings == null)
+            return "";
+        else
+            return mListOfCoolThings.get(i).getSubTitle();
     }
 
     // Return the body text of a CoolThing at the given position
     public String getBodyText(int i) {
-        return mListOfCoolThings.get(i).getBodyText();
+        if(mListOfCoolThings == null)
+            return "";
+        else
+            return mListOfCoolThings.get(i).getBodyText();
     }
 
     // Return the palette color of a CoolThing at the given position
-    public String getPaletteColor(int i) {return mListOfCoolThings.get(i).getPaletteColor(); }
+    public String getPaletteColor(int i) {
+        if(mListOfCoolThings == null)
+            return "";
+        else
+            return mListOfCoolThings.get(i).getPaletteColor(); }
 
     // Return the fullItemURL of a CoolThing at the given position
     public String getFullItemURL(int i) {
-        return mListOfCoolThings.get(i).getFullItemURL();
+        if(mListOfCoolThings == null)
+            return "";
+        else
+            return mListOfCoolThings.get(i).getFullItemURL();
     }
 
     // Returns the tweetText of a CoolThng at the given position
-    public String getTweetText(int i) { return mListOfCoolThings.get(i).getTweetText(); }
+    public String getTweetText(int i) {
+        if(mListOfCoolThings == null)
+            return "";
+        else
+            return mListOfCoolThings.get(i).getTweetText();
+    }
 
     private void resetAllFragments(int newPosition) {
         // First, simply load the current position's appropriate fragment

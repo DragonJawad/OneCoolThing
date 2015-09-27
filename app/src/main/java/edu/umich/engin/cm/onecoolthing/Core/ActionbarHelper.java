@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -32,6 +33,8 @@ public class ActionbarHelper {
 
     // For remembering what's currently active in the CoolFeeds actionbar
     private boolean mIsOCFActive;
+    // Remembers if the CoolFeeds ActionBar has been fully set up one time at least
+    private boolean mFirstCoolFeedSetupDone = false;
     // The container of the MEM portion in the CoolFeeds actionbar (for moving and animating)
     View mCoolFeedsMEMContainer;
     // Locations to and from where the MEM part of the CoolFeed actionbar should animate around
@@ -164,6 +167,19 @@ public class ActionbarHelper {
 
         // Remember that, by default, One Cool Feed is NOT active
         mIsOCFActive = false;
+
+        // As the layout is usually not drawn at this point, wait until it is to move over the MEM portion
+        ViewTreeObserver vto = mCoolFeedsMEMContainer.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Try to switch to the OCF before the user notices anything, if necessary
+                if(!mFirstCoolFeedSetupDone) {
+                    mFirstCoolFeedSetupDone = true;
+                    switchCoolFeed(true, true);
+                }
+            }
+        });
     }
 
     /**
@@ -177,7 +193,7 @@ public class ActionbarHelper {
             return;
 
         // If the locations haven't been cached yet, get them now
-        if(mClosedLoc == null || mOpenLoc[0] == 0) {
+        if(mClosedLoc == null || mClosedLoc[0] == 0) {
             mClosedLoc = new int[2];
             mOpenLoc = new int[2];
 
@@ -187,6 +203,11 @@ public class ActionbarHelper {
 
             Log.d(LOGTAG, "mOpenLoc: " + mOpenLoc[0] + " " + mOpenLoc[1]);
             Log.d(LOGTAG, "mClosedLoc: " + mClosedLoc[0] + " " + mClosedLoc[1]);
+
+            // If the position is set to 0, then the layout hasn't been set yet- can't do anything
+            if(mClosedLoc[0] == 0) {
+                return;
+            }
         }
 
         // Duration depends on actually "animating", in terms of what the user can see
