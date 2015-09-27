@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -15,6 +16,8 @@ import edu.umich.engin.cm.onecoolthing.Util.Constants;
  * Created by jawad on 27/09/15.
  */
 public class AlarmNotificationManager {
+    private static final String LOGTAG = "MD/AlarmNotificationMan";
+
     static public void setNotificationAlarm(Context context, int hours, int minutes) {
         // First cancel previously planned notifications, if any
         cancelNotificationAlarmIfNecessary(context);
@@ -33,6 +36,8 @@ public class AlarmNotificationManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.KEY_NOTIFSETYET, true);
         editor.apply();
+
+        Log.d(LOGTAG, "Alarm set for hours " + hours + " and minutes " + minutes);
     }
 
     static public void cancelNotificationAlarmIfNecessary(Context context) {
@@ -50,6 +55,8 @@ public class AlarmNotificationManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.KEY_NOTIFSETYET, false);
         editor.commit();
+
+        Log.d(LOGTAG, "Canceled alarm in cancelNotificationIfNecessary()");
     }
 
     static private PendingIntent getAlarmIntent(Context context) {

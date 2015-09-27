@@ -35,7 +35,7 @@
         </activity>
 
         <receiver android:name="edu.umich.engin.cm.onecoolthing.Notifications.BootReceiver"
-                  android:enabled="false">
+                  android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
