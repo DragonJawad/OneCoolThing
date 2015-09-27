@@ -42,11 +42,9 @@ import com.squareup.seismic.ShakeDetector;
 
 import java.util.ArrayList;
 
+import edu.umich.engin.cm.onecoolthing.CoolFeeds.MichiganCoolFeed;
 import edu.umich.engin.cm.onecoolthing.CoolFeeds.OneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.Decoder.DecoderIntroFrag;
-import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedData;
-import edu.umich.engin.cm.onecoolthing.MichEngMag.MEMDetailedFrag;
-import edu.umich.engin.cm.onecoolthing.MichEngMag.MichEngMagListAdapter;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SendCoolFragment;
@@ -64,14 +62,13 @@ import edu.umich.engin.cm.onecoolthing.Util.VertPagerCommunicator;
  * Created by jawad on 12/10/14.
  */
 public class ActivityMain extends FragmentActivity implements VertPagerCommunicator,
-    View.OnClickListener, SettingsFragment.TutorialEnforcer, MichEngMagListAdapter.MagazineViewer,
-    ShakeDetector.Listener {
+    View.OnClickListener, SettingsFragment.TutorialEnforcer, ShakeDetector.Listener {
     // Log tag for this class
     private final String TAG = "MD/ActivityTestCenter";
 
     // Enums for Activity setting configurations
     public enum SettingsType {
-        ONECOOLFEED, // Settings for the One Cool Feed
+        COOLFEED, // Settings for the One Cool Feed
         WEBVIEW,     // Settings for the WebView fragments, like the Tumblr feeds
         ABOUT,       // Settings for the About page
         MICHENGMAG,  // Settings for the MichEngMag page
@@ -137,9 +134,9 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
      *          this -> changeFrag()
      * TODO/NOTE: In hindsight, this was stupid. Need to redo this as enums
      * 0 - One Cool Feed [main One Cool Thing feed]
-     * 1 - LabLog
-     * 2 - Visual Adventures
-     * 3 - Michigan Engineer Mag
+     * 1 - Michigan Engineer Mag
+     * 2 - LabLog
+     * 3 - Visual Adventures
      * 4 - I <3 A2
      * 5 - Some Cool Apps
      * 6 - MichEpedia
@@ -644,7 +641,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         else {
             // Save the previous settings based off of the index
             if(mCurrentFragmentIndex == 0)
-                backStackSettings.setPreviousSettings(SettingsType.ONECOOLFEED);
+                backStackSettings.setPreviousSettings(SettingsType.COOLFEED);
             else if(mCurrentFragmentIndex == 7)
                 backStackSettings.setPreviousSettings(SettingsType.DECODER);
             else if(mCurrentFragmentIndex == 8)
@@ -659,7 +656,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
             // Apply the settings for the OneCoolFeed
-            changeSettingsMode(SettingsType.ONECOOLFEED);
+            changeSettingsMode(SettingsType.COOLFEED);
 
             // Actually initialize the fragment
             OneCoolFeed frag = new OneCoolFeed();
@@ -679,24 +676,28 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Show the tutorial if necessary
             showTutorialIfNecessary();
         }
-/*      Following is deprecated in favor of just using a webview instead
-        // If so, then add in the Michigan Engineer Magazine fragment
-        else if(index == 3) {
-            // Get the title/tag separately, for ease of typing/reading
-            String this_title = mFragTags[index];
-            // Put the title on the actionBar that will be used
-            mActionSolidBgTitle.setText(this_title);
+        else if(index == 1) {
+            // Apply the settings for the CoolFeed
+            changeSettingsMode(SettingsType.COOLFEED);
 
-            // Set settings for this page
-            changeSettingsMode(SettingsType.MICHENGMAG);
+            // Actually initialize the fragment
+            MichiganCoolFeed frag = new MichiganCoolFeed();
 
-            // Create and setup the fragment to use
-            MichEngMagFrag frag = new MichEngMagFrag();
-            frag.setMagazineViewer(this);
+            // Let the frag communicate with this activity
+            frag.setCommunicator(this);
 
-            // Add the frag to the center view
-            fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
-        }*/
+            // Add in the fragment to the place specified in the layout file
+            fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[0]);
+
+            // Set the index of the mCurrentFragmentIndex to 0, to show that the OneCoolFeed was added
+            mCurrentFragmentIndex = 0;
+
+            // Register this fragment to handle shake events
+            mShakeListener = frag;
+
+            // Show the tutorial if necessary
+            showTutorialIfNecessary();
+        }
         // Otherwise, if this index has an URL, open up a feed
         else if(!mFragUrls[index].equals("")) {
             // Get the url and title separately, for ease of typing/reading
@@ -818,36 +819,6 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         }
     }
 
-    @Override
-    // Open up the MEM Detailed frag
-    public void openMagazineItem(MEMDetailedData data) {
-        // Begin the fragment transaction
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        // Create the fragment to add in
-        MEMDetailedFrag frag = new MEMDetailedFrag();
-        // Give the frag the data
-        frag.setData(data);
-
-        // Indicate that the current frag will be the MEMDetailedFrag
-        mCurrentFragmentIndex = 9;
-
-        // Add in the fragment
-        fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[mCurrentFragmentIndex]);
-
-        // Create a new Backstack settings item to restore to the MichEngMag
-        BackStackSettings backStackSettings = new BackStackSettings();
-        backStackSettings.setPreviousSettings(SettingsType.MICHENGMAG);
-        backStackSettings.setPreviousFragPosition(3);
-        mBackStackList.add(backStackSettings);
-
-        // Change the current settings for this detailed view
-        changeSettingsMode(SettingsType.MEMDETAILED);
-
-        fragmentTransaction.commit();
-    }
-
     // Change the right slide to match the current CoolThing
     public void changeRightSlide(String title, String subTitle, String body, String paletteColor, final String fullItemURL) {
         // Get and cache the current Cool Thing's title
@@ -964,16 +935,16 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
         // Decide on whether or not to enable the right slider
             // Only OneCoolFeed uses the right slider
-        enableRightSlider(mode == SettingsType.ONECOOLFEED);
+        enableRightSlider(mode == SettingsType.COOLFEED);
 
         // Then toggle the landscape mode as necessary
-        if(mode == SettingsType.ONECOOLFEED)
+        if(mode == SettingsType.COOLFEED)
             toggleLandscapeMode(false);
         else
             toggleLandscapeMode(true); // Everything else uses landscape mode
 
         // Finally, change the ActionBar as necessary
-        if(mode == SettingsType.ONECOOLFEED) {
+        if(mode == SettingsType.COOLFEED) {
             // If so, then set the transparent ActionBar up without a title
             toggleActionBars(ActionBarType.TRANSPARENT);
             mActionTransBgTitle.setText("");

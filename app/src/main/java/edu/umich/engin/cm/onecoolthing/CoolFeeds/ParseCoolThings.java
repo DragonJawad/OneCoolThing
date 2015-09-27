@@ -22,6 +22,7 @@ public class ParseCoolThings {
     // JSON Tags
     private static final String TAG_ID = "ID";
     private static final String TAG_INCLUDEINAPP = "Include in App";
+    private static final String TAG_INCLUDEINMICHENG = "Include in MichEng Feed";
     private static final String TAG_TITLE = "Title";
     private static final String TAG_SUBTITLE = "Sub Title";
     private static final String TAG_BODYTEXT = "Body Text";
@@ -88,8 +89,18 @@ public class ParseCoolThings {
      */
     static private boolean shouldIncludeInApp(JSONObject jsonObject) {
         try{
-            // Only determined currently by the parameter in the json itself
-            return jsonObject.getBoolean(TAG_INCLUDEINAPP);
+            // If it has the basic include in app tag, simply use that boolean
+            if(jsonObject.has(TAG_INCLUDEINAPP)) {
+                return jsonObject.getBoolean(TAG_INCLUDEINAPP);
+            }
+            // Otherwise, if it has the include in mich eng mag tag, then use that boolean
+            else if(jsonObject.has(TAG_INCLUDEINMICHENG)) {
+                return jsonObject.getBoolean(TAG_INCLUDEINMICHENG);
+            }
+            // If nothing else is in there, then this cool thing should be thrown out anyways
+            else {
+                return false;
+            }
         }
         catch (Exception e) {
             // Log the error

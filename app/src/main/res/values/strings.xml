@@ -33,9 +33,9 @@
         <!-- The names on the left drawer/nav menu -->
     <string-array name="nav_items">
         <item name="nav_OneCoolFeed">One Cool Feed</item>
+        <item name="nav_MichiganEngineerMag">Michigan Engineer Mag</item>
         <item name="nav-LabLog">LabLog</item>
         <item name="nav_VisualAdventures">Visual Adventures</item>
-        <item name="nav_MichiganEngineerMag">Michigan Engineer Mag</item>
         <item name="nav_LoveA2">I &lt;3 A2</item>
         <item name="nav_SomeCoolApps">Some Cool Apps</item>
         <item name="nav_MichEpedia">MichEpedia</item>
@@ -47,9 +47,9 @@
         <!-- The URLS for the feeds- "" == no url/no webview -->
     <string-array name="nav_items_urls">
         <item name="nav_OneCoolFeed"></item>
+        <item name="nav_MichiganEngineerMag"></item>
         <item name="nav-LabLog">http://umengineeringlablog.tumblr.com/</item>
         <item name="nav_VisualAdventures">http://michiganengineering.tumblr.com/</item>
-        <item name="nav_MichiganEngineerMag">http://the-michigan-engineer.tumblr.com/</item>
         <item name="nav_LoveA2">http://iloveannarbor.tumblr.com/</item>
         <item name="nav_SomeCoolApps">http://somecoolapps.tumblr.com/</item>
         <item name="nav_MichEpedia">http://m.youtube.com/playlist?list=PL08851138B834B69B</item>
