@@ -26,7 +26,8 @@ public class ParseCoolThings {
     private static final String TAG_SUBTITLE = "Sub Title";
     private static final String TAG_BODYTEXT = "Body Text";
     private static final String TAG_PALETTECOLOR = "Color Palette";
-    private static final String TAG_IMAGEURL = "iPhone 5 Retina Image";
+    private static final String TAG_IMAGEURL_OLD = "iPhone 5 Retina Image";
+    private static final String TAG_IMAGEURL_PORTRAIT = "Portrait Image";
     private static final String TAG_FULLITEMURL = "Full Item URL";
     private static final String TAG_TWITTERTEXT = "Tweet Language";
 
@@ -45,7 +46,20 @@ public class ParseCoolThings {
         String body = jsonObject.getString(TAG_BODYTEXT);
 
         String paletteColor = jsonObject.getString(TAG_PALETTECOLOR);
-        String imageURL = jsonObject.getString(TAG_IMAGEURL);
+
+        // Get the image url, depending on what the object actually has
+        String imageURL;
+        if(jsonObject.has(TAG_IMAGEURL_PORTRAIT) && !jsonObject.getString(TAG_IMAGEURL_PORTRAIT).equals("")) {
+            imageURL = jsonObject.getString(TAG_IMAGEURL_PORTRAIT);
+        }
+        // Otherwise, hopefully it at least has the older image tag that was used
+        else if(jsonObject.has(TAG_IMAGEURL_OLD) && !jsonObject.getString(TAG_IMAGEURL_OLD).equals("")) {
+            imageURL = jsonObject.getString(TAG_IMAGEURL_OLD);
+        }
+        // Else, current fallback is just to not display any background image
+        else {
+            imageURL = "";
+        }
 
         String fullItemURL = jsonObject.getString(TAG_FULLITEMURL);
         String tweetText = jsonObject.getString(TAG_TWITTERTEXT);

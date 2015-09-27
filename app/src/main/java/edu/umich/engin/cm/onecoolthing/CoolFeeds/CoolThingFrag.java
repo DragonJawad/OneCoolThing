@@ -21,7 +21,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     private static final String LOGTAG = "MD/CoolThingFrag";
 
     // View elements
-    private ImageView mBackground;
+    private ImageView mBackgroundView;
     private TextView mTitleView;
     private TextView mCurrentPosView;
     private TextView mTotalCountView;
@@ -36,7 +36,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     private Bitmap mBackgroundImage;
 
     // True if data has been assigned at least once
-        // Used only in onCreateView to update the counter (so if data is set before views created)
+    // Used only in onCreateView to update the counter (so if data is set before views created)
     private boolean mHasDataBeenAssigned = false;
 
     CoolImageLoader mImageLoader = new CoolImageLoader();
@@ -49,7 +49,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         mSpinner = (ImageView) view.findViewById(R.id.loadingSpinner);
 
         // Get the view elements
-        mBackground = (ImageView) view.findViewById(R.id.background);
+        mBackgroundView = (ImageView) view.findViewById(R.id.background);
         mTitleView = (TextView) view.findViewById(R.id.title);
         mCurrentPosView = (TextView) view.findViewById(R.id.currentPosition);
         mTotalCountView = (TextView) view.findViewById(R.id.totalCount);
@@ -62,7 +62,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
 
         // If the image has already been loaded, then display it
         if(mBackgroundImage != null) {
-            DisplayAllData();
+            DisplayAllData(true);
         }
 
         return view;
@@ -80,7 +80,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         mImageLoader.CancelTaskIfAny();
 
         // Reset the views, if views have already been created
-        if(mBackground != null)
+        if(mBackgroundView != null)
             ResetViews();
 
         // Simply store the basic data
@@ -96,7 +96,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         }
 
         // Remember that basic data has been assigned at least once
-            // Used only in onCreateView, maybe can be more efficient?
+        // Used only in onCreateView, maybe can be more efficient?
         mHasDataBeenAssigned = true;
 
         // Finally try loading the image
@@ -104,29 +104,43 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     }
 
     private void ResetViews() {
+        // Show the loading spinner once again
+        ShowSpinner();
+
+        // If the views haven't been set up and cached yet, do nothing else
+        if(mBackgroundView == null || mTitleView == null) {
+            return;
+        }
+
         // Clear out the background image
-        mBackground.setImageResource(android.R.color.transparent);
+        mBackgroundView.setImageResource(android.R.color.transparent);
         mBackgroundImage = null;
 
         // Clear out any and all text
         mTitleView.setText("");
-
-        // Show the loading spinner once again
-        ShowSpinner();
     }
 
-    private void DisplayAllData() {
-        // Set the background image only if the views have already been created
-        mBackground.setImageBitmap(mBackgroundImage);
+    private void DisplayAllData(boolean displayImage) {
+        // Stop the spinner
+        HideSpinner();
+
+        // If the necessary views haven't been set up - for some reason - then stop now
+        if(mBackgroundView == null || mTitleView == null) {
+            return;
+        }
+
+        if(displayImage) {
+            // Set the background image only if the views have already been created
+            mBackgroundView.setImageBitmap(mBackgroundImage);
+        }
 
         // Set the title text
         mTitleView.setText(mTitleText);
-
-        // Finally, stop the spinner
-        HideSpinner();
     }
 
     private void ShowSpinner() {
+        if(mSpinner == null) return;
+
         mSpinner.setVisibility(View.VISIBLE);
         // Set the spinner to infinitely spin
         if(getActivity() != null) {
@@ -136,6 +150,8 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         }
     }
     private void HideSpinner() {
+        if(mSpinner == null) return;
+
         mSpinner.clearAnimation();
         mSpinner.setVisibility(View.GONE);
     }
@@ -149,8 +165,8 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         mBackgroundImage = results;
 
         // Display all the data if the views have already been created
-        if(mBackground != null)
-            DisplayAllData();
+        if(mBackgroundView != null)
+            DisplayAllData(true);
     }
 
     /**
@@ -160,6 +176,9 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     @Override
     public void FailedImageRetrieval() {
         // For now, simply log the issue
-        Log.d(LOGTAG, "Received event that failed to retrieve image. Not doing anything though~");
+        Log.d(LOGTAG, "Received event that failed to retrieve image");
+
+        // Display all the information except the background image
+        DisplayAllData(false);
     }
 }

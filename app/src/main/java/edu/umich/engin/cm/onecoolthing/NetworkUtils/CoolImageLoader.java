@@ -5,8 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import edu.umich.engin.cm.onecoolthing.Util.BitmapReceiver;
@@ -34,13 +32,19 @@ public class CoolImageLoader {
     }
 
     public void CancelTaskIfAny() {
+
         // If there's a current task, cancel it
         if(mCurrentTask != null) {
+            Log.d(LOGTAG, "Canceling task");
+
             // Cancel the task itself
             mCurrentTask.cancel(true);
 
             // Then throw away the task
             mCurrentTask = null;
+        }
+        else {
+            Log.d(LOGTAG, "No task found to cancel");
         }
     }
 
@@ -70,16 +74,19 @@ public class CoolImageLoader {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            // If there is no URL - possibly due to improper JSON - just save some work and do nothing
+            if(mImageUrl == "") {
+                mResults = null;
+                return null;
+            }
+
             try {
                 // Simply get the BitMap from the url
                 URL url = new URL(mImageUrl);
                 mResults = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             } catch (Exception e) {
-                Log.e(LOGTAG, e.toString());
-                e.printStackTrace();
+                Log.e(LOGTAG, "Error with getting image | Url: " + mImageUrl + " | Error: " + e.toString());
 
-                // Let rest of the system know that something went wrong
-                FailedImageRetrieval();
                 cancel(true);
             }
 
@@ -88,6 +95,9 @@ public class CoolImageLoader {
 
         @Override
         protected void onCancelled() {
+            // Let rest of the system know that something went wrong
+            FailedImageRetrieval();
+
             super.onCancelled();
         }
 
