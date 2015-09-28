@@ -33,7 +33,7 @@
 
     <!-- Notification strings -->
     <string name="notification_title">One Cool Thing</string>
-    <string name="notification_subject">Notification for your new Cool Thing. Tap to check it out!</string>
+    <string name="notification_subject">Get your daily dose of Cool.</string>
 
     <!-- Nav/Fragments/Pages -->
         <!-- The names on the left drawer/nav menu -->

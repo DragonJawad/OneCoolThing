@@ -49,6 +49,9 @@ public class CoolThingsPagerAdapter extends PagerAdapter {
     }
 
     public int getRandomCoolThingIndex() {
+        if(mListOfCoolThings == null)
+            return 0;
+
         Random rand = new Random();
 
         // Return a random index from [0, total number of cool things)
