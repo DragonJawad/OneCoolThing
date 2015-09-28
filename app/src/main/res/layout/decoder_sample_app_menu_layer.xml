@@ -30,7 +30,7 @@
 			    android:padding="14dp"
 			    android:fontFamily="sans-serif"
 			    android:textStyle="bold"
-			    android:textSize="22sp"
+			    android:textSize="@dimen/menu_title"
 		        />
 		    
 	     </LinearLayout>

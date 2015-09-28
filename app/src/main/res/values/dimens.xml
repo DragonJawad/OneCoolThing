@@ -19,13 +19,13 @@
     <dimen name="text_about_clicks">18sp</dimen>
     <dimen name="text_sendcool">16sp</dimen>
     <dimen name="text_decoder_intro">18sp</dimen>
-        <!-- Text sizes for the Michigan Engineer Magazine magazine items -->
+    <!-- Text sizes for the Michigan Engineer Magazine magazine items -->
     <dimen name="text_michengmag_level1_title">25sp</dimen>
     <dimen name="text_michengmag_level2_title">15sp</dimen>
-        <!-- Text sizes for the tutorial -->
+    <!-- Text sizes for the tutorial -->
     <dimen name="text_tutorial_taptoclose">20sp</dimen>
     <dimen name="text_tutorial_chalk">30sp</dimen>
-        <!-- Text sizes for the detailed MEM page -->
+    <!-- Text sizes for the detailed MEM page -->
     <dimen name="text_memdetailed_title_main">25sp</dimen>
     <dimen name="text_memdetailed_title_other">18sp</dimen>
 
@@ -38,23 +38,23 @@
     <dimen name="margin_drawer_top">10dp</dimen>
     <dimen name="margin_decoderintro_text_sides">20dp</dimen>
     <dimen name="margin_decoderintro_text_top">10dp</dimen>
-        <!-- Margins between each left sliding menu item -->
+    <!-- Margins between each left sliding menu item -->
     <dimen name="margin_nav_item">16dp</dimen>
-        <!-- Margin between the left edge of the right menu, which includes the shadow -->
+    <!-- Margin between the left edge of the right menu, which includes the shadow -->
     <dimen name="margin_rightmenu_leftpush">20dp</dimen>
-        <!-- Margin b6tween right sliding menu's title and body scrollview -->
+    <!-- Margin b6tween right sliding menu's title and body scrollview -->
     <dimen name="margin_rightmenu_betweenbodytitle">15dp</dimen>
-        <!-- Top offset margin for the one cool feed share icons -->
+    <!-- Top offset margin for the one cool feed share icons -->
     <dimen name="shareicon_top_offset">20dp</dimen>
-        <!-- Right offset margin for the container of the one cool feed share icons -->
+    <!-- Right offset margin for the container of the one cool feed share icons -->
     <dimen name="shareicon_container_right_offset">70dp</dimen>
-        <!-- Top offset for the main share "text" icon/button -->
+    <!-- Top offset for the main share "text" icon/button -->
     <dimen name="shareicon_main_top_offset">20dp</dimen>
-        <!-- Offsets of the text in the about page -->
+    <!-- Offsets of the text in the about page -->
     <dimen name="about_text_left_offset">20dp</dimen>
     <dimen name="about_text_right_offset">20dp</dimen>
     <dimen name="about_text_vertical_separation">20dp</dimen>
-        <!-- Offsets for the MEM Detailed layout -->
+    <!-- Offsets for the MEM Detailed layout -->
     <dimen name="margin_memdetailed_descriptionoffsetleft">10dp</dimen>
     <dimen name="margin_memdetialed_titlemain_topoffset">5dp</dimen>
     <dimen name="margin_memdetialed_titlemain_bottomoffset">20dp</dimen>
@@ -68,20 +68,20 @@
     <dimen name="padding_rightmenu_betweenbodytitle">15dp</dimen>
     <dimen name="padding_rightmenu_rightedge">20dp</dimen>
     <dimen name="padding_rightmenu_rightedge_share">10dp</dimen>
-        <!-- Padding for the Michigan Engineer Magazine magazine items -->
+    <!-- Padding for the Michigan Engineer Magazine magazine items -->
     <dimen name="padding_michengmag_level1_texttop">220dp</dimen>
     <dimen name="padding_michengmag_level2_texttop">100dp</dimen>
 
     <!-- Size Dimensions -->
     <dimen name="drawer_item_icon_height">25dp</dimen>
-        <!-- Heights for the Michigan Engineer Magazine magazine items -->
+    <!-- Heights for the Michigan Engineer Magazine magazine items -->
     <dimen name="michengmag_level1_height">280dp</dimen>
     <dimen name="michengmag_level2_height">150dp</dimen>
-        <!-- Height for the One Cool Feed share icons -->
+    <!-- Height for the One Cool Feed share icons -->
     <dimen name="share_specificicons_height">30dp</dimen>
-        <!-- Height for the Share This Cool Thing "text" icon/button -->
+    <!-- Height for the Share This Cool Thing "text" icon/button -->
     <dimen name="share_mainicon_height">40dp</dimen>
-        <!-- Height and width for the back imageButton on the appropriate actionBar -->
+    <!-- Height and width for the back imageButton on the appropriate actionBar -->
     <dimen name="actionbar_backbutton_width">30dp</dimen>
     <dimen name="actionbar_backbutton_height">40dp</dimen>
 
@@ -104,17 +104,17 @@
 
     <!-- Parameters -->
     <integer name="slidingright_gradient_angle">315</integer>
-        <!-- Deltas for the share container to animate -->
+    <!-- Deltas for the share container to animate -->
     <integer name="shareicons_container_xdelta">-600</integer>
     <integer name="shareicons_container_ydelta">150</integer>
 
     <!-- Decoder v5 -->
-    <dimen name="menu_title">22sp</dimen>
+    <dimen name="menu_title">12sp</dimen>
     <dimen name="menu_title_padding">14dp</dimen>
     <dimen name="menu_activities_list_padding_left">24dp</dimen>
     <dimen name="menu_activities_list_padding_top_down">14dp</dimen>
-    <dimen name="menu_entries_text">20sp</dimen>
-    <dimen name="menu_entries_title">16sp</dimen>
+    <dimen name="menu_entries_text">10sp</dimen>
+    <dimen name="menu_entries_title">8sp</dimen>
     <dimen name="menu_entries_sides_padding">10dp</dimen>
     <dimen name="menu_entries_top_down_padding">15dp</dimen>
     <dimen name="menu_entries_top_down_radio_padding">7dp</dimen>

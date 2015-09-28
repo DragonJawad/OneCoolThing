@@ -763,13 +763,13 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
                 CMD_CAMERA_REAR, true);
         }
         
-        group = mSampleAppMenu
+/*        group = mSampleAppMenu
             .addGroup(getString(R.string.menu_datasets), true);
         mStartDatasetsIndex = CMD_DATASET_START_INDEX;
         mDatasetsNumber = mDatasetStrings.size();
         
         group.addRadioItem("Stones & Chips", mStartDatasetsIndex, true);
-        group.addRadioItem("Tarmac", mStartDatasetsIndex + 1, false);
+        group.addRadioItem("Tarmac", mStartDatasetsIndex + 1, false);*/
         
         mSampleAppMenu.attachMenu();
     }

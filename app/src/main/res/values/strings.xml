@@ -175,7 +175,7 @@
     <string name="target_quality_error_title">Low Quality Image</string>
     <string name="target_quality_error_desc">The image has very little detail, please try another.</string>
 
-    <string name="menu_back">Vuforia Samples</string>
+    <string name="menu_back">Decoder</string>
     <string name="menu_extended_tracking">Extended Tracking</string>
     <string name="menu_character_mode">Character Mode</string>
     <string name="menu_flash">Flash</string>
