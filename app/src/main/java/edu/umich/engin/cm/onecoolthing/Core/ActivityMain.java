@@ -201,7 +201,8 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         }
         else {
             // Otherwise, get the "current" page index to use
-            int newFragIndex = savedInstanceState.getInt(Constants.KEY_STATE_CURINDEX, 0);
+            int newFragIndex = savedInstanceState.getInt(Constants.KEY_STATE_CURINDEX,
+                    Constants.DEFAULTVAL_STATE_CURINDEX);
 
             changeFrag(newFragIndex, false);
         }
@@ -279,7 +280,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     public boolean getSeenTutorial() {
         // Get and return the value from the preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getBoolean(Constants.KEY_SEENTUTORIAL, false);
+        return sharedPreferences.getBoolean(Constants.KEY_SEENTUTORIAL, Constants.DEFAULTVAL_SEENTUTORIAL);
     }
 
 
@@ -1073,7 +1074,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     private boolean getIfSeenShakeDialog() {
         // Get and return the value from the preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getBoolean(Constants.KEY_SEENSHAKEDIALOG, false);
+        return sharedPreferences.getBoolean(Constants.KEY_SEENSHAKEDIALOG, Constants.DEFAULTVAL_SEENSHAKEDIALOG);
     }
 
     // Sets sharedPreferences boolean of whether or not tutorial has been seen yet
@@ -1121,7 +1122,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
     private boolean isShakeEnabled() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getBoolean(Constants.KEY_ENABLESHAKE, true);
+        return sharedPreferences.getBoolean(Constants.KEY_ENABLESHAKE, Constants.DEFAULTVAL_ENABLESHAKE);
     }
 
     private void setShakeEnabled(boolean isShakeEnabled) {

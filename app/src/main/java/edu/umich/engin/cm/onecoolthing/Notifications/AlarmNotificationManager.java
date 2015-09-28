@@ -43,7 +43,8 @@ public class AlarmNotificationManager {
     static public void cancelNotificationAlarmIfNecessary(Context context) {
         // If there hasn't been a notification scheduled before, then nothing to do
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if(!sharedPreferences.getBoolean(Constants.KEY_NOTIFSETYET, false)) {
+        if(!sharedPreferences.getBoolean(Constants.KEY_NOTIFSETYET,
+                Constants.DEFAULTVAL_NOTIFSETYET)) {
             return;
         }
 

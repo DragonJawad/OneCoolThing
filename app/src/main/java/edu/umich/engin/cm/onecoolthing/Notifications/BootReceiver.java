@@ -24,13 +24,16 @@ public class BootReceiver extends BroadcastReceiver {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
             // If the user doesn't want notifications, then nothing to do!
-            if(!sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE, false)) {
+            if(!sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE,
+                    Constants.DEFAULTVAL_ENABLEDAILYDOSE)) {
                 return;
             }
 
             // Get the hours and minutes to set the alarm at
-            int hours = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR, 8);
-            int minutes = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE, 0);
+            int hours = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR,
+                    Constants.DEFAULTVAL_DAILYNOTIFTIME_HOUR);
+            int minutes = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE,
+                    Constants.DEFAULTVAL_DAILYNOTIFTIME_MINUTE);
 
             // Finally, set up the Alarm itself so the beautiful notifications can run once again
             AlarmNotificationManager.setNotificationAlarm(context, hours, minutes);

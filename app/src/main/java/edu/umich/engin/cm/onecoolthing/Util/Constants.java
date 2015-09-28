@@ -16,4 +16,14 @@ public class Constants {
     public static final String KEY_DAILYNOTIFTIME_MINUTE = "Key_DailyNotifTime_Minute";
 
     public static final String KEY_NOTIFSETYET = "Key_NotificationSetYet";
+
+    // Default values for the various keys used with SharedPreferences
+    public static final int DEFAULTVAL_STATE_CURINDEX = 0;
+    public static final boolean DEFAULTVAL_SEENTUTORIAL = false;
+    public static final boolean DEFAULTVAL_SEENSHAKEDIALOG = false;
+    public static final boolean DEFAULTVAL_ENABLESHAKE = true;
+    public static final boolean DEFAULTVAL_ENABLEDAILYDOSE = true;
+    public static final int DEFAULTVAL_DAILYNOTIFTIME_HOUR = 8;
+    public static final int DEFAULTVAL_DAILYNOTIFTIME_MINUTE = 0;
+    public static final boolean DEFAULTVAL_NOTIFSETYET = false;
 }

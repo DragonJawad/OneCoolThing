@@ -68,12 +68,16 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
         // Get the shared preferences to load in the previous values for the different settings
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        mToggleBtnShake.setChecked(sharedPreferences.getBoolean(Constants.KEY_ENABLESHAKE, true));
-        mToggleBtnDailyDose.setChecked(sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE, false));
+        mToggleBtnShake.setChecked(sharedPreferences.getBoolean(Constants.KEY_ENABLESHAKE,
+                Constants.DEFAULTVAL_ENABLESHAKE));
+        mToggleBtnDailyDose.setChecked(sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE,
+                Constants.DEFAULTVAL_ENABLEDAILYDOSE));
 
         setTimeButtonText(
-                sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR, 8),
-                sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE, 0)
+                sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR,
+                        Constants.DEFAULTVAL_DAILYNOTIFTIME_HOUR),
+                sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE,
+                        Constants.DEFAULTVAL_DAILYNOTIFTIME_MINUTE)
         );
 
         mToggleBtnShake.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -109,8 +113,10 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
                     AlarmNotificationManager.cancelNotificationAlarmIfNecessary(getActivity());
                     // Otherwise, activate the notification
                 else {
-                    int hours = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR, 8);
-                    int minutes = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE, 0);
+                    int hours = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR,
+                            Constants.DEFAULTVAL_DAILYNOTIFTIME_HOUR);
+                    int minutes = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE,
+                            Constants.DEFAULTVAL_DAILYNOTIFTIME_MINUTE);
                     AlarmNotificationManager.setNotificationAlarm(getActivity(), hours, minutes);
                 }
             }
@@ -139,7 +145,8 @@ public class SettingsFragment extends Fragment implements TimePickerDialog.OnTim
         setTimeButtonText(hourOfDay, minute);
 
         // If notifications are enabled, then set the new notification up
-        if(sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE, false)) {
+        if(sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE,
+                Constants.DEFAULTVAL_ENABLEDAILYDOSE)) {
             AlarmNotificationManager.setNotificationAlarm(getActivity(), hourOfDay, minute);
         }
     }
