@@ -45,7 +45,7 @@ import java.util.ArrayList;
 
 import edu.umich.engin.cm.onecoolthing.CoolFeeds.MichiganCoolFeed;
 import edu.umich.engin.cm.onecoolthing.CoolFeeds.OneCoolFeed;
-import edu.umich.engin.cm.onecoolthing.Decoder.DecoderIntroFrag;
+import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderIntroFrag;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SendCoolFragment;

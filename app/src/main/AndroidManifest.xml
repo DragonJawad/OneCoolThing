@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Decoder.DecoderActivity"
+        <activity android:name=".DecoderV5.ActivityDecoder"
             android:label="@string/decoder_name"
             android:parentActivityName=".Core.ActivityMain"
             >
