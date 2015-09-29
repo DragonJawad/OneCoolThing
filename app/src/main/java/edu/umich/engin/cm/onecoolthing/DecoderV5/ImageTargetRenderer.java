@@ -28,8 +28,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.CubeShaders;
+import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.DecoderApplication3DModel;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.LoadingDialogHandler;
-import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleApplication3DModel;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleApplicationSession;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleUtils;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.Teapot;
@@ -61,7 +61,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     private Teapot mTeapot;
     
     private float kBuildingScale = 12.0f;
-    private SampleApplication3DModel mBuildingsModel;
+    private DecoderApplication3DModel mBuildingsModel;
     
     private Renderer mRenderer;
     
@@ -155,7 +155,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         
         try
         {
-            mBuildingsModel = new SampleApplication3DModel();
+            mBuildingsModel = new DecoderApplication3DModel();
             mBuildingsModel.loadModel(mActivity.getResources().getAssets(),
                 "ImageTargets/Buildings.txt");
         } catch (IOException e)

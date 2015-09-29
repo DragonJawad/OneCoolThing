@@ -24,10 +24,17 @@
         android:layout_weight="1"
     />
 
+    <ProgressBar
+        android:id="@+id/progress_horizontal"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminateOnly="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/button_start"
+        android:background="@drawable/button_background_general"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/decoder_intro_buttontext"/>
+        android:text="@string/decoder_intro_btn_downloadtext"/>
 
 </LinearLayout>

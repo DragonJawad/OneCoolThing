@@ -13,6 +13,9 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -40,20 +43,8 @@ public class Texture
         InputStream inputStream = null;
         try
         {
-            Log.d(LOGTAG, "Point 1");
             inputStream = assets.open(fileName, AssetManager.ACCESS_BUFFER);
-            Log.d(LOGTAG, "Point 2");
-            BufferedInputStream bufferedStream = new BufferedInputStream(
-                inputStream);
-            Log.d(LOGTAG, "Point 3");
-            Bitmap bitMap = BitmapFactory.decodeStream(bufferedStream);
-            Log.d(LOGTAG, "Point 4");
-            int[] data = new int[bitMap.getWidth() * bitMap.getHeight()];
-            bitMap.getPixels(data, 0, bitMap.getWidth(), 0, 0,
-                bitMap.getWidth(), bitMap.getHeight());
-            Log.d(LOGTAG, "Point 5");
-            return loadTextureFromIntBuffer(data, bitMap.getWidth(),
-                bitMap.getHeight());
+            return loadTextureFromInputStream(inputStream);
         } catch (IOException e)
         {
             Log.e(LOGTAG, "Failed to log texture '" + fileName + "' from APK");
@@ -61,7 +52,30 @@ public class Texture
             return null;
         }
     }
-    
+
+    public static Texture loadTextureFromFile(File fileDir, String fileName) {
+        InputStream inputStream = null;
+        try {
+            File targetFile = new File(fileDir, fileName);
+            inputStream = new FileInputStream(targetFile);
+            return loadTextureFromInputStream(inputStream);
+        } catch (FileNotFoundException e) {
+            Log.e(LOGTAG, "Failed to log texture '" + fileName + "' from file");
+            Log.i(LOGTAG, e.getMessage());
+            return null;
+        }
+    }
+
+    private static Texture loadTextureFromInputStream(InputStream inputStream) {
+        BufferedInputStream bufferedStream = new BufferedInputStream(
+                inputStream);
+        Bitmap bitMap = BitmapFactory.decodeStream(bufferedStream);
+        int[] data = new int[bitMap.getWidth() * bitMap.getHeight()];
+        bitMap.getPixels(data, 0, bitMap.getWidth(), 0, 0,
+                bitMap.getWidth(), bitMap.getHeight());
+        return loadTextureFromIntBuffer(data, bitMap.getWidth(),
+                bitMap.getHeight());
+    }
     
     public static Texture loadTextureFromIntBuffer(int[] data, int width,
         int height)

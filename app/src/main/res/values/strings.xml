@@ -88,7 +88,10 @@
 
     <!-- Decoder strings --> <!-- TODO: Rename these and remove unused ones -->
     <string name="decoder_intro_text">This feature will let you see bonus content when you hover over specially coded objects. Coded objects may be found in The Michigan Engineer magazine and locations on the University of Michigan campus. Coded objects will be marked with the One Cool Thing logo.\n\nTo use the Decoder, tap the button below to open the Decoder, then hover over a coded object. </string>
-    <string name="decoder_intro_buttontext">Start Decoder</string>
+    <string name="decoder_intro_btn_starttext">Start Decoder</string>
+    <string name="decoder_intro_btn_downloadtext">Download Content</string>
+    <string name="decoder_download_success">Decoder is now ready to start</string>
+    <string name="decoder_download_failed">Sorry, failed to download the Decoder content</string>
     <string name="decoder_failed_toast">Sorry, Decoder couldn\'t run properly</string>
     <string name="decoder_menu_back">Vuforia Samples</string>
     <string name="decoder_menu_extended_tracking">Extended Tracking</string>
