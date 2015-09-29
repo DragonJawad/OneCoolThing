@@ -13,9 +13,10 @@
         >
         <ImageButton
             android:id="@+id/navButton_main"
-            android:layout_width="35dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
+            android:paddingLeft="@dimen/padding_actionbar_icon"
             android:paddingRight="@dimen/padding_actionbar_icon"
             android:paddingEnd="@dimen/padding_actionbar_icon"
             android:layout_magin="0"
@@ -34,7 +35,7 @@
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@+id/containerOCT"
                 android:layout_toEndOf="@+id/containerOCT"
-                android:layout_marginLeft="-45dp"
+                android:layout_marginLeft="-50dp"
                 android:background="@color/actionbar_cool_mainbg"/>
 
             <!-- OneCoolThing -->
@@ -49,10 +50,11 @@
 
                 <ImageButton
                     android:id="@+id/navButton_OCT"
-                    android:layout_width="45dp"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
-                    android:paddingLeft="@dimen/padding_general"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:src="@drawable/onect"
                     android:background="?android:attr/selectableItemBackground"
                     />
@@ -84,10 +86,11 @@
 
                 <ImageButton
                     android:id="@+id/navButton_MEM"
-                    android:layout_width="45dp"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
-                    android:paddingLeft="@dimen/padding_general"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:src="@drawable/justm"
                     android:background="?android:attr/selectableItemBackground"
                     />

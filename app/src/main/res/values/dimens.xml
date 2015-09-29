@@ -63,7 +63,7 @@
 
     <!-- Padding Dimens -->
     <dimen name="padding_general">5dp</dimen>
-    <dimen name="padding_actionbar_icon">15dp</dimen>
+    <dimen name="padding_actionbar_icon">12dp</dimen>
     <dimen name="padding_drawer_left">10dp</dimen>
     <dimen name="padding_rightmenu_betweenbodytitle">15dp</dimen>
     <dimen name="padding_rightmenu_rightedge">20dp</dimen>
