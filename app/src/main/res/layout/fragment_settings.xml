@@ -90,10 +90,12 @@
                 android:paddingLeft="@dimen/padding_general"
                 android:paddingRight="@dimen/padding_general"
                 android:id="@+id/buttonChangeTime"
+                android:background="@drawable/button_background_general"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:textSize="@dimen/text_about_clicks"
+                android:textColor="@color/black"
                 />
 
         </RelativeLayout>

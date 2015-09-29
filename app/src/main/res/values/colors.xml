@@ -94,4 +94,7 @@
     <color name="slidingright_greydarker_upperleft">#5B5D60</color>
     <color name="slidingright_greydarker_middle">#373B43</color>
     <color name="slidingright_greydarker_bottomright">#131724</color>
+
+    <!-- Etc Colors -->
+    <color name="buttonbg_default">#ACBAD4</color>
 </resources>
