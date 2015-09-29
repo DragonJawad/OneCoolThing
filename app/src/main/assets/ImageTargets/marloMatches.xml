@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Tracking xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Tracking>
     <ImageTarget name="xplore_spring2015" url="https://www.youtube.com/watch?v=8agHJnNpSu0" />
     <ImageTarget name="truebelievers_spring2015" url="https://www.youtube.com/watch?v=gtFVvCS1Qvc" />
     <ImageTarget name="social_spring2015" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Comments for The Michigan Engineer" />
@@ -19,6 +19,7 @@
     <ImageTarget name="inourimage" url="http://youtu.be/c6J7kfG9JrY?list=PLFe0SMV3hBCDPEEhG0iLEvXVpfQsq_NdS" />
     <ImageTarget name="randaccess" url="http://youtu.be/l4bE326tlNA" />
     <ImageTarget name="comtweet" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Comments for The Michigan Engineer" />
+    <ImageTarget name="comtweet_fall2015" url="" emailTo="MichiganEngineer@umich.edu" emailSubject="Comments for The Michigan Engineer" />
     <ImageTarget name="pawblack" url="http://engcomm.engin.umich.edu/wolverine.html" />
     <ImageTarget name="paw" url="http://engcomm.engin.umich.edu/wolverine.html" />
     <ImageTarget name="fxb" url="http://youtu.be/Au2Ew6t3Acg" />
@@ -31,6 +32,11 @@
     <ImageTarget name="Fountain" url="http://www.cityoffountainsbuilders.com/176.jpg" />
     <ImageTarget name="BusStopTight" url="http://engcomm.engin.umich.edu/redirect.php" />
     <ImageTarget name="BusStopWide" url="http://engcomm.engin.umich.edu/redirect.php" />
-    <ImageTarget name="Wolverine" url="http://engcomm.engin.umich.edu/wolverine.html" />
     <ImageTarget name="Marlo" url="http://youtu.be/c6J7kfG9JrY?list=PLFe0SMV3hBCDPEEhG0iLEvXVpfQsq_NdS" />
+    <ImageTarget name="historyoftheinternet" url="http://dme.engin.umich.edu/historyoftheinternet.php" />
+    <ImageTarget name="randomaccessrowblue" url="http://dme.engin.umich.edu/randomaccessrowblue.php" />
+    <ImageTarget name="victorsgiving" url="http://dme.engin.umich.edu/victorsgiving.php" />
+    <ImageTarget name="etheopia" url="http://dme.engin.umich.edu/ethiopia_redirect.php" />
+    <ImageTarget name="erade" url="http://dme.engin.umich.edu/erade_redirect.php" />
+    <ImageTarget name="driverlesscars" url="http://dme.engin.umich.edu/driverlesscars_redirect.php" />
 </Tracking>

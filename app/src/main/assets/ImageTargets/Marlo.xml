@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="aurum" size="300.000000 159.108383" />
+    <ImageTarget name="historyoftheinternet" size="300.000000 151.449814" />
+    <ImageTarget name="randomaccessrowblue" size="300.000000 362.444458" />
+    <ImageTarget name="victorsgiving" size="300.000000 362.444458" />
+    <ImageTarget name="etheopia" size="300.000000 362.444458" />
+    <ImageTarget name="erade" size="300.000000 362.444458" />
+    <ImageTarget name="driverlesscars" size="300.000000 362.444458" />
+    <ImageTarget name="comtweet_fall2015" size="300.000000 362.444458" />
+    <ImageTarget name="Continuum" size="300.000000 207.142853" />
+    <ImageTarget name="Generation" size="300.000000 205.923340" />
+    <ImageTarget name="Infinium" size="300.000000 206.643356" />
+    <ImageTarget name="M-Pulse" size="300.000000 207.812500" />
+    <ImageTarget name="MaizeAndBlue" size="300.000000 211.518326" />
+    <ImageTarget name="Maize" size="300.000000 209.375000" />
+    <ImageTarget name="Quantum" size="300.000000 208.173920" />
+    <ImageTarget name="SpectruM" size="300.000000 205.699478" />
+    <ImageTarget name="SunRunner" size="300.000000 210.104523" />
+    <ImageTarget name="Wolverine" size="300.000000 206.574402" />
+    <ImageTarget name="SolarVision" size="300.000000 211.423553" />
+    <ImageTarget name="Momentum" size="300.000000 206.412476" />
     <ImageTarget name="xplore_spring2015" size="1000.000000 1208.333374" />
     <ImageTarget name="truebelievers_spring2015" size="1000.000000 1208.333374" />
     <ImageTarget name="social_spring2015" size="1000.000000 1208.333374" />
@@ -32,7 +52,6 @@
     <ImageTarget name="Fountain" size="1000.000000 1333.333374" />
     <ImageTarget name="BusStopTight" size="1000.000000 1243.243286" />
     <ImageTarget name="BusStopWide" size="1000.000000 1333.676636" />
-    <ImageTarget name="Wolverine" size="100.000000 173.913040" />
     <ImageTarget name="Marlo" size="1800.000000 2175.000000" />
   </Tracking>
 </QCARConfig>
