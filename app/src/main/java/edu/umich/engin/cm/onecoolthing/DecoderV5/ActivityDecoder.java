@@ -59,6 +59,7 @@ import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleApplicationS
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.Texture;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
+import edu.umich.engin.cm.onecoolthing.Util.StorageUtils;
 
 
 public class ActivityDecoder extends Activity implements SampleApplicationControl,
@@ -81,6 +82,9 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
     ArrayList<ImageTarget> mImageTargetList;
     // Holds a reference to the last matched image target name
     String lastMatchedTarget;
+    boolean mWasLastMatchCar = true;
+    // List of all the solar car metadata that may be displayed
+    ArrayList<DecoderCarMetadata> mCarMetadata;
 
     SampleApplicationSession vuforiaAppSession;
     
@@ -138,7 +142,7 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
 
         mGestureDetector = new GestureDetector(this, new GestureListener());
 
-        // Load any sample specific textures:
+        // Load any specific textures:
         mTextures = new Vector<Texture>();
         loadTextures();
 
@@ -149,6 +153,9 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
 
     private void addData() {
         mDatasetStrings.add(PATH_IMAGETARGET_ITEMS);
+
+        // Get all the car metadata
+        mCarMetadata = ParseDecoderContent.getStoredMetadata(this);
 
         // TODO: Put all this parsing somewhere cleaner, preferably in its own class?
         // Parse and cache the xml file that defines what all the matches do
@@ -204,15 +211,36 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
     }
 
     // Called for when an image target has been found
-    public void foundImageTarget(String targetName) {
+
+    /**
+     *
+     * @param targetName - Name of target to be matched
+     * @return 0 if valid ImageTarget found, -1 if nothing valid found, otherwise index+1 of car matched
+     */
+    public int foundImageTarget(String targetName) {
         Log.d(LOGTAG, "Received targetName: " + targetName);
 
-        // If this target has already been found, then don't launch it again
-        if(targetName.equals(lastMatchedTarget)) return;
-            // Otherwise, set this target as the last matched target
-        else
+        // If this target has already been found AND if last target was a image target, then don't launch it again
+        if(targetName.equals(lastMatchedTarget) && !mWasLastMatchCar) {
+            return -1; // No match made right now
+        }
+        // Otherwise, set this target as the last tried-to-be-matched target
+        else {
             lastMatchedTarget = targetName;
+        }
         // TODO: Think of a better alternative to prevent multiple successive matches
+
+        // First try to find a match with the car names
+        for(int i = 0; i < mCarMetadata.size(); ++i) {
+            // If the names match, then this is the one!
+            if(mCarMetadata.get(i).name.equals(targetName)) {
+                // Remember that the last match was a car match
+                mWasLastMatchCar = true;
+
+                // Return the index + 1, for loading up the appropriate model+texture
+                return i+1;
+            }
+        }
 
         // Holds [supposedly] the matching ImageTarget
         ImageTarget targetMatch = null;
@@ -232,7 +260,7 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         // If the match is still null, do nothing and play it cool
         if(targetMatch == null) {
             Log.e(LOGTAG, "Found no ImageTarget match!");
-            return;
+            return -1; // No match whatsoever
         }
 
         // If gotten to this point, then send some data that the Decoder has been used to find something
@@ -249,6 +277,10 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
             String targetEmailSubject = targetMatch.getTargetEmailSubject();
             IntentStarter.sendEmail(this, targetEmailTo, targetEmailSubject);
         }
+        // Remember that this match for sure was NOT a car for sure
+        mWasLastMatchCar = false;
+
+        return 0; // Found an actual ImageTarget, return 0
     }
 
 
@@ -294,14 +326,25 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
     
     private void loadTextures()
     {
+        // Load in the default, good ol' brass teapot
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",
             getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
+        /*mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
             getAssets()));
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
             getAssets()));
         mTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg",
-            getAssets()));
+            getAssets()));*/
+
+        // Then, add in a texture - in precise order - for every car that could be displayed
+        for (DecoderCarMetadata carMetadata : mCarMetadata) {
+            mTextures.add(
+                    Texture.loadTextureFromFile(
+                            StorageUtils.getAppDataFolder(this),
+                            carMetadata.filepath_texture
+                    )
+            );
+        }
     }
     
     

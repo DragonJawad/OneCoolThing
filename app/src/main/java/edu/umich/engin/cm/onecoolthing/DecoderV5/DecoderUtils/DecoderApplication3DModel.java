@@ -10,6 +10,8 @@ package edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils;
 import android.content.res.AssetManager;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,7 +27,60 @@ public class DecoderApplication3DModel extends MeshObject
     private ByteBuffer textCoords;
     private ByteBuffer norms;
     int numVerts = 0;
-    
+
+    public void loadModel(File fileDir, String fileName) throws IOException {
+        InputStream is = null;
+        try
+        {
+            File targetFile = new File(fileDir, fileName);
+            is = new FileInputStream(targetFile);
+
+            // TODO: Separate rest of method into own function
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(is));
+
+            String line = reader.readLine();
+
+            int floatsToRead = Integer.parseInt(line);
+            numVerts = floatsToRead / 3;
+
+            verts = ByteBuffer.allocateDirect(floatsToRead * 4);
+            verts.order(ByteOrder.nativeOrder());
+            for (int i = 0; i < floatsToRead; i++)
+            {
+                verts.putFloat(Float.parseFloat(reader.readLine()));
+            }
+            verts.rewind();
+
+            line = reader.readLine();
+            floatsToRead = Integer.parseInt(line);
+
+            norms = ByteBuffer.allocateDirect(floatsToRead * 4);
+            norms.order(ByteOrder.nativeOrder());
+            for (int i = 0; i < floatsToRead; i++)
+            {
+                norms.putFloat(Float.parseFloat(reader.readLine()));
+            }
+            norms.rewind();
+
+            line = reader.readLine();
+            floatsToRead = Integer.parseInt(line);
+
+            textCoords = ByteBuffer.allocateDirect(floatsToRead * 4);
+            textCoords.order(ByteOrder.nativeOrder());
+            for (int i = 0; i < floatsToRead; i++)
+            {
+                textCoords.putFloat(Float.parseFloat(reader.readLine()));
+            }
+            textCoords.rewind();
+
+        }
+        finally
+        {
+            if (is != null)
+                is.close();
+        }
+    }
     
     public void loadModel(AssetManager assetManager, String filename)
         throws IOException
@@ -34,6 +89,8 @@ public class DecoderApplication3DModel extends MeshObject
         try
         {
             is = assetManager.open(filename);
+
+            // TODO: Separate rest of method into own function
             BufferedReader reader = new BufferedReader(
                 new InputStreamReader(is));
             

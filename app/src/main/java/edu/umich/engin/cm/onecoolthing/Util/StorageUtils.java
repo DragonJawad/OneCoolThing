@@ -4,9 +4,13 @@ import android.content.Context;
 import android.os.Environment;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -87,6 +91,25 @@ public class StorageUtils {
         File newFile = new File(directory, newFileName);
         FileOutputStream outputStream = new FileOutputStream(newFile);
         outputStream.write(content.getBytes());
+    }
+
+    static public String getStringFromFile(File directory, String fileName) throws IOException {
+        // Get the inputstream of the file
+        File targetFile = new File(directory, fileName);
+        InputStream inputStream = new FileInputStream(targetFile);
+
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String receiveString = "";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        while ( (receiveString = bufferedReader.readLine()) != null ) {
+            stringBuilder.append(receiveString);
+        }
+
+        // Finally close the input stream and return the results
+        inputStream.close();
+        return stringBuilder.toString();
     }
 
     static public boolean deleteDirectory(File dir) {

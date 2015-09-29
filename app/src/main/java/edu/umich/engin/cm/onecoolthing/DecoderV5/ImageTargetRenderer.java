@@ -7,6 +7,7 @@ and other countries. Trademarks of QUALCOMM Incorporated are used with permissio
 
 package edu.umich.engin.cm.onecoolthing.DecoderV5;
 
+import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -21,7 +22,9 @@ import com.qualcomm.vuforia.TrackableResult;
 import com.qualcomm.vuforia.VIDEO_BACKGROUND_REFLECTION;
 import com.qualcomm.vuforia.Vuforia;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -34,6 +37,7 @@ import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleApplicationS
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleUtils;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.Teapot;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.Texture;
+import edu.umich.engin.cm.onecoolthing.Util.StorageUtils;
 
 
 // The renderer class for the ImageTargets sample. 
@@ -45,6 +49,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     private ActivityDecoder mActivity;
     
     private Vector<Texture> mTextures;
+    private Vector<DecoderApplication3DModel> mCarModels;
     
     private int shaderProgramID;
     
@@ -61,7 +66,6 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     private Teapot mTeapot;
     
     private float kBuildingScale = 12.0f;
-    private DecoderApplication3DModel mBuildingsModel;
     
     private Renderer mRenderer;
     
@@ -153,16 +157,6 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         texSampler2DHandle = GLES20.glGetUniformLocation(shaderProgramID,
                 "texSampler2D");
         
-        try
-        {
-            mBuildingsModel = new DecoderApplication3DModel();
-            mBuildingsModel.loadModel(mActivity.getResources().getAssets(),
-                "ImageTargets/Buildings.txt");
-        } catch (IOException e)
-        {
-            Log.e(LOGTAG, "Unable to load buildings");
-        }
-        
         // Hide the Loading Dialog
         mActivity.loadingDialogHandler
             .sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
@@ -196,19 +190,19 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             Trackable trackable = result.getTrackable();
 
             // Tell the DecoderActivity that a match has been found
-            Log.d(LOGTAG, "Got a tag with the following userdata: " + trackable.getUserData());
-            mActivity.foundImageTarget((String) trackable.getUserData());
+//            Log.d(LOGTAG, "Got a tag with the following userdata: " + trackable.getUserData());
+//            printUserData(trackable);
+            int matchCode = mActivity.foundImageTarget((String) trackable.getUserData());
 
-            printUserData(trackable);
+            // If there really wasn't a match, then do nothing for this trackable
+            if(matchCode == -1) {
+                continue;
+            }
+
             Matrix44F modelViewMatrix_Vuforia = Tool
                 .convertPose2GLMatrix(result.getPose());
             float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
-            
-            int textureIndex = trackable.getName().equalsIgnoreCase("stones") ? 0
-                : 1;
-            textureIndex = trackable.getName().equalsIgnoreCase("tarmac") ? 2
-                : textureIndex;
-            
+
             // deal with the modelview and projection matrices
             float[] modelViewProjection = new float[16];
             
@@ -230,62 +224,68 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             
             // activate the shader program and bind the vertex/normal/tex coords
             GLES20.glUseProgram(shaderProgramID);
-            
-            if (!mActivity.isExtendedTrackingActive())
-            {
+
+            // If found a normal image target, simply show the good ol' teapot for the user
+            if(matchCode == 0) {
                 GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
                         false, 0, mTeapot.getVertices());
                 GLES20.glVertexAttribPointer(normalHandle, 3, GLES20.GL_FLOAT,
                         false, 0, mTeapot.getNormals());
                 GLES20.glVertexAttribPointer(textureCoordHandle, 2,
                         GLES20.GL_FLOAT, false, 0, mTeapot.getTexCoords());
-                
+
                 GLES20.glEnableVertexAttribArray(vertexHandle);
                 GLES20.glEnableVertexAttribArray(normalHandle);
                 GLES20.glEnableVertexAttribArray(textureCoordHandle);
-                
+
                 // activate texture 0, bind it, and pass to shader
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                        mTextures.get(textureIndex).mTextureID[0]);
+                        mTextures.get(matchCode).mTextureID[0]);
                 GLES20.glUniform1i(texSampler2DHandle, 0);
-                
+
                 // pass the model view matrix to the shader
                 GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                         modelViewProjection, 0);
-                
+
                 // finally draw the teapot
                 GLES20.glDrawElements(GLES20.GL_TRIANGLES,
                         mTeapot.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
                         mTeapot.getIndices());
-                
+
                 // disable the enabled arrays
                 GLES20.glDisableVertexAttribArray(vertexHandle);
                 GLES20.glDisableVertexAttribArray(normalHandle);
                 GLES20.glDisableVertexAttribArray(textureCoordHandle);
-            } else
-            {
+            }
+            // Otherwise, showing a car model now
+            else {
+                // Get the current model, specified by the match code
+                DecoderApplication3DModel curModel = mCarModels.get(matchCode-1);
+
                 GLES20.glDisable(GLES20.GL_CULL_FACE);
                 GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
-                        false, 0, mBuildingsModel.getVertices());
+                        false, 0, curModel.getVertices());
                 GLES20.glVertexAttribPointer(normalHandle, 3, GLES20.GL_FLOAT,
-                        false, 0, mBuildingsModel.getNormals());
+                        false, 0, curModel.getNormals());
                 GLES20.glVertexAttribPointer(textureCoordHandle, 2,
-                        GLES20.GL_FLOAT, false, 0, mBuildingsModel.getTexCoords());
-                
+                        GLES20.GL_FLOAT, false, 0, curModel.getTexCoords());
+
                 GLES20.glEnableVertexAttribArray(vertexHandle);
                 GLES20.glEnableVertexAttribArray(normalHandle);
                 GLES20.glEnableVertexAttribArray(textureCoordHandle);
-                
+
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                        mTextures.get(3).mTextureID[0]);
+                        mTextures.get(matchCode).mTextureID[0]);
+
                 GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                         modelViewProjection, 0);
                 GLES20.glUniform1i(texSampler2DHandle, 0);
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0,
-                        mBuildingsModel.getNumObjectVertex());
-                
+                        curModel.getNumObjectVertex());
+
                 SampleUtils.checkGLError("Renderer DrawBuildings");
             }
             
@@ -309,7 +309,43 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     public void setTextures(Vector<Texture> textures)
     {
         mTextures = textures;
-        
+    }
+
+    public void setCarModels(Context context, ArrayList<DecoderCarMetadata> carModelsMetadataList) {
+        // Initialize the vector of car models to the same size as the car models metadata list
+        mCarModels = new Vector<DecoderApplication3DModel>(carModelsMetadataList.size());
+
+        // TODO: Double check vector size is really zero right now
+        if(mCarModels.size() != 0) {
+            throw new IllegalArgumentException("Improper vector");
+        }
+
+        // Create the 3D model of each car from the stored data
+        File fileDir = StorageUtils.getAppDataFolder(context); // All models stored in AppData
+        for (int i = 0; i < carModelsMetadataList.size(); ++i) {
+            // Create the new instance of a car model
+            DecoderApplication3DModel curModel = new DecoderApplication3DModel();
+
+            // Load the model from the appropriate stored file
+            try {
+                curModel.loadModel(fileDir,
+                        carModelsMetadataList.get(i).filepath_vertex);
+            } catch (IOException e) {
+                Log.e(LOGTAG, "Failed to load model '" +
+                        carModelsMetadataList.get(i).filepath_vertex + "' from file");
+                Log.i(LOGTAG, e.getMessage());
+
+                curModel = null;
+            }
+
+            // Insert the complete model into the vector of car models
+            mCarModels.add(curModel);
+        }
+
+        // TODO: Remove below, just personal checking
+        if(mCarModels.size() != carModelsMetadataList.size()) {
+            throw new IllegalArgumentException("Improper vector part2");
+        }
     }
     
 }

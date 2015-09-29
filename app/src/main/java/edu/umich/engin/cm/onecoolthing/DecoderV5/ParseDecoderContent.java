@@ -46,6 +46,49 @@ public class ParseDecoderContent {
         mCurrentTask.execute();
     }
 
+    // Get all the decoder items locally stored
+        // Note: Assumes files have actually been stored, and stored correctly
+    static public ArrayList<DecoderCarMetadata> getStoredMetadata(Context context) {
+        ArrayList<DecoderCarMetadata> results = new ArrayList<DecoderCarMetadata>();
+
+        try {
+            // First, get the index json from the stored file that should be there
+            String jsonStr = StorageUtils.getStringFromFile(
+                    StorageUtils.getAppDataFolder(context),
+                    URL_MAIN
+            );
+
+            // Then get the JSON object that holds all the data as more objects
+            JSONArray baseArray = new JSONArray(jsonStr);
+            JSONObject allContentJSON = baseArray.getJSONObject(0); // Only one object
+
+            // Then loop through each subobject in the json and add their data in
+            Iterator<String> keyIterator = allContentJSON.keys();
+            while(keyIterator.hasNext()) {
+                // Get the current JSON obj of data
+                String key = keyIterator.next();
+                JSONObject curJSON = allContentJSON.getJSONObject(key);
+
+                // Create the new metadata object and fill it up
+                DecoderCarMetadata curMetadata = new DecoderCarMetadata();
+                curMetadata.name = curJSON.getString(TAG_NAME);
+                curMetadata.filepath_texture = curJSON.getString(TAG_TEXTURE);
+                curMetadata.filepath_vertex = curJSON.getString(TAG_TEXTNAME);
+
+                // Finally, add the metadata object to the entire list of metadata objects
+                results.add(curMetadata);
+            }
+
+        } catch (Exception e) {
+            Log.e(LOGTAG, "getStoredMetadata() failed");
+            Log.i(LOGTAG, e.getMessage());
+
+            return null;
+        }
+
+        return results;
+    }
+
     public void cancelAnyTasks() {
         if(mCurrentTask != null) {
             mCurrentTask.cancel(true);
