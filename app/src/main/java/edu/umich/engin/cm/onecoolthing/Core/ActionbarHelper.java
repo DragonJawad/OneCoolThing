@@ -105,6 +105,11 @@ public class ActionbarHelper {
         if(mCurrentMode == mode)
             return;
 
+        // TODO: Overly hacky solution. Supposed to only use CoolFeeds actionbar. Properly do when time allows
+        if(mode != ActionBarType.ONECOOLFEED && mode != ActionBarType.MEMCOOLFEEED) {
+            return;
+        }
+
         // Hide all ActionBars by default, first
         mViewCoolFeeds.setVisibility(View.INVISIBLE);
         mViewActionBarTransparent.setVisibility(View.INVISIBLE);
@@ -188,7 +193,17 @@ public class ActionbarHelper {
      * @param useAnimation True if the MEM part should slide in/out
      */
     private void switchCoolFeed(boolean useOCF, boolean useAnimation) {
-        // If the current active feed is the requested one, nothing to do
+        // First off, try to switch to the correct fragment, if necessary
+        if(useOCF) {
+            // Switch to the One Cool Thing/Feed fragment, if not already on it
+            mActivityRef.changeFragIfNecessary(0);
+        }
+        else {
+            // Switch to the Michigan Engineer Mag, if not already on it
+            mActivityRef.changeFragIfNecessary(1);
+        }
+
+        // If the current active feed in the actionbar is the requested one, nothing more to do
         if(useOCF == mIsOCFActive)
             return;
 
@@ -227,11 +242,5 @@ public class ActionbarHelper {
 
         // Finally remember what mode the CoolFeed is now in
         mIsOCFActive = useOCF;
-
-        // TODO: Tell the Activity to switch the current fragment
-        if(useOCF)
-            mActivityRef.changeFragIfNecessary(0);
-        else
-            mActivityRef.changeFragIfNecessary(1);
     }
 }
