@@ -13,15 +13,13 @@
         >
         <ImageButton
             android:id="@+id/navButton_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/padding_actionbar_icon"
-            android:paddingBottom="@dimen/padding_actionbar_icon"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
             android:paddingRight="@dimen/padding_actionbar_icon"
             android:paddingEnd="@dimen/padding_actionbar_icon"
-            android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
-            android:layout_marginStart="@dimen/margin_actionbar_icon_left"
-            android:src="@drawable/ic_drawer_normal"
+            android:layout_magin="0"
+            android:src="@drawable/hamfull"
             android:background="?android:attr/selectableItemBackground"
             />
 
@@ -54,9 +52,8 @@
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
-                    android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
-                    android:layout_marginStart="@dimen/margin_actionbar_icon_left"
-                    android:src="@drawable/ic_launcher"
+                    android:paddingLeft="@dimen/padding_general"
+                    android:src="@drawable/onect"
                     android:background="?android:attr/selectableItemBackground"
                     />
 
@@ -82,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="45dp"
+                android:layout_marginLeft="50dp"
                 android:background="@color/actionbar_cool_mem">
 
                 <ImageButton
@@ -90,9 +87,8 @@
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
-                    android:layout_marginLeft="@dimen/margin_actionbar_icon_left"
-                    android:layout_marginStart="@dimen/margin_actionbar_icon_left"
-                    android:src="@drawable/ic_drawer_normal"
+                    android:paddingLeft="@dimen/padding_general"
+                    android:src="@drawable/justm"
                     android:background="?android:attr/selectableItemBackground"
                     />
 
