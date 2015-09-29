@@ -37,6 +37,10 @@ public class ActionbarHelper {
     private boolean mFirstCoolFeedSetupDone = false;
     // The container of the MEM portion in the CoolFeeds actionbar (for moving and animating)
     View mCoolFeedsMEMContainer;
+    // Imagebuttons for the OCT and MEM portions, respectively
+    ImageButton mImageBtnOCT;
+    ImageButton mImageBtnMEM;
+    private static final float DISABLEDOPACITY = 0.7f;
     // Locations to and from where the MEM part of the CoolFeed actionbar should animate around
     private int[] mClosedLoc = null;
     private int[] mOpenLoc = null;
@@ -153,17 +157,17 @@ public class ActionbarHelper {
 
         // Cache all the necessary parts of the CoolFeeds to setup the switching, sliding actions
         mCoolFeedsMEMContainer = mViewCoolFeeds.findViewById(R.id.containerMEM);
-        ImageButton imageBtnOCF = (ImageButton) mViewCoolFeeds.findViewById(R.id.navButton_OCT);
-        ImageButton imageBtnMEM = (ImageButton) mViewCoolFeeds.findViewById(R.id.navButton_MEM);
+        mImageBtnOCT = (ImageButton) mViewCoolFeeds.findViewById(R.id.navButton_OCT);
+        mImageBtnMEM = (ImageButton) mViewCoolFeeds.findViewById(R.id.navButton_MEM);
 
         // Set the image buttons to switch the current feed, as necessary
-        imageBtnOCF.setOnClickListener(new View.OnClickListener() {
+        mImageBtnOCT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switchCoolFeed(true, true);
             }
         });
-        imageBtnMEM.setOnClickListener(new View.OnClickListener() {
+        mImageBtnMEM.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switchCoolFeed(false, true);
@@ -189,12 +193,12 @@ public class ActionbarHelper {
 
     /**
      * For the mViewCoolFeeds actionbar, switches the "active" part of the actionbar
-     * @param useOCF True if One Cool Feed should be the active item, False for MEM
+     * @param useOCT True if One Cool Feed should be the active item, False for MEM
      * @param useAnimation True if the MEM part should slide in/out
      */
-    private void switchCoolFeed(boolean useOCF, boolean useAnimation) {
+    private void switchCoolFeed(boolean useOCT, boolean useAnimation) {
         // First off, try to switch to the correct fragment, if necessary
-        if(useOCF) {
+        if(useOCT) {
             // Switch to the One Cool Thing/Feed fragment, if not already on it
             mActivityRef.changeFragIfNecessary(0);
         }
@@ -204,7 +208,7 @@ public class ActionbarHelper {
         }
 
         // If the current active feed in the actionbar is the requested one, nothing more to do
-        if(useOCF == mIsOCFActive)
+        if(useOCT == mIsOCFActive)
             return;
 
         // If the locations haven't been cached yet, get them now
@@ -229,18 +233,26 @@ public class ActionbarHelper {
         long animDuration = useAnimation ? 400 : 0;
 
         ObjectAnimator objectAnimator;
-        if(useOCF) {
+        if(useOCT) {
             // If so, then "closing" the MEM portion
             objectAnimator = ObjectAnimator.ofFloat(mCoolFeedsMEMContainer, "translationX", 0f, mClosedLoc[0] - mOpenLoc[0]);
+
+            // "Gray out" the MEM icon and make the OCT icon visible entirely
+            mImageBtnMEM.setAlpha(DISABLEDOPACITY);
+            mImageBtnOCT.setAlpha(1f);
         }
         else {
             // Otherwise, "opening" the MEM portio
             objectAnimator = ObjectAnimator.ofFloat(mCoolFeedsMEMContainer, "translationX", mClosedLoc[0] - mOpenLoc[0], 0f);
+
+            // "Gray out" the OCT icon and make the MEM icon visible entirely
+            mImageBtnOCT.setAlpha(DISABLEDOPACITY);
+            mImageBtnMEM.setAlpha(1f);
         }
         objectAnimator.setDuration(animDuration);
         objectAnimator.start();
 
         // Finally remember what mode the CoolFeed is now in
-        mIsOCFActive = useOCF;
+        mIsOCFActive = useOCT;
     }
 }
