@@ -51,7 +51,8 @@ public class ActionbarHelper {
         MEMCOOLFEEED,   // CoolFeeds actionbar with the Mich Eng Mag part active
         TRANSPARENT,    // ActionBar that has a transparent background
         SOLIDBG,        // ActionBar that has a solid white bg
-        BACKONLY        // For ActionBar that only contains the back button [+solid white bg]
+        BACKONLY,        // For ActionBar that only contains the back button [+solid white bg]
+        NA
     }
 
     public ActionbarHelper(ActivityMain activity, LayoutInflater inflater, ViewGroup actionbarContainer) {
@@ -61,6 +62,7 @@ public class ActionbarHelper {
         // Inflate the CoolFeeds ActionBar view
         mViewCoolFeeds = inflater.inflate(R.layout.actionbar_coolfeeds, null);
 
+/*
         // Inflate the simple ActionBar view
         mViewActionBarTransparent = inflater.inflate(R.layout.actionbar_withtransbg, null);
         // Set the imageButton from the simple view to toggle the slidingMenu
@@ -89,16 +91,20 @@ public class ActionbarHelper {
                     mActivityRef.onBackPressed();
                 }
             });
+*/
 
         // Add the actionBars to the respective container
         actionbarContainer.addView(mViewCoolFeeds);
-        actionbarContainer.addView(mViewActionBarTransparent);
+/*        actionbarContainer.addView(mViewActionBarTransparent);
         actionbarContainer.addView(mViewActionBarSolidBg);
-        actionbarContainer.addView(mViewActionBarBackOnly);
+        actionbarContainer.addView(mViewActionBarBackOnly);*/
 
         // Show the transparent ActionBar by default
-        mCurrentMode = ActionBarType.BACKONLY; // Set so toggleActionBars() can reset it without issues
-        toggleActionBars(ActionBarType.TRANSPARENT);
+//        mCurrentMode = ActionBarType.BACKONLY; // Set so toggleActionBars() can reset it without issues
+//        toggleActionBars(ActionBarType.TRANSPARENT);
+
+        mViewCoolFeeds.setVisibility(View.VISIBLE);
+        mCurrentMode = ActionBarType.NA;
 
         // Initialize the CoolFeed actionbar as necessary
         initCoolFeed();
@@ -109,32 +115,11 @@ public class ActionbarHelper {
         if(mCurrentMode == mode)
             return;
 
-        // TODO: Overly hacky solution. Supposed to only use CoolFeeds actionbar. Properly do when time allows
-        if(mode != ActionBarType.ONECOOLFEED && mode != ActionBarType.MEMCOOLFEEED) {
-            return;
-        }
-
-        // Hide all ActionBars by default, first
-        mViewCoolFeeds.setVisibility(View.INVISIBLE);
-        mViewActionBarTransparent.setVisibility(View.INVISIBLE);
-        mViewActionBarSolidBg.setVisibility(View.INVISIBLE);
-        mViewActionBarBackOnly.setVisibility(View.INVISIBLE);
-
-        // Show the correct actionBar
-        if(mode == ActionBarType.TRANSPARENT)
-            mViewActionBarTransparent.setVisibility(View.VISIBLE);
-        else if(mode == ActionBarType.SOLIDBG)
-            mViewActionBarSolidBg.setVisibility(View.VISIBLE);
-        else if(mode == ActionBarType.BACKONLY)
-            mViewActionBarBackOnly.setVisibility(View.VISIBLE);
-        else if(mode == ActionBarType.ONECOOLFEED) {
-            mViewCoolFeeds.setVisibility(View.VISIBLE);
-
+        // Currently only care about two modes- OCF and MEM
+        if(mode == ActionBarType.ONECOOLFEED) {
             switchCoolFeed(true, false);
         }
         else if(mode == ActionBarType.MEMCOOLFEEED) {
-            mViewCoolFeeds.setVisibility(View.VISIBLE);
-
             switchCoolFeed(false, false);
         }
 
@@ -142,13 +127,13 @@ public class ActionbarHelper {
         mCurrentMode = mode;
     }
 
-    public void setSolidActionbarTitle(CharSequence newTitle) {
+/*    public void setSolidActionbarTitle(CharSequence newTitle) {
         mActionSolidBgTitle.setText(newTitle);
     }
 
     public void setTransActionbarTitle(CharSequence newTitle) {
         mActionTransBgTitle.setText(newTitle);
-    }
+    }*/
 
     private void initCoolFeed() {
         // First off, make the main menu button act as it should be- the drawer opening button

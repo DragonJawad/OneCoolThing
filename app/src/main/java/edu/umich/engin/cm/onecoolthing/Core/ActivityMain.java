@@ -614,10 +614,11 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Clean up any other necessary variables
         mCurrentCoolThingTitle = null;
 
+        SettingsType newSettings = null;
         // Then add in the chosen fragment and set the appropriate settings
         if (index == 0) {
             // Apply the settings for the OneCoolFeed
-            changeSettingsMode(SettingsType.ONECOOLFEED);
+            newSettings = SettingsType.ONECOOLFEED;
 
             // Actually initialize the fragment
             OneCoolFeed frag = new OneCoolFeed();
@@ -626,10 +627,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             frag.setCommunicator(this);
 
             // Add in the fragment to the place specified in the layout file
-            fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[0]);
-
-            // Set the index of the mCurrentFragmentIndex to 0, to show that the OneCoolFeed was added
-            mCurrentFragmentIndex = 0;
+            fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[index]);
 
             // Register this fragment to handle shake events
             mShakeListener = frag;
@@ -639,7 +637,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         }
         else if(index == 1) {
             // Apply the settings for the Mich Eng Feed
-            changeSettingsMode(SettingsType.MICHENGMAG);
+            newSettings = SettingsType.MICHENGMAG;
 
             // Actually initialize the fragment
             MichiganCoolFeed frag = new MichiganCoolFeed();
@@ -648,10 +646,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             frag.setCommunicator(this);
 
             // Add in the fragment to the place specified in the layout file
-            fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[0]);
-
-            // Set the index of the mCurrentFragmentIndex to 0, to show that the OneCoolFeed was added
-            mCurrentFragmentIndex = 0;
+            fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[index]);
 
             // Register this fragment to handle shake events
             mShakeListener = frag;
@@ -666,10 +661,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             String this_title = mFragTags[index];
 
             // Set the actionBar's title text (on the one that will be used)
-            mActionbarHelper.setSolidActionbarTitle(this_title);
+//            mActionbarHelper.setSolidActionbarTitle(this_title);
 
             // Set settings for this web view
-            changeSettingsMode(SettingsType.WEBVIEW);
+            newSettings = SettingsType.WEBVIEW;
 
             // Create a new TumblrFeed fragment, with its title and url
             WebFeedFragment frag = WebFeedFragment.newInstance(this_url, this_title);
@@ -681,10 +676,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
-            mActionbarHelper.setSolidActionbarTitle(this_title);
+//            mActionbarHelper.setSolidActionbarTitle(this_title);
 
             // Set settings for this view- same as a Webview
-            changeSettingsMode(SettingsType.DECODER);
+            newSettings = SettingsType.DECODER;
 
             // Create the DecoderIntro frag to use
             DecoderIntroFrag frag = new DecoderIntroFrag();
@@ -697,10 +692,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
-            mActionbarHelper.setSolidActionbarTitle(this_title);
+//            mActionbarHelper.setSolidActionbarTitle(this_title);
 
             // Set settings for this view
-            changeSettingsMode(SettingsType.ABOUT);
+            newSettings = SettingsType.ABOUT;
 
             // Create a new AboutFragment to use
             AboutFragment frag = new AboutFragment();
@@ -713,10 +708,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
           // Get the title/tag separately, for ease of typing/reading
           String this_title = mFragTags[index];
           // Put the title on the actionBar that will be used
-          mActionbarHelper.setTransActionbarTitle(this_title);
+//          mActionbarHelper.setTransActionbarTitle(this_title);
 
           // Set settings for this view- same as About page
-          changeSettingsMode(SettingsType.ABOUT);
+          newSettings = SettingsType.ABOUT;
 
           // Create a new SendCool fragment to use
           SendCoolFragment frag = new SendCoolFragment();
@@ -729,10 +724,10 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
-            mActionbarHelper.setTransActionbarTitle(this_title);
+//            mActionbarHelper.setTransActionbarTitle(this_title);
 
             // Set settings for this view
-            changeSettingsMode(SettingsType.ABOUT);
+            newSettings = SettingsType.ABOUT;
 
             // Create a new Settings to use
             SettingsFragment frag = new SettingsFragment();
@@ -753,8 +748,12 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Change the indicator on the menu
         mNavAdapter.setVisibleIndicator(index);
 
-        // Finally, change the index of the currently used fragment
+        // Change the remembered index of the currently used fragment
         mCurrentFragmentIndex = index;
+
+        // Finally, change the settings to what was specified before
+            // Important to do after setting current index to avoid stackoverflow with calling changeFrag again
+        changeSettingsMode(newSettings);
     }
 
     @Override
@@ -902,26 +901,26 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         enableRightSlider(usingCoolFeed);
 
         // Then toggle the landscape mode as necessary
-        if(usingCoolFeed)
+//        if(usingCoolFeed)
             toggleLandscapeMode(false);
-        else
-            toggleLandscapeMode(true); // Everything else uses landscape mode
+/*        else
+            toggleLandscapeMode(true); // Everything else uses landscape mode*/
 
         // Finally, change the ActionBar as necessary
         if(mode == SettingsType.ONECOOLFEED) {
-            toggleActionBars(ActionbarHelper.ActionBarType.ONECOOLFEED);
+            mActionbarHelper.toggleActionBars(ActionbarHelper.ActionBarType.ONECOOLFEED);
         }
         else if(mode == SettingsType.MICHENGMAG) {
-            toggleActionBars(ActionbarHelper.ActionBarType.MEMCOOLFEEED);
+            mActionbarHelper.toggleActionBars(ActionbarHelper.ActionBarType.MEMCOOLFEEED);
         }
-        else if(mode == SettingsType.WEBVIEW || mode == SettingsType.DECODER) {
+/*        else if(mode == SettingsType.WEBVIEW || mode == SettingsType.DECODER) {
             // If so, show the ActionBar with a solid white bg
             toggleActionBars(ActionbarHelper.ActionBarType.SOLIDBG);
         }
         else if(mode == SettingsType.ABOUT) {
             // If so, then show the particular transparent ActionBar
             toggleActionBars(ActionbarHelper.ActionBarType.TRANSPARENT);
-        }
+        }*/
         /*else if(mode == SettingsType.MEMDETAILED) {
             // Simply show the backOnly ActionBar
             toggleActionBars(ActionbarHelper.ActionBarType.BACKONLY);
@@ -973,16 +972,6 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
-    }
-
-    /**
-     * Switches the correct ActionBar into view
-     * @param mode - Defines which ActionBar should be visible
-     */
-    // TODO: Method deprecated, simply call the ActionbarHelper instead of this method
-    private void toggleActionBars(ActionbarHelper.ActionBarType mode) {
-        // Simply let the ActionbarHelper switch modes
-        mActionbarHelper.toggleActionBars(mode);
     }
 
     /**

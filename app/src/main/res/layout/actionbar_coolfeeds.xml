@@ -19,7 +19,7 @@
             android:paddingLeft="@dimen/padding_actionbar_icon"
             android:paddingRight="@dimen/padding_actionbar_icon"
             android:paddingEnd="@dimen/padding_actionbar_icon"
-            android:layout_magin="0"
+            android:layout_margin="0dp"
             android:src="@drawable/hamfull"
             android:background="?android:attr/selectableItemBackground"
             />
