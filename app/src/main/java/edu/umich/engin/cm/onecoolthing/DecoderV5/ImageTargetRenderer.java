@@ -11,6 +11,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.qualcomm.vuforia.Matrix44F;
@@ -65,13 +66,13 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     
     private Teapot mTeapot;
     
-    private float kBuildingScale = 12.0f;
+    private float kBuildingScale = 1.0f;
     
     private Renderer mRenderer;
     
     boolean mIsActive = false;
     
-    private static final float OBJECT_SCALE_FLOAT = 3.0f;
+    private static final float OBJECT_SCALE_FLOAT = 1.0f;
     
     
     public ImageTargetRenderer(ActivityDecoder activity,
@@ -193,6 +194,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
 //            Log.d(LOGTAG, "Got a tag with the following userdata: " + trackable.getUserData());
 //            printUserData(trackable);
             int matchCode = mActivity.foundImageTarget((String) trackable.getUserData());
+            Log.d(LOGTAG, "tIdx: " + tIdx + " with matchCode: " + matchCode);
 
             // If there really wasn't a match, then do nothing for this trackable
             if(matchCode == -1) {
@@ -278,7 +280,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                        mTextures.get(matchCode).mTextureID[0]);
+                        mTextures.get(1).mTextureID[0]);
 
                 GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                         modelViewProjection, 0);
@@ -323,6 +325,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         // Create the 3D model of each car from the stored data
         File fileDir = StorageUtils.getAppDataFolder(context); // All models stored in AppData
         for (int i = 0; i < carModelsMetadataList.size(); ++i) {
+            Log.d(LOGTAG, "Creating carmodel: " + i);
             // Create the new instance of a car model
             DecoderApplication3DModel curModel = new DecoderApplication3DModel();
 
@@ -345,6 +348,18 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         // TODO: Remove below, just personal checking
         if(mCarModels.size() != carModelsMetadataList.size()) {
             throw new IllegalArgumentException("Improper vector part2");
+        }
+    }
+
+    private class GetDecoderContent extends AsyncTask<Void, Void, Void> {
+
+        public GetDecoderContent() {
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
         }
     }
     

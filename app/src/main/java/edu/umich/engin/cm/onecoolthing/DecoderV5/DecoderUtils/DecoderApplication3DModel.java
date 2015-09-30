@@ -40,6 +40,8 @@ public class DecoderApplication3DModel extends MeshObject
                     new InputStreamReader(is));
 
             String line = reader.readLine();
+            // If there's a colon in this line, remove it (colon for iOS parsing)
+            line = line.replace(":", "");
 
             int floatsToRead = Integer.parseInt(line);
             numVerts = floatsToRead / 3;
@@ -53,6 +55,9 @@ public class DecoderApplication3DModel extends MeshObject
             verts.rewind();
 
             line = reader.readLine();
+            // If there's a colon in this line, remove it (colon for iOS parsing)
+            line = line.replace(":", "");
+
             floatsToRead = Integer.parseInt(line);
 
             norms = ByteBuffer.allocateDirect(floatsToRead * 4);
@@ -64,6 +69,9 @@ public class DecoderApplication3DModel extends MeshObject
             norms.rewind();
 
             line = reader.readLine();
+            // If there's a colon in this line, remove it (colon for iOS parsing)
+            line = line.replace(":", "");
+
             floatsToRead = Integer.parseInt(line);
 
             textCoords = ByteBuffer.allocateDirect(floatsToRead * 4);

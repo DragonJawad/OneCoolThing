@@ -337,13 +337,18 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
             getAssets()));*/
 
         // Then, add in a texture - in precise order - for every car that could be displayed
+        int debugCount = 0;
         for (DecoderCarMetadata carMetadata : mCarMetadata) {
+            if(debugCount == 1) {
+                break;
+            }
             mTextures.add(
                     Texture.loadTextureFromFile(
                             StorageUtils.getAppDataFolder(this),
                             carMetadata.filepath_texture
                     )
             );
+            debugCount++;
         }
     }
     
@@ -462,6 +467,7 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         mGlView.init(translucent, depthSize, stencilSize);
         
         mRenderer = new ImageTargetRenderer(this, vuforiaAppSession);
+        mRenderer.setCarModels(this, mCarMetadata);
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
         
