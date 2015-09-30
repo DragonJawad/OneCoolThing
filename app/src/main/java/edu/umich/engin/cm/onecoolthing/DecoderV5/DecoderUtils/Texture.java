@@ -26,7 +26,7 @@ import java.nio.ByteOrder;
 // Exposes functionality for loading a texture from the APK.
 public class Texture
 {
-    private static final String LOGTAG = "Vuforia_Texture";
+    private static final String LOGTAG = "MD/Texture";
     
     public int mWidth;          // The width of the texture.
     public int mHeight;         // The height of the texture.
@@ -57,10 +57,15 @@ public class Texture
         InputStream inputStream = null;
         try {
             File targetFile = new File(fileDir, fileName);
+
+            if(!targetFile.exists()) {
+                Log.e(LOGTAG, "File doesn't exist with name " + fileName);
+            }
+
             inputStream = new FileInputStream(targetFile);
             return loadTextureFromInputStream(inputStream);
         } catch (FileNotFoundException e) {
-            Log.e(LOGTAG, "Failed to log texture '" + fileName + "' from file");
+            Log.e(LOGTAG, "Failed to load texture '" + fileName + "' from file");
             Log.i(LOGTAG, e.getMessage());
             return null;
         }

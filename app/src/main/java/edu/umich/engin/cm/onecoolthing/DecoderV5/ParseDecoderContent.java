@@ -105,6 +105,8 @@ public class ParseDecoderContent {
         // Throw away the current task
         mCurrentTask = null;
 
+        Log.i(LOGTAG, "asyncSuccessful(): Got data for " + allDecoderMetadata.size() + " items");
+
         // Notify the user of the received data
         if(mUser != null)
             mUser.gotDecoderContent();
@@ -167,7 +169,7 @@ public class ParseDecoderContent {
                     mAllDecoderItems.add(curMetadata);
 
                     // Download and store the texture file straight away if it doesn't exist already
-                    if(StorageUtils.checkIfFileExists(storageDirectory, curMetadata.filepath_texture)) {
+                    if(!StorageUtils.checkIfFileExists(storageDirectory, curMetadata.filepath_texture)) {
                         StorageUtils.storeFileFromWeb(
                                 storageDirectory,
                                 curMetadata.filepath_texture,
@@ -176,7 +178,7 @@ public class ParseDecoderContent {
                     }
 
                     // Download and store the vertex text file straight away, if it doesn't exist already
-                    if(StorageUtils.checkIfFileExists(storageDirectory, curMetadata.filepath_vertex)) {
+                    if(!StorageUtils.checkIfFileExists(storageDirectory, curMetadata.filepath_vertex)) {
                         StorageUtils.storeFileFromWeb(
                                 storageDirectory,
                                 curMetadata.filepath_vertex,

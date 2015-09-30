@@ -44,7 +44,31 @@ public class StorageUtils {
 
         // Try to create get the app data location on the external
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            dataDir = new File(Environment.getExternalStorageDirectory(), "myappdata");
+            dataDir = new File(context.getExternalFilesDir(null), "OCTData");
+
+            // If the folder doesn't exist, create it
+            if(!dataDir.isDirectory()) {
+                dataDir.mkdirs();
+            }
+        }
+
+        // If couldn't get any external app data folders, then use the internal one
+        if(dataDir == null || !dataDir.isDirectory()) {
+            dataDir = new File(context.getFilesDir(), "OCTData");
+            if(!dataDir.isDirectory()) {
+                dataDir.mkdirs();
+            }
+        }
+
+        return dataDir;
+    }
+
+    static public File getPublicAppDataFolder(Context context) {
+        File dataDir = null;
+
+        // Try to create get the app data location on the external
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            dataDir = new File(Environment.getExternalStorageDirectory(), "OCTData");
 
             // If the folder doesn't exist, create it
             if(!dataDir.isDirectory()) {

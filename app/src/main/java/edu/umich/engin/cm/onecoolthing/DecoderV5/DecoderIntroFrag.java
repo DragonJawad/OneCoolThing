@@ -112,6 +112,7 @@ public class DecoderIntroFrag extends android.support.v4.app.Fragment
 
         // Re-enable the download content button and stop the progress bar
         startButton.setEnabled(true);
+        startButton.setOnClickListener(this); // Necessary to re-enable
         mProgressBar.setVisibility(View.GONE);
 
         // Let the user know that the app failed to get the data, for one reason or another
