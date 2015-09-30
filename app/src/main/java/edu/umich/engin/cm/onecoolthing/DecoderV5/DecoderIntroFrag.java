@@ -97,7 +97,8 @@ public class DecoderIntroFrag extends android.support.v4.app.Fragment
 
         // Enable the start button and change what it says
         startButton.setText(getResources().getString(R.string.decoder_intro_btn_starttext));
-        startButton.setEnabled(false);
+        startButton.setEnabled(true);
+        startButton.setOnClickListener(this); // Necessary to re-enable
 
         // Hide the progress bar now
         mProgressBar.setVisibility(View.GONE);
