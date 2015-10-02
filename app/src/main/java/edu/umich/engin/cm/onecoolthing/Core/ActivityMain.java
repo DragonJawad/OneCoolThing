@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import edu.umich.engin.cm.onecoolthing.CoolFeeds.MichiganCoolFeed;
 import edu.umich.engin.cm.onecoolthing.CoolFeeds.OneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderIntroFrag;
+import edu.umich.engin.cm.onecoolthing.Notifications.AlarmNotificationManager;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.SendCoolFragment;
@@ -754,6 +755,9 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Finally, change the settings to what was specified before
             // Important to do after setting current index to avoid stackoverflow with calling changeFrag again
         changeSettingsMode(newSettings);
+
+        // Turn on notifications if necessary
+        AlarmNotificationManager.turnOnNotificationIfPossible(this);
     }
 
     @Override

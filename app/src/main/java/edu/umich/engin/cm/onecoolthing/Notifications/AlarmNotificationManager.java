@@ -18,6 +18,25 @@ import edu.umich.engin.cm.onecoolthing.Util.Constants;
 public class AlarmNotificationManager {
     private static final String LOGTAG = "MD/AlarmNotificationMan";
 
+    static public void turnOnNotificationIfPossible(Context context) {
+        // First get the SharedPreferences to load up all the necessary values
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // If user turned off alarms of or if an alarm already set, then nothing to do
+        if(!sharedPreferences.getBoolean(Constants.KEY_ENABLEDAILYDOSE, Constants.DEFAULTVAL_ENABLEDAILYDOSE) ||
+                sharedPreferences.getBoolean(Constants.KEY_NOTIFSETYET, Constants.DEFAULTVAL_NOTIFSETYET)) {
+            return;
+        }
+        // Otherwise start the alarm with the default values
+        else {
+            int hours = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_HOUR,
+                    Constants.DEFAULTVAL_DAILYNOTIFTIME_HOUR);
+            int minutes = sharedPreferences.getInt(Constants.KEY_DAILYNOTIFTIME_MINUTE,
+                    Constants.DEFAULTVAL_DAILYNOTIFTIME_MINUTE);
+            setNotificationAlarm(context, hours, minutes);
+        }
+    }
+
     static public void setNotificationAlarm(Context context, int hours, int minutes) {
         // First cancel previously planned notifications, if any
         cancelNotificationAlarmIfNecessary(context);
