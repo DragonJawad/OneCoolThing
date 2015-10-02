@@ -59,7 +59,6 @@ import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleApplicationS
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.Texture;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
-import edu.umich.engin.cm.onecoolthing.Util.StorageUtils;
 
 
 public class ActivityDecoder extends Activity implements SampleApplicationControl,
@@ -336,8 +335,7 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         mTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg",
             getAssets()));*/
 
-        // Then, add in a texture - in precise order - for every car that could be displayed
-        int debugCount = 0;
+        /*// Then, add in a texture - in precise order - for every car that could be displayed
         for (DecoderCarMetadata carMetadata : mCarMetadata) {
             if(debugCount == 1) {
                 break;
@@ -349,7 +347,7 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
                     )
             );
             debugCount++;
-        }
+        }*/
     }
     
     

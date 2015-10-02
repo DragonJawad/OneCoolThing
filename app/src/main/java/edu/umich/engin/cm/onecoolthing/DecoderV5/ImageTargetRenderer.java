@@ -66,14 +66,15 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     
     private Teapot mTeapot;
     
-    private float kBuildingScale = 1.0f;
-    
     private Renderer mRenderer;
     
     boolean mIsActive = false;
-    
+
     private static final float OBJECT_SCALE_FLOAT = 1.0f;
-    
+
+    private Texture mCurCarTexutre = null;
+    private int mCurCarTextureIndex = -1;
+    private ArrayList<DecoderCarMetadata> mCarMetadata;
     
     public ImageTargetRenderer(ActivityDecoder activity,
         SampleApplicationSession session)
@@ -126,7 +127,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         mTeapot = new Teapot();
         
         mRenderer = Renderer.getInstance();
-        
+
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, Vuforia.requiresAlpha() ? 0.0f
                 : 1.0f);
         
@@ -160,7 +161,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         
         // Hide the Loading Dialog
         mActivity.loadingDialogHandler
-            .sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
+                .sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
         
     }
     
@@ -168,6 +169,8 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     // The render function.
     private void renderFrame()
     {
+        boolean wasThereAMatchYet = false;
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         
         State state = mRenderer.begin();
@@ -187,6 +190,11 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         // did we find any trackables this frame?
         for (int tIdx = 0; tIdx < state.getNumTrackableResults(); tIdx++)
         {
+            // If there was already a match, then quit
+                // Quick fix for not having enough memory for all the textures- showing only one max
+            if(wasThereAMatchYet)
+                break;
+
             TrackableResult result = state.getTrackableResult(tIdx);
             Trackable trackable = result.getTrackable();
 
@@ -199,6 +207,10 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             // If there really wasn't a match, then do nothing for this trackable
             if(matchCode == -1) {
                 continue;
+            }
+            // Otherwise remember there was a valid match for this frame
+            else {
+                wasThereAMatchYet = true;
             }
 
             Matrix44F modelViewMatrix_Vuforia = Tool
@@ -217,8 +229,8 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             } else
             {
                 Matrix.rotateM(modelViewMatrix, 0, 90.0f, 1.0f, 0, 0);
-                Matrix.scaleM(modelViewMatrix, 0, kBuildingScale,
-                        kBuildingScale, kBuildingScale);
+                Matrix.scaleM(modelViewMatrix, 0, OBJECT_SCALE_FLOAT,
+                        OBJECT_SCALE_FLOAT, OBJECT_SCALE_FLOAT);
             }
             
             Matrix.multiplyMM(modelViewProjection, 0, vuforiaAppSession
@@ -262,6 +274,18 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             }
             // Otherwise, showing a car model now
             else {
+                // Load up the texture for this car (if necessary)
+                if(matchCode-1 != mCurCarTextureIndex) {
+                    // Save the index of what the texture is for
+                    mCurCarTextureIndex = matchCode-1;
+
+                    // Load up the current texture from memory
+                    mCurCarTexutre = Texture.loadTextureFromFile(
+                            StorageUtils.getAppDataFolder(mActivity),
+                            mCarMetadata.get(mCurCarTextureIndex).filepath_texture
+                            );
+                }
+
                 // Get the current model, specified by the match code
                 DecoderApplication3DModel curModel = mCarModels.get(matchCode-1);
 
@@ -280,7 +304,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                        mTextures.get(1).mTextureID[0]);
+                        mCurCarTexutre.mTextureID[0]);
 
                 GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                         modelViewProjection, 0);
@@ -290,7 +314,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
 
                 SampleUtils.checkGLError("Renderer DrawBuildings");
             }
-            
+
             SampleUtils.checkGLError("Render Frame");
             
         }
@@ -306,7 +330,6 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         String userData = (String) trackable.getUserData();
         Log.d(LOGTAG, "UserData:Retreived User Data	\"" + userData + "\"");
     }
-    
     
     public void setTextures(Vector<Texture> textures)
     {
@@ -349,6 +372,9 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         if(mCarModels.size() != carModelsMetadataList.size()) {
             throw new IllegalArgumentException("Improper vector part2");
         }
+
+        // Cache the metadata reference to use later to get the texture files
+        mCarMetadata = carModelsMetadataList;
     }
 
     private class GetDecoderContent extends AsyncTask<Void, Void, Void> {
