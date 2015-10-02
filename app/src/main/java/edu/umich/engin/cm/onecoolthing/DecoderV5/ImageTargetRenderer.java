@@ -7,11 +7,9 @@ and other countries. Trademarks of QUALCOMM Incorporated are used with permissio
 
 package edu.umich.engin.cm.onecoolthing.DecoderV5;
 
-import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.qualcomm.vuforia.Matrix44F;
@@ -23,8 +21,6 @@ import com.qualcomm.vuforia.TrackableResult;
 import com.qualcomm.vuforia.VIDEO_BACKGROUND_REFLECTION;
 import com.qualcomm.vuforia.Vuforia;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -50,7 +46,6 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
     private ActivityDecoder mActivity;
     
     private Vector<Texture> mTextures;
-    private Vector<DecoderApplication3DModel> mCarModels;
     
     private int shaderProgramID;
     
@@ -72,9 +67,10 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
 
     private static final float OBJECT_SCALE_FLOAT = 1.0f;
 
-    private Texture mCurCarTexutre = null;
-    private int mCurCarTextureIndex = -1;
+    private Texture mCurCarTexture = null;
+    private int mLastMatchIndex = -1;
     private ArrayList<DecoderCarMetadata> mCarMetadata;
+    private Vector<DecoderApplication3DModel> mCarModels;
     
     public ImageTargetRenderer(ActivityDecoder activity,
         SampleApplicationSession session)
@@ -190,10 +186,11 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         // did we find any trackables this frame?
         for (int tIdx = 0; tIdx < state.getNumTrackableResults(); tIdx++)
         {
-            // If there was already a match, then quit
-                // Quick fix for not having enough memory for all the textures- showing only one max
-            if(wasThereAMatchYet)
+            // If there was already a match and this isn't the same, then skip this trackable
+            // Quick fix for not having enough memory for all the textures- showing only one max
+            if(wasThereAMatchYet) {
                 break;
+            }
 
             TrackableResult result = state.getTrackableResult(tIdx);
             Trackable trackable = result.getTrackable();
@@ -208,9 +205,15 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             if(matchCode == -1) {
                 continue;
             }
+            else if(matchCode != 0 && mCarModels == null) {
+                // If the car models haven't been created or some other issue occured, then skip this
+                Log.e(LOGTAG, "mCarModels was null but there was a match for it!");
+                break;
+            }
             // Otherwise remember there was a valid match for this frame
             else {
                 wasThereAMatchYet = true;
+                mLastMatchIndex = matchCode;
             }
 
             Matrix44F modelViewMatrix_Vuforia = Tool
@@ -275,16 +278,25 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             // Otherwise, showing a car model now
             else {
                 // Load up the texture for this car (if necessary)
-                if(matchCode-1 != mCurCarTextureIndex) {
-                    // Save the index of what the texture is for
-                    mCurCarTextureIndex = matchCode-1;
-
+                if(matchCode != mLastMatchIndex) {
                     // Load up the current texture from memory
-                    mCurCarTexutre = Texture.loadTextureFromFile(
+                    mCurCarTexture = Texture.loadTextureFromFile(
                             StorageUtils.getAppDataFolder(mActivity),
-                            mCarMetadata.get(mCurCarTextureIndex).filepath_texture
+                            mCarMetadata.get(matchCode-1).filepath_texture
                             );
+
+                    GLES20.glGenTextures(1, mCurCarTexture.mTextureID, 0);
+                    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mCurCarTexture.mTextureID[0]);
+                    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                            GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                            GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                    GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
+                            mCurCarTexture.mWidth, mCurCarTexture.mHeight, 0, GLES20.GL_RGBA,
+                            GLES20.GL_UNSIGNED_BYTE, mCurCarTexture.mData);
                 }
+
+                if(mCurCarTexture == null) break;
 
                 // Get the current model, specified by the match code
                 DecoderApplication3DModel curModel = mCarModels.get(matchCode-1);
@@ -304,7 +316,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                        mCurCarTexutre.mTextureID[0]);
+                        mCurCarTexture.mTextureID[0]);
 
                 GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                         modelViewProjection, 0);
@@ -336,57 +348,11 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
         mTextures = textures;
     }
 
-    public void setCarModels(Context context, ArrayList<DecoderCarMetadata> carModelsMetadataList) {
-        // Initialize the vector of car models to the same size as the car models metadata list
-        mCarModels = new Vector<DecoderApplication3DModel>(carModelsMetadataList.size());
-
-        // TODO: Double check vector size is really zero right now
-        if(mCarModels.size() != 0) {
-            throw new IllegalArgumentException("Improper vector");
-        }
-
-        // Create the 3D model of each car from the stored data
-        File fileDir = StorageUtils.getAppDataFolder(context); // All models stored in AppData
-        for (int i = 0; i < carModelsMetadataList.size(); ++i) {
-            Log.d(LOGTAG, "Creating carmodel: " + i);
-            // Create the new instance of a car model
-            DecoderApplication3DModel curModel = new DecoderApplication3DModel();
-
-            // Load the model from the appropriate stored file
-            try {
-                curModel.loadModel(fileDir,
-                        carModelsMetadataList.get(i).filepath_vertex);
-            } catch (IOException e) {
-                Log.e(LOGTAG, "Failed to load model '" +
-                        carModelsMetadataList.get(i).filepath_vertex + "' from file");
-                Log.i(LOGTAG, e.getMessage());
-
-                curModel = null;
-            }
-
-            // Insert the complete model into the vector of car models
-            mCarModels.add(curModel);
-        }
-
-        // TODO: Remove below, just personal checking
-        if(mCarModels.size() != carModelsMetadataList.size()) {
-            throw new IllegalArgumentException("Improper vector part2");
-        }
-
-        // Cache the metadata reference to use later to get the texture files
+    public void setCarModels(ArrayList<DecoderCarMetadata> carModelsMetadataList,
+                             Vector<DecoderApplication3DModel> carModels) {
+        // Cache the reference to the car metadata and models
         mCarMetadata = carModelsMetadataList;
-    }
-
-    private class GetDecoderContent extends AsyncTask<Void, Void, Void> {
-
-        public GetDecoderContent() {
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
+        mCarModels = carModels;
     }
     
 }

@@ -40,7 +40,7 @@
     <dimen name="margin_decoderintro_text_sides">20dp</dimen>
     <dimen name="margin_decoderintro_text_top">10dp</dimen>
     <!-- Margins between each left sliding menu item -->
-    <dimen name="margin_nav_item">16dp</dimen>
+    <dimen name="margin_nav_item">14dp</dimen>
     <!-- Margin between the left edge of the right menu, which includes the shadow -->
     <dimen name="margin_rightmenu_leftpush">20dp</dimen>
     <!-- Margin b6tween right sliding menu's title and body scrollview -->

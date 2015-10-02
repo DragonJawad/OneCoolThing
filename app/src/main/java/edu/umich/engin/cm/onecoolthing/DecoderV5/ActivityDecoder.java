@@ -15,6 +15,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,12 +43,14 @@ import com.qualcomm.vuforia.Vuforia;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import edu.umich.engin.cm.onecoolthing.Core.AnalyticsHelper;
+import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.DecoderApplication3DModel;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.LoadingDialogHandler;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleAppMenu.SampleAppMenu;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleAppMenu.SampleAppMenuGroup;
@@ -59,6 +62,7 @@ import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.SampleApplicationS
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderUtils.Texture;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.Util.IntentStarter;
+import edu.umich.engin.cm.onecoolthing.Util.StorageUtils;
 
 
 public class ActivityDecoder extends Activity implements SampleApplicationControl,
@@ -84,6 +88,7 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
     boolean mWasLastMatchCar = true;
     // List of all the solar car metadata that may be displayed
     ArrayList<DecoderCarMetadata> mCarMetadata;
+    private Vector<DecoderApplication3DModel> mCarModels;
 
     SampleApplicationSession vuforiaAppSession;
     
@@ -135,19 +140,6 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         
         startLoadingAnimation();
         addData();
-
-        vuforiaAppSession
-            .initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        mGestureDetector = new GestureDetector(this, new GestureListener());
-
-        // Load any specific textures:
-        mTextures = new Vector<Texture>();
-        loadTextures();
-
-        mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
-            "droid");
-        
     }
 
     private void addData() {
@@ -209,7 +201,19 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         }
     }
 
-    // Called for when an image target has been found
+    private void afterModelsCreated() {
+        vuforiaAppSession
+                .initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        mGestureDetector = new GestureDetector(this, new GestureListener());
+
+        // Load any specific textures:
+        mTextures = new Vector<Texture>();
+        loadTextures();
+
+        mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
+                "droid");
+    }
 
     /**
      *
@@ -227,7 +231,6 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         else {
             lastMatchedTarget = targetName;
         }
-        // TODO: Think of a better alternative to prevent multiple successive matches
 
         // First try to find a match with the car names
         for(int i = 0; i < mCarMetadata.size(); ++i) {
@@ -328,26 +331,6 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         // Load in the default, good ol' brass teapot
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",
             getAssets()));
-        /*mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
-            getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
-            getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg",
-            getAssets()));*/
-
-        /*// Then, add in a texture - in precise order - for every car that could be displayed
-        for (DecoderCarMetadata carMetadata : mCarMetadata) {
-            if(debugCount == 1) {
-                break;
-            }
-            mTextures.add(
-                    Texture.loadTextureFromFile(
-                            StorageUtils.getAppDataFolder(this),
-                            carMetadata.filepath_texture
-                    )
-            );
-            debugCount++;
-        }*/
     }
     
     
@@ -465,7 +448,7 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
         mGlView.init(translucent, depthSize, stencilSize);
         
         mRenderer = new ImageTargetRenderer(this, vuforiaAppSession);
-        mRenderer.setCarModels(this, mCarMetadata);
+        mRenderer.setCarModels(mCarMetadata, mCarModels);
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
         
@@ -979,6 +962,60 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
 
         // End the Activity
         finish();
+    }
+
+    private class GetDecoderModels extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // If the car metadata hasn't been cached yet, then can't do any work
+            if(mCarMetadata == null) {
+                Log.e(LOGTAG, "GetDecoderModels: mCarMetadata was null!");
+                return null;
+            }
+
+            mCarModels =
+                    new Vector<DecoderApplication3DModel>(mCarMetadata.size());
+
+            // Create the 3D model of each car from the stored data
+            File fileDir = StorageUtils.getAppDataFolder(ActivityDecoder.this); // All models stored in AppData
+            for (int i = 0; i < mCarMetadata.size(); ++i) {
+                Log.d(LOGTAG, "Creating carmodel: " + i);
+                // Create the new instance of a car model
+                DecoderApplication3DModel curModel = new DecoderApplication3DModel();
+
+                // Load the model from the appropriate stored file
+                try {
+                    curModel.loadModel(fileDir,
+                            mCarMetadata.get(i).filepath_vertex);
+                } catch (IOException e) {
+                    Log.e(LOGTAG, "Failed to load model '" +
+                            mCarMetadata.get(i).filepath_vertex + "' from file");
+                    Log.i(LOGTAG, e.getMessage());
+
+                    curModel = null;
+                }
+
+                // Insert the complete model into the vector of car models
+                mCarModels.add(curModel);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+
+            endDecoder(true);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            // Finish setting up Vuforia
+            afterModelsCreated();
+        }
     }
     
     private void showToast(String text)
