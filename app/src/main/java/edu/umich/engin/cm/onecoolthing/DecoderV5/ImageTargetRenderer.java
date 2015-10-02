@@ -213,7 +213,6 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             // Otherwise remember there was a valid match for this frame
             else {
                 wasThereAMatchYet = true;
-                mLastMatchIndex = matchCode;
             }
 
             Matrix44F modelViewMatrix_Vuforia = Tool
@@ -279,24 +278,31 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer
             else {
                 // Load up the texture for this car (if necessary)
                 if(matchCode != mLastMatchIndex) {
+                    mLastMatchIndex = matchCode;
+
                     // Load up the current texture from memory
                     mCurCarTexture = Texture.loadTextureFromFile(
                             StorageUtils.getAppDataFolder(mActivity),
                             mCarMetadata.get(matchCode-1).filepath_texture
                             );
-
-                    GLES20.glGenTextures(1, mCurCarTexture.mTextureID, 0);
-                    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mCurCarTexture.mTextureID[0]);
-                    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                            GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-                    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                            GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-                    GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
-                            mCurCarTexture.mWidth, mCurCarTexture.mHeight, 0, GLES20.GL_RGBA,
-                            GLES20.GL_UNSIGNED_BYTE, mCurCarTexture.mData);
+                    if(mCurCarTexture != null) {
+                        GLES20.glGenTextures(1, mCurCarTexture.mTextureID, 0);
+                        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mCurCarTexture.mTextureID[0]);
+                        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                                GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                                GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
+                                mCurCarTexture.mWidth, mCurCarTexture.mHeight, 0, GLES20.GL_RGBA,
+                                GLES20.GL_UNSIGNED_BYTE, mCurCarTexture.mData);
+                    }
                 }
 
-                if(mCurCarTexture == null) break;
+                if(mCurCarTexture == null) {
+                    Log.e(LOGTAG, "mCurCarTexture is null!");
+
+                    break;
+                }
 
                 // Get the current model, specified by the match code
                 DecoderApplication3DModel curModel = mCarModels.get(matchCode-1);
