@@ -15,6 +15,7 @@
     <dimen name="text_nav">17sp</dimen> <!-- Size of each item in the left sliding menu's nav -->
     <dimen name="text_rightmenu_body">18sp</dimen> <!-- Size of body scrollview and share text -->
     <dimen name="text_rightmenu_title">26sp</dimen>
+    <dimen name="text_actionbar">18sp</dimen>
     <dimen name="text_about_main">15sp</dimen> <!-- Size of the primary text in the About page -->
     <dimen name="text_about_clicks">18sp</dimen>
     <dimen name="text_sendcool">16sp</dimen>

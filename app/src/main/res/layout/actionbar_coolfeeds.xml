@@ -67,7 +67,7 @@
                     android:layout_marginStart="@dimen/margin_general"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_normal"
+                    android:textSize="@dimen/text_actionbar"
                     android:text="@string/actionbar_onecoolthing"
                     onecoolthing:fontName="@string/customfont_normal"
                     />
@@ -102,7 +102,7 @@
                     android:layout_marginStart="@dimen/margin_general"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_normal"
+                    android:textSize="@dimen/text_actionbar"
                     android:text="@string/actionbar_micheng"
                     onecoolthing:fontName="@string/customfont_normal"
                     />
