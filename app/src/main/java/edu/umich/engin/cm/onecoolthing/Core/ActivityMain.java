@@ -126,15 +126,14 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
      * TODO/NOTE: In hindsight, this was stupid. Need to redo this as enums
      * 0 - One Cool Feed [main One Cool Thing feed]
      * 1 - Michigan Engineer Mag
-     * 2 - LabLog
-     * 3 - Visual Adventures
-     * 4 - I <3 A2
-     * 5 - Some Cool Apps
-     * 6 - MichEpedia
-     * 7 - Decoder
-     * 8 - About
-     * 9 - Send Us Cool Things
-     * 10 - Settings
+     * 2 - FeatureStories
+     * 3 - MichEpedia
+     * 4 - VisualAdventures
+     * 5 - SolarRaceCoverage
+     * 6 - Decoder
+     * 7 - About
+     * 8 - Send Us Cool Things
+     * 9 - Settings
      */
     int mCurrentFragmentIndex = -1;
 
@@ -616,9 +615,9 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             else if(mCurrentFragmentIndex == 1) {
                 backStackSettings.setPreviousSettings(SettingsType.MICHENGMAG);
             }
-            else if(mCurrentFragmentIndex == 7)
+            else if(mCurrentFragmentIndex == 6)
                 backStackSettings.setPreviousSettings(SettingsType.DECODER);
-            else if(mCurrentFragmentIndex == 8)
+            else if(mCurrentFragmentIndex == 7)
                 backStackSettings.setPreviousSettings(SettingsType.ABOUT);
             else
                 backStackSettings.setPreviousSettings(SettingsType.WEBVIEW);
@@ -685,7 +684,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             // Add the webview to the center view
             fragmentTransaction.replace(R.id.fragContainer, frag, mFragTags[index]);
         }
-        else if(index == 7) {
+        else if(index == 6) {
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
@@ -701,7 +700,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
         // If so, then add in the About fragment
-        else if(index == 8) {
+        else if(index == 7) {
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
@@ -717,7 +716,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
             fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
         // If so, then add in the Send Us Cool Things fragment
-        else if(index == 9) {
+        else if(index == 8) {
           // Get the title/tag separately, for ease of typing/reading
           String this_title = mFragTags[index];
           // Put the title on the actionBar that will be used
@@ -733,7 +732,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
           fragmentTransaction.replace(R.id.fragContainer, frag, this_title);
         }
         // If so, then add in the Settings fragment
-        else if(index == 10) {
+        else if(index == 9) {
             // Get the title/tag separately, for ease of typing/reading
             String this_title = mFragTags[index];
             // Put the title on the actionBar that will be used
@@ -1166,7 +1165,7 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         private void initIndicatorList() {
           // TODO: Change this so doesn't manually need to be set in order to increase/decrease
           //          size of menu
-          final int SIZE = 11;
+          final int SIZE = 10;
 
             // Actually initialize the indicator list
             mIndicatorViewList = new ArrayList<View>(SIZE);
