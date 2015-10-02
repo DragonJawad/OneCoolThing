@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:onecoolthing="http://schemas.android.com/apk/res-auto"
     android:id="@+id/camera_overlay_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
@@ -11,5 +12,18 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" />
+
+        <edu.umich.engin.cm.onecoolthing.Util.CustomFontTextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loading_indicator"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/decoder_intro_loading"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            onecoolthing:fontName="@string/customfont_normal"
+            />
         
 </RelativeLayout>

@@ -28,6 +28,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qualcomm.vuforia.CameraDevice;
@@ -577,6 +578,10 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
             
             // Sets the layout background to transparent
             mUILayout.setBackgroundColor(Color.TRANSPARENT);
+
+            // Hide the loading text
+            TextView loadingTextView = (TextView) mUILayout.findViewById(R.id.loading_text);
+            loadingTextView.setVisibility(View.GONE);
             
             try
             {
