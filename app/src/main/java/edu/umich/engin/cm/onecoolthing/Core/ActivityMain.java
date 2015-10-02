@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import edu.umich.engin.cm.onecoolthing.CoolFeeds.MichiganCoolFeed;
 import edu.umich.engin.cm.onecoolthing.CoolFeeds.OneCoolFeed;
 import edu.umich.engin.cm.onecoolthing.DecoderV5.DecoderIntroFrag;
+import edu.umich.engin.cm.onecoolthing.DecoderV5.ParseDecoderContent;
 import edu.umich.engin.cm.onecoolthing.Notifications.AlarmNotificationManager;
 import edu.umich.engin.cm.onecoolthing.R;
 import edu.umich.engin.cm.onecoolthing.StandaloneFragments.AboutFragment;
@@ -147,10 +148,18 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
     // Listener to be called when a shake event occurs
     private ShakeListener mShakeListener; // Only changed in changeFrag
 
+    ParseDecoderContent mParseDecoder;
+
     @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Start the async to check if decoder content is up to date now
+            // Trying to avoid user case where user switches to the Decoder immediately and this isn't done yet
+            // TODO: Remove reference as soon as don't need it
+        mParseDecoder = new ParseDecoderContent();
+        mParseDecoder.checkIfDecoderContentUpToDate(this);
+
         // Remove the actionBar in its evil entirety
         ActionBar actionBar = getActionBar();
         if(actionBar != null) {
@@ -207,6 +216,9 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
 
             changeFrag(newFragIndex, false);
         }
+
+        // Finally, turn on notifications if necessary
+        AlarmNotificationManager.turnOnNotificationIfPossible(this);
     }
 
     // Save any data before the Activity is destroyed
@@ -755,9 +767,6 @@ public class ActivityMain extends FragmentActivity implements VertPagerCommunica
         // Finally, change the settings to what was specified before
             // Important to do after setting current index to avoid stackoverflow with calling changeFrag again
         changeSettingsMode(newSettings);
-
-        // Turn on notifications if necessary
-        AlarmNotificationManager.turnOnNotificationIfPossible(this);
     }
 
     @Override

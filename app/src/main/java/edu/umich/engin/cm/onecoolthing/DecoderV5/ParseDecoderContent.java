@@ -35,19 +35,8 @@ public class ParseDecoderContent {
         public void parseDecoderContentFromWebFailed();
     }
 
-    public void getDecoderContent(Context context, DecoderParserUser callbackUser) {
-        if(mCurrentTask != null) {
-            throw new RuntimeException("Task already in progress!");
-        }
-
-        this.mUser = callbackUser;
-
-        this.mCurrentTask = new GetDecoderContent(context);
-        mCurrentTask.execute();
-    }
-
     // Get all the decoder items locally stored
-        // Note: Assumes files have actually been stored, and stored correctly
+    // Note: Assumes files have actually been stored, and stored correctly
     static public ArrayList<DecoderCarMetadata> getStoredMetadata(Context context) {
         ArrayList<DecoderCarMetadata> results = new ArrayList<DecoderCarMetadata>();
 
@@ -89,6 +78,17 @@ public class ParseDecoderContent {
         return results;
     }
 
+    public void getDecoderContent(Context context, DecoderParserUser callbackUser) {
+        if(mCurrentTask != null) {
+            throw new RuntimeException("Task already in progress!");
+        }
+
+        this.mUser = callbackUser;
+
+        this.mCurrentTask = new GetDecoderContent(context);
+        mCurrentTask.execute();
+    }
+
     public void cancelAnyTasks() {
         if(mCurrentTask != null) {
             mCurrentTask.cancel(true);
@@ -99,6 +99,11 @@ public class ParseDecoderContent {
         // Check if the index file with all the data was ever stored
         File storageDir = StorageUtils.getAppDataFolder(context);
         return StorageUtils.checkIfFileExists(storageDir, URL_MAIN);
+    }
+
+    public void checkIfDecoderContentUpToDate(Context context) {
+        CheckDecoderContentUpdates checkAsync = new CheckDecoderContentUpdates(context);
+        checkAsync.execute();
     }
 
     private void asyncSuccessful(ArrayList<DecoderCarMetadata> allDecoderMetadata) {
@@ -221,6 +226,103 @@ public class ParseDecoderContent {
 
             // Return all the metadata for all the files
             asyncSuccessful(mAllDecoderItems);
+        }
+    }
+
+    /**
+     * Checks if the current version of the Decoder content is up to date.
+     * If not, deletes all stored Decoder content
+     */
+    private class CheckDecoderContentUpdates extends AsyncTask<Void, Void, Void> {
+        Context mContext;
+
+        public CheckDecoderContentUpdates(Context context) {
+            this.mContext = context;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // First get the storage directory that holds all the beautiful files
+            File storageDir = StorageUtils.getAppDataFolder(mContext);
+
+            // Check if there's an stored index file- if not, then no stored content to check
+            if(!StorageUtils.checkIfFileExists(storageDir, URL_MAIN)) {
+                return null;
+            }
+
+            // Otherwise, need to parse all the content and compare local vs online data
+            try {
+                ArrayList<DecoderCarMetadata> localData = new ArrayList<DecoderCarMetadata>();
+
+                // First, get the index json from the stored file that should be there
+                String jsonStr = StorageUtils.getStringFromFile(
+                        StorageUtils.getAppDataFolder(mContext),
+                        URL_MAIN
+                );
+
+                // Then get the JSON object that holds all the data as more objects
+                JSONArray baseArray = new JSONArray(jsonStr);
+                JSONObject allContentJSON = baseArray.getJSONObject(0); // Only one object
+
+                // Then loop through each subobject in the json and add their data in
+                Iterator<String> keyIterator = allContentJSON.keys();
+                while(keyIterator.hasNext()) {
+                    // Get the current JSON obj of data
+                    String key = keyIterator.next();
+                    JSONObject curJSON = allContentJSON.getJSONObject(key);
+
+                    // Create the new metadata object and fill it up
+                    DecoderCarMetadata curMetadata = new DecoderCarMetadata();
+                    curMetadata.name = curJSON.getString(TAG_NAME);
+                    curMetadata.filepath_texture = curJSON.getString(TAG_TEXTURE);
+                    curMetadata.filepath_vertex = curJSON.getString(TAG_TEXTNAME);
+
+                    // Finally, add the metadata object to the entire list of metadata objects
+                    localData.add(curMetadata);
+                }
+
+                // Now need to do the same for the online version
+                ServiceHandler sh = new ServiceHandler();
+                jsonStr = sh.makeServiceCall(URL_BASE + URL_MAIN, ServiceHandler.GET);
+                baseArray = new JSONArray(jsonStr);
+                allContentJSON = baseArray.getJSONObject(0); // Only one object
+                keyIterator = allContentJSON.keys();
+
+                // Finally, compare each bit of metadata to the one from online
+                int checkCounter = 0;
+                while(keyIterator.hasNext()) {
+                    // Get the current JSON obj of data
+                    String key = keyIterator.next();
+                    JSONObject curJSON = allContentJSON.getJSONObject(key);
+
+                    // Create the new metadata object and fill it up
+                    DecoderCarMetadata curMetadata = new DecoderCarMetadata();
+                    curMetadata.name = curJSON.getString(TAG_NAME);
+                    curMetadata.filepath_texture = curJSON.getString(TAG_TEXTURE);
+                    curMetadata.filepath_vertex = curJSON.getString(TAG_TEXTNAME);
+
+                    // Get a reference to the corresponding local metadata and make sure they match
+                    DecoderCarMetadata localMetadata = localData.get(checkCounter);
+                    if(!localMetadata.name.equals(curMetadata.name)
+                            || !localMetadata.filepath_texture.equals(curMetadata.filepath_texture)
+                            || !localMetadata.filepath_vertex.equals(curMetadata.filepath_vertex)) {
+                        // There's a mismatch! Delete all stored Decoder content as inaccurate
+                            // TODO: Make a more efficient system, rather than deleting >everything<
+                        StorageUtils.deleteDirectory(StorageUtils.getAppDataFolder(mContext));
+
+                        // No need to check anymore, as one difference is enough
+                        break;
+                    }
+
+                    ++checkCounter;
+                }
+            }
+            catch (Exception e) {
+                Log.e(LOGTAG, "CheckDecoderContentUpdate failed");
+                Log.i(LOGTAG, e.getMessage());
+            }
+
+            return null;
         }
     }
 }
