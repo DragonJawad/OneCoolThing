@@ -199,6 +199,9 @@ public class ActivityDecoder extends Activity implements SampleApplicationContro
             Log.e(LOGTAG, "Failed to parse the matches file, XmlPullParserException");
             endDecoder(true);
         }
+
+        GetDecoderModels getDecoderModels = new GetDecoderModels();
+        getDecoderModels.execute();
     }
 
     private void afterModelsCreated() {
