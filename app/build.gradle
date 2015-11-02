@@ -8,14 +8,14 @@ android {
             keyPassword = ""
         }
     }
-    compileSdkVersion 19
+    compileSdkVersion 20
     buildToolsVersion "20.0.0"
     defaultConfig {
         applicationId "edu.umich.engin.cm.onecoolthing"
         minSdkVersion 11
         targetSdkVersion 20
-        versionCode 3
-        versionName "2.0"
+        versionCode 4
+        versionName "2.1"
         signingConfig signingConfigs.unsigned
     }
     buildTypes {
