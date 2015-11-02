@@ -77,7 +77,10 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
 
     public void LoadNewCoolThing(CoolThingData newData, int currentPosition, int totalCount) {
         // Cancel any ongoing previous image loading tasks as appropriate
-        mImageLoader.CancelTaskIfAny();
+        if(mImageLoader.CancelTaskIfAny()) {
+            Log.d(LOGTAG, "Pos: " + mCurrentPosition + " | NewPos: " + currentPosition +
+                    " | Ongoing task was cancelled");
+        }
 
         // Reset the views, if views have already been created
         if(mBackgroundView != null)
@@ -100,7 +103,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
         mHasDataBeenAssigned = true;
 
         // Finally try loading the image
-        mImageLoader.GetImage(mImageURL, this);
+        mImageLoader.GetImage(this, mImageURL);
     }
 
     private void ResetViews() {
@@ -176,7 +179,7 @@ public class CoolThingFrag extends android.support.v4.app.Fragment implements Bi
     @Override
     public void FailedImageRetrieval() {
         // For now, simply log the issue
-        Log.d(LOGTAG, "Received event that failed to retrieve image");
+        Log.d(LOGTAG, "Pos: " + mCurrentPosition + " | Received event that failed to retrieve image");
 
         // Display all the information except the background image
         DisplayAllData(false);
